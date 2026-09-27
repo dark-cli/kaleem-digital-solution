@@ -92,9 +92,11 @@
   background-color: var(--k-paper);
 }
 
-/* Board: transparent background showing starfield. Header and footer ONLY. */
+/* Board: semi-transparent dark overlay showing starfield behind. Header and footer ONLY. */
 .board {
+  background-color: rgba(29, 35, 32, 0.7);
   color: var(--k-chalk);
+  backdrop-filter: blur(2px);
 }
 
 /* ─── Kaleem Component Classes ────────────────────────────────────── */
