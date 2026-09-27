@@ -1,7 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" width="820" height="540" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" role="img" aria-labelledby="t d">
 <title id="t">Kaleem — your data, set free</title>
 <desc id="d">An old locked box is unlocked and opened; its data blocks travel out and land sorted in a clean open folder, and a key is handed back to the owner.</desc>
-<rect width="820" height="540" rx="28" fill="#f8c9b8"/>
 <defs>
 <filter id="pen" x="-5%" y="-5%" width="110%" height="110%">
 <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="4" result="n"/>
@@ -9,40 +8,30 @@
 </filter>
 </defs>
 <g filter="url(#pen)" stroke="#1f1f1f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
-
-<!-- 1 · the old system: a lilac box, corner peeled open -->
-<path d="M80 170 H260 L320 230 V410 H80 Z" fill="#d9ccf0"/>
-<path d="M260 170 V230 H320 Z" fill="#c4b3e8"/>
-<!-- tangled data inside -->
-<path d="M112 262 c30 -34 62 18 40 34 c-26 18 -46 -26 -6 -40 c42 -14 70 30 44 52 c-24 20 -60 -2 -38 -30 c24 -30 86 -6 90 30 c3 26 -30 40 -52 22" fill="none" stroke-width="3.5"/>
-<!-- unlocked padlock -->
-<path d="M114 356 v-16 a18 18 0 0 1 36 0 v-6" fill="none" stroke-width="4"/>
-<rect x="104" y="356" width="56" height="42" rx="6" fill="#f9d2ae"/>
-<circle cx="132" cy="374" r="5" fill="#1f1f1f" stroke="none"/>
-<path d="M132 378 v9" stroke-width="3.5"/>
-
-<!-- 2 · the journey: one dotted path, three blocks -->
-<path d="M318 200 C 390 70, 520 60, 612 214" fill="none" stroke-width="3" stroke-dasharray="1 11"/>
-<rect x="336" y="126" width="42" height="42" rx="4" fill="#f7e7b0" transform="rotate(-12 357 147)"/>
-<rect x="430" y="84" width="42" height="42" rx="4" fill="#bfe6d6" transform="rotate(8 451 105)"/>
-<rect x="526" y="104" width="42" height="42" rx="4" fill="#c6ddf0" transform="rotate(-6 547 125)"/>
-
-<!-- 3 · the result: a clean, open folder, data sorted -->
-<path d="M540 250 H604 L620 234 H688 L704 250 H740 V420 H540 Z" fill="#faf6ee"/>
-<rect x="566" y="276" width="26" height="26" rx="3" fill="#f7e7b0"/>
-<path d="M606 289 H712" stroke-width="3.5"/>
-<rect x="566" y="320" width="26" height="26" rx="3" fill="#bfe6d6"/>
-<path d="M606 333 H690" stroke-width="3.5"/>
-<rect x="566" y="364" width="26" height="26" rx="3" fill="#c6ddf0"/>
-<path d="M606 377 H702" stroke-width="3.5"/>
-
-<!-- 4 · the key: it's yours now -->
-<circle cx="566" cy="466" r="22" fill="#f7e7b0"/>
-<circle cx="566" cy="466" r="7" fill="#f8c9b8"/>
-<path d="M588 466 H708 M684 466 V484 M700 466 V480" fill="none"/>
-
-<!-- two quiet sparkles -->
-<path d="M760 214 v18 M751 223 h18" stroke-width="3"/>
-<path d="M500 470 v14 M493 477 h14" stroke-width="3"/>
+<!-- 1 · the old system: lilac box, corner peeled open, tangled data, unlocked padlock -->
+<path d="M60 90 H200 L250 140 V310 H60 Z" fill="#d9ccf0"/>
+<path d="M200 90 V140 H250 Z" fill="#c4b3e8"/>
+<path d="M92 172 c24 -28 50 14 32 28 c-21 15 -37 -21 -5 -32 c34 -11 56 24 35 42 c-19 16 -48 -2 -30 -24 c19 -24 68 -5 72 24 c2 21 -24 32 -42 18" fill="none" stroke-width="3.5"/>
+<path d="M96 262 v-12 a14 14 0 0 1 28 0 v-5" fill="none"/>
+<rect x="86" y="262" width="46" height="36" rx="5" fill="#f9d2ae"/>
+<circle cx="109" cy="277" r="4.5" fill="#1f1f1f" stroke="none"/>
+<path d="M109 280 v8" stroke-width="3.5"/>
+<!-- 2 · the journey -->
+<path d="M256 132 C 370 96, 470 190, 438 326" fill="none" stroke-width="3" stroke-dasharray="1 11"/>
+<rect x="308" y="106" width="40" height="40" rx="4" fill="#f7e7b0" transform="rotate(-12 328 126)"/>
+<rect x="382" y="144" width="40" height="40" rx="4" fill="#bfe6d6" transform="rotate(8 402 164)"/>
+<rect x="421" y="223" width="40" height="40" rx="4" fill="#c6ddf0" transform="rotate(-6 441 243)"/>
+<!-- 3 · the result: clean open folder, data sorted -->
+<path d="M330 350 H384 L398 336 H458 L472 350 H540 V520 H330 Z" fill="#faf6ee"/>
+<rect x="354" y="374" width="26" height="26" rx="3" fill="#f7e7b0"/><path d="M396 387 H510" stroke-width="3.5"/>
+<rect x="354" y="418" width="26" height="26" rx="3" fill="#bfe6d6"/><path d="M396 431 H488" stroke-width="3.5"/>
+<rect x="354" y="462" width="26" height="26" rx="3" fill="#c6ddf0"/><path d="M396 475 H502" stroke-width="3.5"/>
+<!-- 4 · the key -->
+<circle cx="96" cy="470" r="22" fill="#f7e7b0"/>
+<circle cx="96" cy="470" r="7" fill="#f8c9b8"/>
+<path d="M118 470 H240 M216 470 V488 M232 470 V484" fill="none"/>
+<!-- sparkles -->
+<path d="M548 110 v18 M539 119 h18" stroke-width="3"/>
+<path d="M280 540 v14 M273 547 h14" stroke-width="3"/>
 </g>
 </svg>
