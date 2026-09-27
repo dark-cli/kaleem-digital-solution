@@ -35,7 +35,7 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     <BaseHead title={title} description={description} image={image} noindex={noindex} fontAwesome={fontAwesome} heroPreload={heroPreload} />
     <ClientRouter />
   </head>
-  <body>
+  <body class="paper">
     {!isProduction && (
       <div class="beta-ribbon" aria-label="Beta environment">
         {locale === "ar" ? "بيتا — بيئة اختبار" : "BETA — testing environment"}

@@ -1,52 +1,153 @@
 /**
- * Copyright (c) 2026 Ali Mussa Imran — https://kaleem.dev
+ * Copyright (c) 2026 Kaleem Digital Solutions — https://kaleem.dev
  * All rights reserved. See LICENSE in the project root.
  */
 
 /**
- * Alimran Clinic — global stylesheet.
+ * Kaleem Website — global stylesheet.
  *
- * Single source of design truth. Every value traces back to HANDOFF.md
- * (see `design/HANDOFF.md` if kept in the repo, or the design zip).
+ * Design system: pastel sketch aesthetic (v1, Sept 2026).
+ * Inspiration: a teacher's notebook on a clean desk.
+ * Foundation: cream paper, soft pastels, dark hand-drawn outlines, chalkboard frame.
  *
- * Notes for future edits:
- *   - No dark mode. Do not reintroduce data-theme rules.
- *   - Two page backgrounds only: white + surface (#f4f7f8) + footer ink (#101c22).
- *   - No box-shadows anywhere. Structure is 1px hairlines over surface.
- *   - Radius is 2px on buttons only. Everything else is square.
- *   - Font Awesome is not used — inline SVG for icons.
+ * Single source of design truth. All values derive from the design-system/
+ * in the handoff folder.
+ *
+ * Philosophy:
+ *   - Paper, pastel, pen — cream background, one pastel per block, 2px outlines
+ *   - Chalkboard frames the page (header & footer only)
+ *   - One colour = one thing (each service owns one pastel)
+ *   - Arabic first, bilingual (RTL-aware logical properties)
+ *   - Hand-drawn but tidy (slightly uneven outlines, exact alignment/spacing)
  */
 
-/* ─── Fonts ───────────────────────────────────────────────────── */
-/* Loaded from BaseHead via <link> + preconnect: a CSS @import here chains
-   the font stylesheet behind this one and blocks rendering longer. */
-
-/* RTL overrides — every html[dir="rtl"] rule for the redesign lives here
-   because Astro's scoped-style compiler strips the html-level prefix. */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap");
 @import url("./rtl-overrides.css");
 
 /* ─── Tokens ──────────────────────────────────────────────────── */
 :root {
-  /* Colour — HANDOFF §2.1 */
-  --ink:            #101c22;
-  --body:           #3c4a52;
-  /* Darkened from #77858c so mono captions and metadata pass WCAG AA
-     contrast (>=4.5:1) against --white and --surface. */
-  --muted:          #5d6b73;
-  --accent:         #0b5e78;
-  --accent-hover:   #07445a;
-  --line:           #dde4e7;
-  --line-soft:      #eef2f4;
-  --line-strong:    #c7d4d9;
+  /* Kaleem Colour Palette — DESIGN-SYSTEM §2 */
+  --k-paper: #faf6ee;
+  --k-paper-2: #f3ecdf;
+  --k-ink: #1f1f1f;
+  --k-ink-muted: #4a4a4a;
+  --k-board: #1d2320;
+  --k-chalk: #eceee6;
+  --k-chalk-muted: #c9d0cb;
+  --k-chalk-dim: #a8b4ac;
+  --k-board-line: #4a5a52;
+  --k-peach: #f8c9b8;
+  --k-mint: #bfe6d6;
+  --k-lilac: #d9ccf0;
+  --k-butter: #f7e7b0;
+  --k-sky: #c6ddf0;
+  --k-apricot: #f9d2ae;
+  --k-logo-block: #f7e39a;
+  --k-focus: #3b6fa0;
+
+  /* Typography Stacks */
+  --k-font-ar: "IBM Plex Sans Arabic", "IBM Plex Sans", Tahoma, sans-serif;
+  --k-font-en: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --k-font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* Sketch Component Tokens */
+  --k-line: 2px;
+  --k-sketch-offset: 4px;
+  --k-radius-sketch: 10px 4px 12px 5px / 5px 12px 4px 10px;
+  --k-radius-sketch-btn: 8px 3px 9px 4px / 4px 9px 3px 8px;
+  --k-radius-pill: 999px;
+
+  /* Spacing Scale */
+  --k-space-1: 4px;   --k-space-2: 8px;   --k-space-3: 12px;  --k-space-4: 16px;
+  --k-space-5: 20px;  --k-space-6: 24px;  --k-space-7: 32px;  --k-space-8: 48px;
+  --k-space-9: 64px;  --k-space-10: 88px; --k-space-11: 96px;
+
+  /* Layout */
+  --k-gutter-desktop: 80px;
+  --k-gutter-mobile: 16px;
+  --k-max: 1280px;
+
+  /* Backwards compat (Alimran tokens) */
+  --ink:            #1f1f1f;
+  --body:           #1f1f1f;
+  --muted:          #4a4a4a;
+  --accent:         #3b6fa0;
+  --accent-hover:   #2a4d76;
+  --line:           #e0e0e0;
+  --line-soft:      #f0f0f0;
+  --line-strong:    #c0c0c0;
   --surface:        #f4f7f8;
   --white:          #ffffff;
-  --footer-bg:      #101c22;
-  --footer-text:    #d7e2e6;
-  --footer-muted:   #a8b8bf;
-  --footer-label:   #7f929a;
-  --footer-rule:    #22333c;
+  --footer-bg:      #1d2320;
+  --footer-text:    #eceee6;
+  --footer-muted:   #c9d0cb;
+  --footer-label:   #a8b4ac;
+  --footer-rule:    #4a5a52;
   --selection:      #cfe4ea;
+}
 
+/* ─── Kaleem Textures (Pure CSS) ───────────────────────────────── */
+/* Paper: faint pencil specks on cream. Use on <body> or page wrapper. */
+.paper {
+  background-color: var(--k-paper);
+  background-image: radial-gradient(circle at 78% 72%, rgba(31,31,31,0.28) 0 0.6px, transparent 1.2px),radial-gradient(circle at 63% 83%, rgba(31,31,31,0.18) 0 1.0px, transparent 2.0px),radial-gradient(circle at 4% 63%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px),radial-gradient(circle at 94% 63%, rgba(31,31,31,0.32) 0 1.0px, transparent 2.0px),radial-gradient(circle at 84% 22%, rgba(31,31,31,0.22) 0 0.6px, transparent 1.2px),radial-gradient(circle at 52% 97%, rgba(31,31,31,0.18) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 8%, rgba(31,31,31,0.18) 0 0.7px, transparent 1.4px),radial-gradient(circle at 63% 79%, rgba(31,31,31,0.32) 0 0.8px, transparent 1.6px),radial-gradient(circle at 96% 76%, rgba(31,31,31,0.22) 0 0.8px, transparent 1.6px),radial-gradient(circle at 15% 7%, rgba(31,31,31,0.32) 0 0.6px, transparent 1.2px),radial-gradient(circle at 36% 89%, rgba(31,31,31,0.28) 0 0.8px, transparent 1.6px),radial-gradient(circle at 67% 52%, rgba(31,31,31,0.28) 0 1.0px, transparent 2.0px),radial-gradient(circle at 77% 55%, rgba(31,31,31,0.22) 0 1.0px, transparent 2.0px),radial-gradient(circle at 90% 6%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px);
+  background-size: 127px 199px,139px 331px,151px 331px,163px 193px,173px 251px,181px 293px,193px 181px,199px 211px,211px 251px,223px 241px,233px 193px,241px 263px,251px 307px,263px 233px;
+}
+
+/* Board: dark chalkboard with pastel chalk dust. Header and footer ONLY. */
+.board {
+  background-color: var(--k-board);
+  background-image: radial-gradient(circle at 81% 50%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 89% 3%, rgba(247,227,154,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 80% 13%, rgba(198,221,240,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 92% 8%, rgba(246,193,208,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 60% 95%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 33% 9%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 11%, rgba(198,221,240,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 40% 29%, rgba(246,193,208,0.55) 0 0.6px, transparent 1.2px),radial-gradient(circle at 56% 14%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 38% 46%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 3% 55%, rgba(198,221,240,0.45) 0 0.5px, transparent 1.0px),radial-gradient(circle at 20% 6%, rgba(246,193,208,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 17% 79%, rgba(236,238,230,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 77% 28%, rgba(247,227,154,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 13% 20%, rgba(198,221,240,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 13% 76%, rgba(246,193,208,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 56% 11%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 14% 92%, rgba(247,227,154,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 80% 95%, rgba(198,221,240,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 74% 90%, rgba(246,193,208,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 37% 97%, rgba(236,238,230,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 93% 54%, rgba(247,227,154,0.35) 0 0.6px, transparent 1.2px);
+  background-size: 127px 271px,139px 181px,151px 271px,163px 331px,173px 373px,181px 181px,193px 293px,199px 163px,211px 419px,223px 251px,233px 373px,241px 283px,251px 389px,263px 401px,271px 127px,283px 293px,293px 193px,307px 347px,317px 181px,331px 211px,347px 389px,359px 163px;
+  color: var(--k-chalk);
+}
+
+/* ─── Kaleem Component Classes ────────────────────────────────────── */
+/* Sketch card: uneven 2px ink outline + offset second pen line. */
+.sk {
+  border: var(--k-line) solid var(--k-ink);
+  border-radius: var(--k-radius-sketch);
+  box-shadow: var(--k-sketch-offset) var(--k-sketch-offset) 0 -2px var(--k-paper),
+              var(--k-sketch-offset) var(--k-sketch-offset) 0 0 var(--k-ink);
+}
+
+/* Sketch button (primary/secondary differ only by fill colour). */
+.skb {
+  display: inline-flex; align-items: center; gap: 12px;
+  height: 52px; padding: 0 22px;
+  border: var(--k-line) solid var(--k-ink);
+  border-radius: var(--k-radius-sketch-btn);
+  box-shadow: 3px 3px 0 -1px var(--k-paper), 3px 3px 0 1px var(--k-ink);
+  color: var(--k-ink); text-decoration: none; font: inherit; font-weight: 600; font-size: 17px;
+  cursor: pointer; transition: transform 120ms ease;
+}
+
+a.sk, a.skb, button.skb { transition: transform 120ms ease; }
+a.sk:hover, a.skb:hover, button.skb:hover { transform: translate(-1px, -1px); }
+
+/* Line icons (inline SVG, 32×32 viewBox). */
+.ico { fill: none; stroke: var(--k-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Pill tag / chip. */
+.k-tag { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border: 1.5px solid var(--k-ink); border-radius: var(--k-radius-pill); font-size: 13px; font-weight: 600; }
+
+/* "You receive" box inside service cards. */
+.k-receipt { padding: 20px 24px; background: var(--k-paper); border: 2px dashed var(--k-ink); }
+
+/* Colour fills — one pastel per service. */
+.bg-peach { background-color: var(--k-peach); }
+.bg-mint { background-color: var(--k-mint); }
+.bg-lilac { background-color: var(--k-lilac); }
+.bg-butter { background-color: var(--k-butter); }
+.bg-sky { background-color: var(--k-sky); }
+.bg-apricot { background-color: var(--k-apricot); }
+.bg-paper { background-color: var(--k-paper); }
+.bg-paper-2 { background-color: var(--k-paper-2); }
+
+/* Focus ring on the dark board uses sky (11:1) instead of the default blue. */
+.board a:focus-visible, .board button:focus-visible { outline-color: var(--k-sky); }
+
+:root {
   /* Type stacks — HANDOFF §2.2 / §2.3 */
   --font-display:   "Newsreader", "Times New Roman", serif;
   --font-body:      "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
