@@ -1,0 +1,158 @@
+---
+// Copyright (c) 2026 Ali Mussa Imran — https://kaleem.dev
+// All rights reserved. See LICENSE in the project root.
+import { ClientRouter } from "astro:transitions";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import ImageLayout from "../components/ImageLayout.astro";
+import CallFab from "../components/CallFab.astro";
+import { currentLocale } from "../lib/i18n";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  fontAwesome?: boolean;
+  heroPreload?: { srcset: string; sizes: string; type?: string };
+}
+
+const { title, description, image, noindex, fontAwesome, heroPreload } = Astro.props;
+const locale = currentLocale(Astro);
+const dir = locale === "ar" ? "rtl" : "ltr";
+
+// Show a "BETA" ribbon on any non-production build (matches the noindex
+// signal in BaseHead). Default to PRODUCTION so a missing env var never
+// shows a stray ribbon on the live site. Only known non-prod branches flip.
+const cfBranch = process.env.CF_PAGES_BRANCH || "";
+const NON_PROD_BRANCHES = new Set(["beta", "staging", "preview", "dev"]);
+const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
+---
+
+<html lang={locale} dir={dir}>
+  <head>
+    <BaseHead title={title} description={description} image={image} noindex={noindex} fontAwesome={fontAwesome} heroPreload={heroPreload} />
+    <ClientRouter />
+  </head>
+  <body>
+    {!isProduction && (
+      <div class="beta-ribbon" aria-label="Beta environment">
+        {locale === "ar" ? "بيتا — بيئة اختبار" : "BETA — testing environment"}
+      </div>
+    )}
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <CallFab />
+    <ImageLayout />
+
+    <!-- Progressive HD-image swap. Any <img data-hires="…"> gets its source
+         upgraded to the higher-quality version once the page finishes loading
+         and the browser is idle. Preloads the file with `new Image()` so the
+         visible swap is instant and never causes a layout shift (dimensions
+         match the srcset variant that's already on screen). -->
+    <script is:inline>
+      (function () {
+        function upgrade() {
+          var imgs = document.querySelectorAll("img[data-hires]");
+          if (!imgs.length) return;
+          imgs.forEach(function (img) {
+            var hi = img.getAttribute("data-hires");
+            if (!hi) return;
+            img.removeAttribute("data-hires");
+            var pre = new Image();
+            pre.onload = function () {
+              img.removeAttribute("srcset");
+              img.removeAttribute("sizes");
+              img.src = hi;
+            };
+            pre.src = hi;
+          });
+        }
+        function schedule() {
+          if ("requestIdleCallback" in window) {
+            requestIdleCallback(upgrade, { timeout: 4000 });
+          } else {
+            setTimeout(upgrade, 2000);
+          }
+        }
+        if (document.readyState === "complete") schedule();
+        else addEventListener("load", schedule, { once: true });
+      })();
+    </script>
+
+    <!-- Toast shown when a user clicks a "not yet redesigned" article link.
+         The message comes from the button's data-soon-message attribute. -->
+    <div id="soon-toast" class="soon-toast" role="status" aria-live="polite"></div>
+    <script is:inline>
+      (function () {
+        if (window.__soonToastBound) return;
+        window.__soonToastBound = true;
+        let hideT = 0;
+        function show(msg) {
+          const el = document.getElementById("soon-toast");
+          if (!el) return;
+          el.textContent = msg;
+          el.classList.add("show");
+          clearTimeout(hideT);
+          hideT = setTimeout(() => el.classList.remove("show"), 3200);
+        }
+        document.addEventListener("click", (e) => {
+          const el = e.target && e.target.closest && e.target.closest("[data-soon-message]");
+          if (!el) return;
+          e.preventDefault();
+          show(el.getAttribute("data-soon-message") || "Not yet available.");
+        });
+      })();
+    </script>
+
+    <style is:global>
+      .soon-toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%) translateY(20px);
+        z-index: 1200;
+        background: var(--footer-bg);
+        color: var(--footer-text);
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+        padding: 14px 20px;
+        max-width: min(90vw, 420px);
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 200ms ease, transform 200ms ease;
+      }
+      .soon-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+    {!isProduction && (
+      <style is:global>
+        .beta-ribbon {
+          position: fixed;
+          top: 12px;
+          inset-inline-end: 12px;
+          z-index: 1000;
+          padding: 0.4em 0.85em;
+          background: #dc2626;
+          color: #fff;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          border-radius: 999px;
+          box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+          pointer-events: none;
+          user-select: none;
+        }
+        @media (max-width: 480px) {
+          .beta-ribbon { top: 8px; inset-inline-end: 8px; font-size: 0.65rem; padding: 0.3em 0.65em; }
+        }
+      </style>
+    )}
+  </body>
+</html>

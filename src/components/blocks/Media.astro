@@ -1,0 +1,202 @@
+---
+/**
+ * Media block — one or more image / video / YouTube items shown side by side.
+ *
+ * Single item  → full-width figure.
+ * Multiple items → equal-width columns (responsive: stacks below 560 px).
+ *
+ * Each item carries its own caption; an optional block-level heading sits
+ * above the grid. Not numbered / not in TOC.
+ *
+ * Images pass through imageVariants() so any image under an optimized
+ * folder (see scripts/optimize-images.mjs) gets a responsive srcset
+ * automatically. Images outside optimized folders fall back to a plain src.
+ */
+import { imageVariants } from "../../lib/image";
+
+interface MediaItem {
+  kind: "image" | "youtube";
+  src: string;
+  alt?: string;
+  caption?: string;
+  aspect?: "16/9" | "4/3" | "3/2" | "1/1";
+  uploadDate?: string;
+}
+
+interface Props {
+  heading?: string;
+  items: MediaItem[];
+}
+
+const { heading, items } = Astro.props;
+if (!items || items.length === 0) return;
+
+function youtubeId(input: string): string {
+  const t = input.trim();
+  // Bare 11-char ID, possibly followed by ?si= or other tracking params
+  const bare = t.match(/^([a-zA-Z0-9_-]{11})(?:[?#].*)?$/);
+  if (bare) return bare[1];
+  const m =
+    t.match(/[?&]v=([a-zA-Z0-9_-]{11})/) ||
+    t.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) ||
+    t.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/) ||
+    t.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : t;
+}
+
+const ytItems = items.filter((it) => it.kind === "youtube");
+const multi   = items.length > 1;
+---
+
+{ytItems.map((it) => {
+  const ytId  = youtubeId(it.src);
+  const schema = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": it.caption || it.alt || "Video",
+    "description": it.caption || it.alt || "Video",
+    "thumbnailUrl": `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`,
+    "uploadDate": it.uploadDate || "2020-01-01T00:00:00+00:00",
+    "contentUrl": `https://www.youtube.com/watch?v=${ytId}`,
+    "embedUrl": `https://www.youtube-nocookie.com/embed/${ytId}`,
+  });
+  return <script type="application/ld+json" set:html={schema} />;
+})}
+
+<section class:list={["media-block", multi && "media-block--multi"]}>
+  {heading && <h2 class="media-heading">{heading}</h2>}
+  <div class="media-grid" style={multi ? `grid-template-columns: repeat(${items.length}, 1fr);` : undefined}>
+    {items.map((it) => {
+      const frameAspect = it.aspect || (it.kind === "image" ? undefined : "16/9");
+      const frameStyle  = frameAspect ? `aspect-ratio: ${frameAspect};` : undefined;
+      const ytId        = it.kind === "youtube" ? youtubeId(it.src) : null;
+      // sizes hint mirrors the layout: full-width on single-item, split
+      // when multi-item side-by-side, full-width on mobile.
+      const imgSizes = multi
+        ? "(min-width: 560px) 50vw, 100vw"
+        : "(min-width: 1024px) 900px, 100vw";
+      const img = it.kind === "image" ? imageVariants(it.src) : null;
+      return (
+        <figure class="media">
+          <div class="media-frame" style={frameStyle}>
+            {it.kind === "image" && img && (
+              <img
+                src={img.src}
+                srcset={img.srcset || undefined}
+                sizes={img.srcset ? imgSizes : undefined}
+                alt={it.alt || ""}
+                width={img.width}
+                height={img.height}
+                loading="lazy"
+                decoding="async"
+                data-hires={img.full}
+              />
+            )}
+            {it.kind === "youtube" && ytId && (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+                title={it.caption || it.alt || "YouTube video"}
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            )}
+          </div>
+          {it.caption && (
+            <figcaption class="media-caption">
+              <span class="media-caption-label">Figure</span>
+              <span class="media-caption-text">{it.caption}</span>
+            </figcaption>
+          )}
+        </figure>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .media-block {
+    margin: 0 0 clamp(44px, 5.5vw, 64px);
+  }
+  .media-block:last-child { margin-bottom: 0; }
+
+  .media-heading {
+    font-size: clamp(17px, 1.9vw, 20px);
+    font-weight: 600;
+    margin: 0 0 clamp(16px, 2vw, 24px);
+  }
+
+  /* Single item — block-level */
+  .media-grid { display: contents; }
+
+  /* Multi-item — side-by-side grid */
+  .media-block--multi .media-grid {
+    display: grid;
+    gap: 1px;
+  }
+  @media (max-width: 560px) {
+    .media-block--multi .media-grid { grid-template-columns: 1fr !important; }
+  }
+
+  .media {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    margin: 0;
+  }
+  /* Single-item block keeps bottom margin on the figure */
+  .media-block:not(.media-block--multi) .media {
+    margin-bottom: 0; /* outer .media-block has the margin */
+  }
+
+  .media-frame {
+    display: block;
+    width: 100%;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .media-frame img,
+  .media-frame video,
+  .media-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+  /* Images without an aspect ratio: keep intrinsic height, don't crop. */
+  .media-frame:not([style*="aspect-ratio"]) img {
+    height: auto;
+    object-fit: initial;
+  }
+
+  .media-caption {
+    display: flex;
+    gap: 14px;
+    padding: 14px clamp(16px, 2vw, 20px);
+    border-top: 1px solid var(--line);
+    background: var(--white);
+  }
+  .media-caption-label {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 2px;
+  }
+  :global(html[dir="rtl"]) .media-caption-label {
+    font-family: var(--font-body);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    font-size: 12px;
+  }
+  .media-caption-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--body);
+    margin: 0;
+  }
+  :global(html[dir="rtl"]) .media-caption-text { line-height: 1.85; }
+</style>

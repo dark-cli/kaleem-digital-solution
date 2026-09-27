@@ -1,0 +1,185 @@
+---
+/**
+ * TwoColumnSection — Generic 2-column layout with flexible content.
+ *
+ * Props:
+ *   - leftHeading: optional h2 above left column
+ *   - leftBody: markdown text for left column
+ *   - rightHeading: optional h2 above right column
+ *   - rightBody: markdown text for right column (can also be raw HTML slot)
+ *   - bgColor: CSS color or design token (default: var(--white))
+ *   - reversed: boolean — swap columns (for design or RTL)
+ *   - gap: string — column gap (default: 64px)
+ *   - ratio: string — grid ratio like "1fr 2fr" (default: "1fr 1fr")
+ */
+import { localizedHref } from "../../lib/i18n";
+import type { Locale } from "../../lib/i18n";
+
+interface Props {
+  leftHeading?: string;
+  leftBody?: string;
+  rightHeading?: string;
+  rightBody?: string;
+  bgColor?: string;
+  reversed?: boolean;
+  gap?: string;
+  ratio?: string;
+  locale?: Locale;
+  id?: string;
+}
+
+const {
+  leftHeading,
+  leftBody,
+  rightHeading,
+  rightBody,
+  bgColor = "var(--white)",
+  reversed = false,
+  gap = "64px",
+  ratio = "1fr 1fr",
+  locale = "en",
+  id,
+} = Astro.props;
+
+function rewriteLinks(md: string): string {
+  return md.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+    const h = href.startsWith("/") ? localizedHref(href, locale) : href;
+    return `<a href="${h}">${label}</a>`;
+  });
+}
+
+// For RTL, conditionally reverse
+const gridTemplate = reversed ? ratio.split(" ").reverse().join(" ") : ratio;
+---
+
+<section class="two-column" style={`--twocol-bg: ${bgColor}; --twocol-gap: ${gap}; --twocol-ratio: ${gridTemplate};`} id={id}>
+  <div class="two-column-container">
+    <div class="two-column-col left">
+      {leftHeading && <h2 class="two-column-heading">{leftHeading}</h2>}
+      {leftBody && <div class="two-column-body" set:html={rewriteLinks(leftBody)} />}
+      <slot name="left" />
+    </div>
+    <div class="two-column-col right">
+      {rightHeading && <h2 class="two-column-heading">{rightHeading}</h2>}
+      {rightBody && <div class="two-column-body" set:html={rewriteLinks(rightBody)} />}
+      <slot name="right" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .two-column {
+    background: var(--twocol-bg);
+    padding: clamp(40px, 5vw, 60px) clamp(20px, 4vw, 40px);
+    margin: clamp(28px, 3.5vw, 44px) 0;
+    scroll-margin-top: 96px;
+  }
+  .two-column:last-child {
+    margin-bottom: 0;
+  }
+
+  .two-column-container {
+    display: grid;
+    grid-template-columns: var(--twocol-ratio);
+    gap: var(--twocol-gap);
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  .two-column-col {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .two-column-heading {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(22px, 2.8vw, 30px);
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.2;
+  }
+  :global(html[dir="rtl"]) .two-column-heading {
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .two-column-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 17px;
+    line-height: 1.72;
+    color: var(--body);
+  }
+  :global(html[dir="rtl"]) .two-column-body {
+    line-height: 1.95;
+  }
+
+  .two-column-body :global(p) {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .two-column-body :global(a) {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .two-column-body :global(a:hover) {
+    text-decoration: underline;
+  }
+
+  .two-column-body :global(ul),
+  .two-column-body :global(ol) {
+    margin: 0;
+    padding-left: 1.5em;
+  }
+  :global(html[dir="rtl"]) .two-column-body :global(ul),
+  :global(html[dir="rtl"]) .two-column-body :global(ol) {
+    padding-right: 1.5em;
+    padding-left: 0;
+  }
+
+  .two-column-body :global(li) {
+    margin-bottom: 8px;
+  }
+
+  /* Slot content inherits text styles */
+  :global(.two-column-col [slot="left"]),
+  :global(.two-column-col [slot="right"]) {
+    display: contents;
+  }
+
+  @media (max-width: 800px) {
+    .two-column-container {
+      grid-template-columns: 1fr;
+      gap: clamp(32px, 4vw, 48px);
+    }
+
+    .two-column-heading {
+      font-size: clamp(20px, 2.5vw, 26px);
+    }
+
+    .two-column-body {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .two-column {
+      padding: clamp(24px, 4vw, 40px) clamp(16px, 3vw, 20px);
+      margin: clamp(20px, 3vw, 28px) 0;
+    }
+
+    .two-column-heading {
+      font-size: clamp(18px, 2.2vw, 22px);
+    }
+
+    .two-column-body {
+      font-size: 15px;
+      gap: 16px;
+    }
+  }
+</style>

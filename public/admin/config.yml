@@ -1,0 +1,512 @@
+# Sveltia CMS configuration
+# Mirrors the Zod schema in src/content.config.ts.
+#
+# Bilingual structure: <collection>/<slug>/en.md + <collection>/<slug>/ar.md.
+#
+# Sveltia has no native i18n structure that models "locale as the bare filename
+# inside a slug folder" (its `multiple_files` structure wants `slug.en.md` with a
+# dot separator, not `slug/en.md`). So each `.md` file is registered as its own
+# monolingual entry. To still get a proper folder tree in the sidebar
+# (topic/ → en, ar leaves), we use `nested` with `subfolders: false`.
+#
+# `subfolders: false` is the key setting: it tells Sveltia the entries are
+# regular files inside folders (NOT Hugo-style folder-as-entry index files).
+# Without it, Sveltia defaults to `subfolders: true`, picks whichever locale's
+# file it saw first as the folder's "index", labels the folder in that locale,
+# and prunes leaf folders entirely — which is why the tree previously looked
+# flat with mixed EN/AR rows.
+
+# Placeholder GitHub backend for production. Sveltia CMS uses the browser's
+# File System Access API for local editing (via "Work with Local Repository"),
+# so no decap-server proxy or local_backend flag is needed. The user picks
+# the repo folder once from the CMS login screen.
+# NOTE: local editing requires a Chromium-based browser (Chrome, Edge, Brave).
+backend:
+  name: github
+  repo: placeholder/alimranmed-web
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+# CRITICAL: prevents empty optional fields from being written as `null`,
+# which would fail Zod's `.optional()` for arrays (e.g. `titles: null`).
+output:
+  omit_empty_optional_fields: true
+
+# ── Section block templates (variable-type list) ─────────────────────────
+# Referenced by *sections_field below. YAML anchors DO work for whole node
+# reuse (objects), so we can alias the entire sections field definition —
+# but they can't splice into sequences, so per-collection field lists are
+# written out explicitly.
+
+# Unified sections field — used by ALL collections (treatments, services,
+# blog, doctors). Mirrors the section discriminated union in content.config.ts.
+_sections_field: &sections_field
+  label: Sections
+  name: sections
+  widget: list
+  required: false
+  typeKey: type
+  types:
+    - name: prose
+      label: Prose
+      fields:
+        - { label: Heading (appears in TOC), name: heading, widget: string, required: false }
+        - { label: Body (markdown — inline links supported), name: body, widget: text }
+    - name: highlights
+      label: Highlights (At a glance)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false, hint: "Defaults to 'At a glance' / 'لمحة سريعة'." }
+        - label: Items
+          name: items
+          widget: list
+          min: 2
+          max: 4
+          fields:
+            - { label: Label, name: label, widget: string }
+            - { label: Value, name: value, widget: text }
+    - name: stats
+      label: Stats
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false }
+        - { label: Intro, name: intro, widget: text, required: false }
+        - label: Items
+          name: items
+          widget: list
+          min: 2
+          max: 6
+          fields:
+            - { label: Value (big number / metric), name: value, widget: string }
+            - { label: Label (short description), name: label, widget: string }
+    - name: facts
+      label: Facts (numbered list)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false, hint: "Defaults to 'Key facts' / 'حقائق أساسية'." }
+        - label: Items
+          name: items
+          widget: list
+          field: { label: Fact, name: fact, widget: text }
+    - name: list
+      label: List
+      fields:
+        - label: Layout
+          name: variant
+          widget: select
+          default: rows
+          hint: "Rows: single-column stacked. Wrap: auto-fit responsive columns (good for memberships/tags). Columns: fixed 2-column grid."
+          options:
+            - { label: "Rows — single column, stacked", value: rows }
+            - { label: "Wrap — responsive (as many cols as fit)", value: wrap }
+            - { label: "Columns — fixed 2 columns", value: columns }
+        - { label: Heading, name: heading, widget: string }
+        - label: Items
+          name: items
+          widget: list
+          min: 1
+          fields:
+            - { label: Label, name: label, widget: string, hint: "Short mono tag — date, year, code." }
+            - { label: Body, name: body, widget: text }
+            - { label: Subtitle, name: subtitle, widget: text, required: false, hint: "Optional secondary line. Supported by Rows and Columns; Wrap ignores it." }
+    - name: quote
+      label: Pull Quote
+      fields:
+        - { label: Quote text, name: text, widget: text }
+        - { label: Attribution, name: attribution, widget: string, required: false }
+    - name: panels
+      label: Panels (comparison or options grid)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false }
+        - { label: Intro, name: intro, widget: text, required: false }
+        - { label: Note (footer line), name: note, widget: string, required: false }
+        - label: Panels
+          name: panels
+          widget: list
+          min: 2
+          max: 4
+          fields:
+            - { label: Eyebrow, name: eyebrow, widget: string, required: false, hint: "Small label above title — e.g. 'Before' / 'After'." }
+            - { label: Title, name: title, widget: string }
+            - { label: Subtitle, name: subtitle, widget: string, required: false }
+            - label: Items
+              name: items
+              widget: list
+              field: { label: Item (markdown links ok), name: item, widget: string }
+    - name: media
+      label: Media (image / video / YouTube)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false, hint: "Optional heading above the media. Not added to TOC." }
+        - label: Items
+          name: items
+          widget: list
+          min: 1
+          typeKey: kind
+          hint: "Add one item for a full-width figure; add more for a side-by-side grid."
+          types:
+            - name: image
+              label: Image
+              fields:
+                - { label: Image, name: src, widget: image, required: true }
+                - { label: Alt text, name: alt, widget: string, required: false }
+                - { label: Caption, name: caption, widget: string, required: false }
+                - { label: Aspect ratio, name: aspect, widget: select, required: false, options: ["16/9", "4/3", "3/2", "1/1"] }
+            - name: youtube
+              label: YouTube
+              fields:
+                - { label: YouTube URL or ID, name: src, widget: string, required: true, hint: "Full URL or bare ID (e.g. dQw4w9WgXcQ)." }
+                - { label: Caption, name: caption, widget: string, required: false }
+                - { label: Aspect ratio, name: aspect, widget: select, required: false, options: ["16/9", "4/3", "3/2", "1/1"] }
+                - { label: Upload date (JSON-LD), name: uploadDate, widget: string, required: false, hint: "ISO date, e.g. 2024-03-15. Helps Google index the video." }
+    - name: pathway
+      label: Pathway (link chip groups)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false }
+        - { label: Intro, name: intro, widget: text, required: false }
+        - label: Groups
+          name: groups
+          widget: list
+          fields:
+            - { label: Eyebrow, name: eyebrow, widget: string, required: false }
+            - { label: Title, name: title, widget: string }
+            - label: Items
+              name: items
+              widget: list
+              fields:
+                - { label: Name, name: name, widget: string }
+                - { label: Link (href), name: href, widget: string }
+    - name: row
+      label: Row (image row)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false }
+        - label: Columns
+          name: columns
+          widget: select
+          default: auto
+          options:
+            - { label: "Auto (responsive fit)", value: auto }
+            - { label: "2 columns", value: "2" }
+            - { label: "3 columns", value: "3" }
+            - { label: "4 columns", value: "4" }
+        - label: Items
+          name: items
+          widget: list
+          fields:
+            - { label: Image path, name: src, widget: string }
+            - { label: Alt text, name: alt, widget: string, required: false }
+            - { label: Caption, name: caption, widget: string, required: false }
+            - { label: Link (href), name: href, widget: string, required: false }
+            - label: Aspect ratio
+              name: aspect
+              widget: select
+              required: false
+              options: ["16/9", "4/3", "3/2", "1/1"]
+    - name: cards
+      label: Cards (related links)
+      fields:
+        - { label: Heading, name: heading, widget: string, required: false, hint: "Defaults to 'Related reading' / 'قراءات ذات صلة'." }
+        - label: Items
+          name: items
+          widget: list
+          min: 1
+          hint: "Locale-agnostic paths, e.g. /treatments/back-pain/ or /blog/my-post/. Title, description and date are pulled automatically."
+          field: { label: Path, name: item, widget: string }
+
+# ── Collections ──────────────────────────────────────────────────────────
+# Base fields (from pageBase in src/content.config.ts) are inlined into each
+# collection's field list; YAML doesn't support splicing arrays via anchors.
+
+collections:
+  # ── Doctors ────────────────────────────────────────────────────────────
+  - name: doctors
+    label: Doctors
+    label_singular: Doctor
+    folder: src/content/doctors
+    nested:
+      depth: 4
+      subfolders: false
+      summary: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    create: true
+    media_folder: /public/images
+    public_folder: /images
+    fields:
+      # ── Identity ─────────────────────────────────────────────────────
+      - { label: Full name, name: fullName, widget: string, hint: "Displayed as the H1 fallback and on the listing card." }
+      - { label: Page title, name: title, widget: string, hint: "Used in the browser tab and site search." }
+      - { label: Description, name: description, widget: text, required: false, hint: "One-line summary — meta description tag + listing card blurb." }
+      - { label: Specialty, name: specialty, widget: string, required: false, hint: "Small caps chip on the listing card." }
+      - label: Credentials / titles
+        name: titles
+        widget: list
+        required: false
+        default: []
+        hint: "Post-nominal letters. Renders as chips in the detail hero AND as the creds line on the listing card."
+        field: { label: Credential, name: credential, widget: string }
+      - label: Languages
+        name: languages
+        widget: list
+        required: false
+        default: []
+        hint: "Only shown on the listing card."
+        field: { label: Language, name: language, widget: string }
+
+      # ── Portrait ─────────────────────────────────────────────────────
+      - label: Photo
+        name: photo
+        widget: image
+        required: false
+        hint: "Shown on both listing card and detail hero."
+        media_folder: "/public/images/doctors"
+        public_folder: "/images/doctors"
+      - { label: Photo alt text, name: photoAlt, widget: string, required: false, hint: "Screen-reader description. Defaults to Full name." }
+
+      # ── Hero copy (always present — every doctor has one) ────────────
+      - { label: Hero eyebrow, name: heroEyebrow, widget: string, hint: "Small caps label above the name (e.g. 'Lead consultant · Clinical profile')." }
+      - { label: Hero headline, name: heroHeadline, widget: string, required: false, hint: "Defaults to Full name if left empty." }
+      - { label: Hero lede, name: heroLede, widget: text, hint: "One-paragraph intro shown under the name." }
+
+      # ── CV sections (page body blocks — including memberships) ───────
+      - *sections_field
+
+      # ── Metadata (bookkeeping — not shown on the detail page) ────────
+      - { label: Listing order, name: order, widget: number, required: false, default: 999, value_type: int, hint: "Sort key for the /doctors/ listing." }
+      - { label: Last updated, name: updated, widget: datetime, required: false, picker_utc: true, hint: "Not displayed — used by SEO schema." }
+      - { label: Legacy URL, name: legacyUrl, widget: string, required: false, hint: "Original alimranmed.com URL — migration bookkeeping only." }
+      - label: Source
+        name: source
+        widget: select
+        default: legacy-wp
+        hint: "Provenance tag — not displayed on the page."
+        options:
+          - { label: Legacy WordPress, value: legacy-wp }
+          - { label: AI draft, value: ai-draft }
+          - { label: Human reviewed, value: human-reviewed }
+          - { label: Original, value: original }
+          - { label: Translated by LLM, value: translated-by-llm }
+      - { label: Reviewed by, name: reviewedBy, widget: string, required: false, hint: "Clinician name — SEO schema only." }
+      - { label: Reviewed at, name: reviewedAt, widget: datetime, required: false, picker_utc: true }
+
+  # ── Treatments ─────────────────────────────────────────────────────────
+  - name: treatments
+    label: Treatments
+    label_singular: Treatment
+    folder: src/content/treatments
+    nested:
+      depth: 4
+      subfolders: false
+      summary: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    create: true
+    media_folder: /public/images
+    public_folder: /images
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Category, name: category, widget: string, required: false }
+      - { label: Order, name: order, widget: number, required: false, default: 999, value_type: int }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image alt, name: imageAlt, widget: string, required: false }
+      - { label: Last updated, name: updated, widget: datetime, required: false, picker_utc: true }
+      - { label: Legacy URL, name: legacyUrl, widget: string, required: false }
+      - label: Source
+        name: source
+        widget: select
+        default: legacy-wp
+        options:
+          - { label: Legacy WordPress, value: legacy-wp }
+          - { label: AI draft, value: ai-draft }
+          - { label: Human reviewed, value: human-reviewed }
+          - { label: Original, value: original }
+          - { label: Translated by LLM, value: translated-by-llm }
+      - { label: Reviewed by, name: reviewedBy, widget: string, required: false }
+      - { label: Reviewed at, name: reviewedAt, widget: datetime, required: false, picker_utc: true }
+      - { label: Body region, name: bodyRegion, widget: string, required: false }
+      - { label: Published at, name: publishedAt, widget: datetime, required: false, picker_utc: true }
+      - { label: Redesigned (block layout), name: redesigned, widget: boolean, required: false, default: false }
+      - { label: Pathway override, name: pathwayOverride, widget: string, required: false }
+      - label: FAQ
+        name: faqItems
+        widget: list
+        required: false
+        fields:
+          - { label: Question, name: question, widget: string }
+          - { label: Answer, name: answer, widget: text }
+      - *sections_field
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ── Services ───────────────────────────────────────────────────────────
+  - name: services
+    label: Services
+    label_singular: Service
+    folder: src/content/services
+    nested:
+      depth: 5
+      subfolders: false
+      summary: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    media_folder: /public/images
+    public_folder: /images
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Category, name: category, widget: string, required: false }
+      - { label: Order, name: order, widget: number, required: false, default: 999, value_type: int }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image alt, name: imageAlt, widget: string, required: false }
+      - { label: Last updated, name: updated, widget: datetime, required: false, picker_utc: true }
+      - { label: Legacy URL, name: legacyUrl, widget: string, required: false }
+      - label: Source
+        name: source
+        widget: select
+        default: legacy-wp
+        options:
+          - { label: Legacy WordPress, value: legacy-wp }
+          - { label: AI draft, value: ai-draft }
+          - { label: Human reviewed, value: human-reviewed }
+          - { label: Original, value: original }
+          - { label: Translated by LLM, value: translated-by-llm }
+      - { label: Reviewed by, name: reviewedBy, widget: string, required: false }
+      - { label: Reviewed at, name: reviewedAt, widget: datetime, required: false, picker_utc: true }
+      - { label: Redesigned (block layout), name: redesigned, widget: boolean, required: false, default: false }
+      - { label: Category hub page, name: isHub, widget: boolean, required: false, default: false }
+      - *sections_field
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ── Blog ───────────────────────────────────────────────────────────────
+  - name: blog
+    label: Blog
+    label_singular: Post
+    folder: src/content/blog
+    nested:
+      depth: 4
+      subfolders: false
+      summary: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    media_folder: /public/images
+    public_folder: /images
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Category, name: category, widget: string, required: false }
+      - { label: Order, name: order, widget: number, required: false, default: 999, value_type: int }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image alt, name: imageAlt, widget: string, required: false }
+      - { label: Last updated, name: updated, widget: datetime, required: false, picker_utc: true }
+      - { label: Legacy URL, name: legacyUrl, widget: string, required: false }
+      - label: Source
+        name: source
+        widget: select
+        default: legacy-wp
+        options:
+          - { label: Legacy WordPress, value: legacy-wp }
+          - { label: AI draft, value: ai-draft }
+          - { label: Human reviewed, value: human-reviewed }
+          - { label: Original, value: original }
+          - { label: Translated by LLM, value: translated-by-llm }
+      - { label: Reviewed by, name: reviewedBy, widget: string, required: false }
+      - { label: Reviewed at, name: reviewedAt, widget: datetime, required: false, picker_utc: true }
+      - { label: Author, name: author, widget: string, required: false }
+      - { label: Published at, name: publishedAt, widget: datetime, required: false, picker_utc: true }
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        default: []
+        field: { label: Tag, name: tag, widget: string }
+      - { label: Redesigned (block layout), name: redesigned, widget: boolean, required: false, default: false }
+      - { label: Clinically relevant, name: clinicallyRelevant, widget: boolean, required: false, default: false }
+      - label: Related treatment slugs
+        name: relatedTreatments
+        widget: list
+        required: false
+        field: { label: Slug, name: slug, widget: string }
+      - *sections_field
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ── Cases ──────────────────────────────────────────────────────────────
+  - name: cases
+    label: Cases
+    label_singular: Case
+    folder: src/content/cases
+    nested:
+      depth: 4
+      subfolders: false
+      summary: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    media_folder: /public/images
+    public_folder: /images
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Category, name: category, widget: string, required: false }
+      - { label: Order, name: order, widget: number, required: false, default: 999, value_type: int }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image alt, name: imageAlt, widget: string, required: false }
+      - { label: Last updated, name: updated, widget: datetime, required: false, picker_utc: true }
+      - { label: Legacy URL, name: legacyUrl, widget: string, required: false }
+      - label: Source
+        name: source
+        widget: select
+        default: legacy-wp
+        options:
+          - { label: Legacy WordPress, value: legacy-wp }
+          - { label: AI draft, value: ai-draft }
+          - { label: Human reviewed, value: human-reviewed }
+          - { label: Original, value: original }
+          - { label: Translated by LLM, value: translated-by-llm }
+      - { label: Reviewed by, name: reviewedBy, widget: string, required: false }
+      - { label: Reviewed at, name: reviewedAt, widget: datetime, required: false, picker_utc: true }
+      - { label: Condition, name: condition, widget: string, required: false }
+      - { label: Outcome, name: outcome, widget: text, required: false }
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ── Pages ──────────────────────────────────────────────────────────────
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: src/content/pages
+    nested:
+      depth: 4
+      subfolders: false
+      summary: "{{title}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    media_folder: /public/images
+    public_folder: /images
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Category, name: category, widget: string, required: false }
+      - { label: Order, name: order, widget: number, required: false, default: 999, value_type: int }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image alt, name: imageAlt, widget: string, required: false }
+      - { label: Last updated, name: updated, widget: datetime, required: false, picker_utc: true }
+      - { label: Legacy URL, name: legacyUrl, widget: string, required: false }
+      - label: Source
+        name: source
+        widget: select
+        default: legacy-wp
+        options:
+          - { label: Legacy WordPress, value: legacy-wp }
+          - { label: AI draft, value: ai-draft }
+          - { label: Human reviewed, value: human-reviewed }
+          - { label: Original, value: original }
+          - { label: Translated by LLM, value: translated-by-llm }
+      - { label: Reviewed by, name: reviewedBy, widget: string, required: false }
+      - { label: Reviewed at, name: reviewedAt, widget: datetime, required: false, picker_utc: true }
+      - { label: Body, name: body, widget: markdown, required: false }

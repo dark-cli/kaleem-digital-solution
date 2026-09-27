@@ -1,0 +1,290 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { CONTACT, SITE_NAME, SITE_DESCRIPTION, SITE_DESCRIPTION_AR } from "../../consts";
+import { localizedHref, currentLocale } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
+}
+
+const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
+const callHref = `tel:${CONTACT.phones[0].replace(/\s/g, "")}`;
+
+const T = isAr ? {
+  title:              `${SITE_NAME} — الصفحة الرئيسية`,
+  description:        SITE_DESCRIPTION_AR,
+  heroEyebrow:        `${SITE_NAME}`,
+  heroH1:             "مرحبًا بك في عيادتنا",
+  heroP1:             "استبدل هذا النص بوصف عيادتك والخدمات التي تقدمها.",
+  heroP2:             "يمكنك تحديث محتوى الصفحة الرئيسية من خلال تعديل ملف الصفحة.",
+  conditionsLabel:    "عرض العلاجات",
+  callLabel:          "اتصل بنا",
+  s01Num:             "٠١",
+  s01Head:            "خدماتنا",
+  s01Lede:            "أضف وصفًا لخدماتك الرئيسية هنا.",
+  s02Num:             "٠٢",
+  s02Head:            "حول العيادة",
+  aboutBody:          "أخبرنا عن عيادتك والقيم التي تقوم عليها.",
+  s03Num:             "٠٣",
+  s03Head:            "التواصل معنا",
+  contactBody:        "يمكنك التواصل معنا من خلال الهاتف أو البريد الإلكتروني.",
+} : {
+  title:              `${SITE_NAME} — Home`,
+  description:        SITE_DESCRIPTION,
+  heroEyebrow:        `${SITE_NAME}`,
+  heroH1:             "Welcome to your clinic",
+  heroP1:             "Replace this text with a description of your clinic and services.",
+  heroP2:             "Update the homepage content by editing this file.",
+  conditionsLabel:    "View treatments",
+  callLabel:          "Contact us",
+  s01Num:             "01",
+  s01Head:            "Our services",
+  s01Lede:            "Add a description of your main services here.",
+  s02Num:             "02",
+  s02Head:            "About us",
+  aboutBody:          "Tell us about your clinic and the values it stands for.",
+  s03Num:             "03",
+  s03Head:            "Get in touch",
+  contactBody:        "You can reach us by phone or email.",
+};
+---
+
+<BaseLayout
+  title={T.title}
+  description={T.description}
+>
+  <!-- ─── HERO ───────────────────────────────────────────────── -->
+  <section class="hero-band">
+    <div class="container hero">
+      <div class="hero-text">
+        <div class="hero-text-inner">
+          <p class="hero-eyebrow">{T.heroEyebrow}</p>
+          <h1 class="hero-h1">{T.heroH1}</h1>
+          <p class="hero-p">{T.heroP1}</p>
+          <p class="hero-p">{T.heroP2}</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href={L("/treatments/")}>{T.conditionsLabel}</a>
+            <a class="btn btn-secondary" href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`}>{T.callLabel}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 01 SERVICES ─────────────────────────────────── -->
+  <section class="pg-section">
+    <header class="pg-head">
+      <span class="pg-num">{T.s01Num}</span>
+      <h2 class="pg-h2">{T.s01Head}</h2>
+    </header>
+    <p class="pg-lede">{T.s01Lede}</p>
+    <p style="text-align: center; color: var(--muted); margin-top: 2rem;">
+      Create your treatment and service content to populate this section.
+    </p>
+  </section>
+
+  <!-- ─── 02 ABOUT ─────────────────────────────── -->
+  <section class="pg-section">
+    <header class="pg-head">
+      <span class="pg-num">{T.s02Num}</span>
+      <h2 class="pg-h2">{T.s02Head}</h2>
+    </header>
+    <p class="pg-lede">{T.aboutBody}</p>
+  </section>
+
+  <!-- ─── 03 CONTACT ─────────────────────────────── -->
+  <section class="pg-section">
+    <header class="pg-head">
+      <span class="pg-num">{T.s03Num}</span>
+      <h2 class="pg-h2">{T.s03Head}</h2>
+    </header>
+    <div class="inside-split">
+      <div>
+        <p>{T.contactBody}</p>
+        <dl class="facts">
+          <div class="fact-row">
+            <dt>Phone</dt>
+            <dd>{CONTACT.phones[0]}</dd>
+          </div>
+          <div class="fact-row">
+            <dt>Email</dt>
+            <dd>{CONTACT.email}</dd>
+          </div>
+          <div class="fact-row">
+            <dt>Location</dt>
+            <dd>{CONTACT.addresses.en}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-band {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--accent) 100%);
+    padding: 4rem 0;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .hero-text-inner {
+    max-width: 600px;
+  }
+
+  .hero-eyebrow {
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .hero-h1 {
+    font-size: 3rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+  }
+
+  .hero-p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: var(--body);
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--ink);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .btn-secondary:hover {
+    background: var(--ink);
+    color: white;
+  }
+
+  .pg-section {
+    padding: 4rem 0;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .pg-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .pg-num {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.3;
+    min-width: 5rem;
+  }
+
+  .pg-h2 {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  .pg-lede {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--body);
+    max-width: 70ch;
+  }
+
+  .inside-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  .facts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .fact-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1rem;
+  }
+
+  .fact-row dt {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .fact-row dd {
+    margin: 0;
+    color: var(--body);
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-h1 {
+      font-size: 2rem;
+    }
+
+    .inside-split {
+      grid-template-columns: 1fr;
+    }
+
+    .fact-row {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

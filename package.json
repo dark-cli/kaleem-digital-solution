@@ -1,0 +1,38 @@
+{
+  "name": "alimranmed-web",
+  "description": "Alimran Medical Center — Neurology and Musculoskeletal Disorders",
+  "author": "Ali Mussa Imran <ali.musa.omran@gmail.com> (https://kaleem.dev)",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@astrojs/cloudflare": "12.6.0",
+    "@astrojs/mdx": "4.3.0",
+    "@astrojs/rss": "4.0.11",
+    "@astrojs/sitemap": "3.4.1",
+    "astro": "5.10.1",
+    "typescript": "5.8.3"
+  },
+  "devDependencies": {
+    "hast-util-from-html": "^2.0.3",
+    "sharp": "^0.35.4",
+    "turndown": "^7.2.4",
+    "unist-util-visit": "^5.1.0",
+    "wrangler": "4.21.x"
+  },
+  "scripts": {
+    "astro": "astro",
+    "prebuild": "node scripts/optimize-images.mjs",
+    "build": "astro build",
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "cf-typegen": "wrangler types",
+    "check": "npm run prebuild && astro build && tsc && wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "dev": "astro dev --host",
+    "preview": "astro build && wrangler dev",
+    "redirects": "node --experimental-strip-types --no-warnings scripts/generate-redirects.mjs",
+    "check:links": "node scripts/check-links.mjs http://localhost:4321",
+    "fonts": "node scripts/download-fonts.mjs",
+    "cms": "astro dev --host"
+  },
+  "type": "module"
+}

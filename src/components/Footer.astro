@@ -1,0 +1,183 @@
+---
+/**
+ * Footer — Alimran Clinic (redesign Sep 2026).
+ * 1:1 port of the footer in `Alimran Neurosurgery.dc.html` (lines 556–593).
+ * Ink background, mono uppercase column labels, four-column grid.
+ */
+import { CONTACT } from "../consts";
+import { currentLocale, localizedHref, alternateHref } from "../lib/i18n";
+
+const locale = currentLocale(Astro);
+const currentPath = Astro.url.pathname;
+const year = new Date().getFullYear();
+
+const L = (href: string) => localizedHref(href, locale);
+const otherLocale = locale === "en" ? "ar" : "en";
+const altHref = alternateHref(currentPath, otherLocale);
+const altLabel = otherLocale === "ar" ? "عربي" : "English";
+
+const isAr = locale === "ar";
+
+const brand = isAr ? "مركز العمران الطبي" : "Alimran Clinic";
+const brandSub = isAr ? "جراحة الأعصاب · العمود الفقري · طب الألم"
+                     : "Neurosurgery · Spine · Pain medicine";
+const addr1 = isAr
+  ? "مركز العمران الطبي — البصرة، بريهة، مجمّع النقبة الطبي، العراق."
+  : "Alimran Medical Centre — Basra, Breaha, Alnkba Medical Collection, Iraq.";
+const addr2 = isAr
+  ? "الاستشاري المسؤول: الدكتور حسين عمران موسى، بكالوريوس طب وجراحة، بورد جراحة الأعصاب."
+  : "Lead consultant: Hussein Imran Mousa, MBChB, FIBMS (Neurosurgery).";
+
+const lContact  = isAr ? "الاتصال"    : "Contact";
+const lSections = isAr ? "الأقسام"    : "Sections";
+const lElsewhere = isAr ? "روابط أخرى" : "Elsewhere";
+
+const nav = [
+  { label: isAr ? "الرئيسية"          : "Home",                    href: "/" },
+  { label: isAr ? "السيرة العلمية"     : "Consultant CV",           href: "/doctors/hussein-imran-mousa/" },
+  { label: isAr ? "الحالات والإجراءات" : "Conditions & procedures", href: "/conditions/" },
+];
+
+const elsewhere = [
+  { label: isAr ? "الاتجاهات"  : "Directions", href: CONTACT.mapsUrl,        external: true },
+  { label: "YouTube",                          href: CONTACT.social.youtube,  external: true },
+  { label: "Facebook",                         href: CONTACT.social.facebook, external: true },
+  { label: "Instagram",                        href: CONTACT.social.instagram, external: true },
+];
+
+const copyright = isAr
+  ? `© ${year} مركز العمران الطبي. جميع الحقوق محفوظة.`
+  : `© ${year} Alimran Medical Centre. All rights reserved.`;
+const disclaimer = isAr
+  ? "المعلومات المنشورة هنا للاسترشاد ولا تُغني عن الاستشارة الطبية الفردية."
+  : "Information on this site is for guidance and does not replace individual medical advice.";
+---
+
+<footer class="footer">
+  <div class="footer-grid">
+    <!-- Brand column -->
+    <div>
+      <p class="f-brand">{brand}</p>
+      <p class="f-brand-sub">{brandSub}</p>
+      <p class="f-brand-line">{addr1}</p>
+      <p class="f-brand-line">{addr2}</p>
+    </div>
+
+    <!-- Contact -->
+    <div>
+      <p class="f-label">{lContact}</p>
+      {CONTACT.phones.map((p) => (
+        <p class="f-item"><a href={`tel:${p.replace(/\s/g, "")}`}><span dir="ltr">{p}</span></a></p>
+      ))}
+      <p class="f-item"><a href={`mailto:${CONTACT.email}`}><span dir="ltr">{CONTACT.email}</span></a></p>
+    </div>
+
+    <!-- Sections -->
+    <div>
+      <p class="f-label">{lSections}</p>
+      <div class="f-links">
+        {nav.map((l) => <a href={L(l.href)}>{l.label}</a>)}
+        <a href={altHref}>{altLabel}</a>
+      </div>
+    </div>
+
+    <!-- Elsewhere -->
+    <div>
+      <p class="f-label">{lElsewhere}</p>
+      <div class="f-links">
+        {elsewhere.map((l) => (
+          <a href={l.href} target="_blank" rel="noopener">{l.label}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>{copyright}</p>
+    <p>{disclaimer}</p>
+    <p class="f-credit">Designed &amp; developed by <a href="https://kaleem.dev" target="_blank" rel="noopener">Kaleem Digital Solutions</a></p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    margin-top: 0;
+  }
+  .footer-grid {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: clamp(40px, 5vw, 64px) 24px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr));
+    gap: 40px;
+  }
+
+  .f-brand {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: #ffffff;
+    margin: 0 0 6px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+.f-brand-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--footer-label);
+    margin: 0 0 20px;
+  }
+.f-brand-line {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--footer-muted);
+    margin: 0 0 10px;
+    max-width: 34ch;
+  }
+.f-brand-line:last-of-type { margin-bottom: 0; }
+
+  .f-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--footer-label);
+    margin: 0 0 16px;
+  }
+  .f-item { margin: 0 0 8px; font-size: 14.5px; overflow-wrap: anywhere; }
+  .f-item:last-child { margin-bottom: 0; }
+  .f-item a {
+    color: var(--footer-text);
+    text-decoration: underline;
+    text-decoration-color: var(--footer-rule);
+    text-underline-offset: 3px;
+  }
+  .f-item a:hover { color: #4bb3d4; text-decoration-color: #4bb3d4; }
+
+  .f-links { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .f-links a {
+    font-size: 14.5px;
+    color: var(--footer-text);
+    text-decoration: underline;
+    text-decoration-color: var(--footer-rule);
+    text-underline-offset: 3px;
+  }
+  .f-links a:hover { color: #4bb3d4; text-decoration-color: #4bb3d4; }
+
+  .footer-bottom {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 20px 24px 40px;
+    border-top: 1px solid var(--footer-rule);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+  }
+  .footer-bottom p { margin: 0; font-size: 12.5px; color: var(--footer-label); }
+  .f-credit a { color: var(--footer-label); text-decoration: underline; text-decoration-color: var(--footer-rule); text-underline-offset: 3px; }
+  .f-credit a:hover { color: #4bb3d4; text-decoration-color: #4bb3d4; }
+</style>

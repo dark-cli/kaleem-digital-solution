@@ -1,0 +1,234 @@
+---
+import "../styles/global.css";
+import { SITE_TITLE, SITE_NAME, SITE_DESCRIPTION, SITE_DESCRIPTION_AR } from "../consts";
+import { currentLocale, alternateHref } from "../lib/i18n";
+import { excerpt } from "../lib/excerpt";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  /** Keep the page out of the index and skip canonical/hreflang (e.g. 404). */
+  noindex?: boolean;
+  /** Load the Font Awesome stylesheet (only legacy pages use fa-* icons). */
+  fontAwesome?: boolean;
+  /** LCP hero image preload — pass the srcset/sizes used on the page. */
+  heroPreload?: { srcset: string; sizes: string; type?: string };
+}
+
+const locale = currentLocale(Astro);
+const {
+  title = SITE_TITLE,
+  image = "/images/doctors/hussein-imran-mousa.jpg",
+  noindex = false,
+  fontAwesome = false,
+  heroPreload,
+} = Astro.props;
+// Empty strings (content entries with no `description`) fall back too, and
+// Arabic pages get an Arabic default rather than the English one.
+// Search results cut descriptions off around 160 characters; trim at a word
+// boundary so the snippet ends cleanly instead of mid-word.
+const description = excerpt(
+  Astro.props.description?.trim() || (locale === "ar" ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION),
+  160,
+);
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const otherLocale = locale === "en" ? "ar" : "en";
+const alternatePath = alternateHref(Astro.url.pathname, otherLocale);
+const alternateURL = new URL(alternatePath, Astro.site);
+const enURL = locale === "en" ? canonicalURL : alternateURL;
+const arURL = locale === "ar" ? canonicalURL : alternateURL;
+
+// Non-production builds (beta, staging, previews) should be hidden from
+// search engines. Default to PRODUCTION so that if the env var is missing
+// for any reason we never accidentally noindex the live site.
+const cfBranch = process.env.CF_PAGES_BRANCH || "";
+const NON_PROD_BRANCHES = new Set(["beta", "staging", "preview", "dev"]);
+const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
+const robotsContent = !isProduction ? "noindex, nofollow" : noindex ? "noindex, follow" : "index, follow";
+
+const businessSchema = {
+  "@context": "https://schema.org",
+  "@type": ["MedicalClinic", "LocalBusiness"],
+  "@id": "https://alimran.clinic/#clinic",
+  name: "Alimran Medical Center",
+  description:
+    "Alimran Medical Center specializes in neurology and musculoskeletal disorders in Basra, Iraq — chiropractic, rehabilitation, brain stimulation (TMS/tDCS), pain management, physiotherapy, radiofrequency, and neurosurgery.",
+  url: Astro.site,
+  telephone: ["+964 780 1926801", "+964 770 6774773"],
+  email: "info@alimranmed.com",
+  address: [
+    {
+      "@type": "PostalAddress",
+      addressLocality: "Basra",
+      addressCountry: "IQ",
+      streetAddress: "Breaha, Alnkba Medical Collection",
+    },
+  ],
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 30.5156,
+    longitude: 47.7804,
+  },
+  medicalSpecialty: [
+    "Neurology",
+    "Neurosurgery",
+    "Chiropractic",
+    "PhysicalTherapy",
+    "PainMedicine",
+  ],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Friday",
+      opens: "14:00",
+      closes: "18:00",
+    },
+  ],
+};
+---
+
+<!-- Charset first (spec: within the first 1024 bytes of the response) so the
+     browser can start decoding without re-scanning after a script/style. -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<script is:inline>
+  // Mark embedded contexts so overscroll containment CSS can opt out.
+  if (window.self !== window.top) {
+    document.documentElement.classList.add("is-embedded");
+  }
+  // Apply theme before paint to avoid FOUC. Preference precedence:
+  // 1) explicit user choice in localStorage, 2) prefers-color-scheme.
+  // Also re-apply on Astro View Transitions swaps — ClientRouter replaces
+  // the <html> attributes on navigation, which would drop data-theme.
+  (function () {
+    function apply() {
+      try {
+        var stored = localStorage.getItem("theme");
+        var wantsDark = stored
+          ? stored === "dark"
+          : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (wantsDark) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+      } catch (e) {}
+    }
+    apply();
+    document.addEventListener("astro:after-swap", apply);
+  })();
+</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<!-- Self-hosted webfonts. Files in public/fonts/ are downloaded from Google
+     Fonts by `node scripts/download-fonts.mjs` — re-run to update weights.
+     Hosting locally means:
+       • no cross-origin RTT to fonts.googleapis + fonts.gstatic (2 DNS + 2 TCP + 2 TLS)
+       • Cloudflare caches them alongside the rest of the site
+       • preload can target the exact weight this page needs
+     font-display: swap is set inside fonts.css so text is visible immediately. -->
+<link rel="preload" as="font" type="font/woff2"
+      href={locale === "ar" ? "/fonts/ibm-plex-sans-arabic-arabic-400.woff2" : "/fonts/ibm-plex-sans-latin-400.woff2"}
+      crossorigin />
+<link rel="preload" as="font" type="font/woff2"
+      href={locale === "ar" ? "/fonts/amiri-arabic-400.woff2" : "/fonts/newsreader-latin-400.woff2"}
+      crossorigin />
+<!-- Load fonts.css asynchronously so it doesn't block render. The `preload`
+     above already primed the browser for the critical face; the remaining
+     @font-face declarations (extra weights, RTL/LTR alternates) can arrive
+     without stalling FCP. Fallback <noscript> keeps webfonts working when
+     JavaScript is disabled. -->
+<link rel="preload" as="style" href="/fonts/fonts.css" onload="this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="/fonts/fonts.css" /></noscript>
+{heroPreload && (
+  <link
+    rel="preload"
+    as="image"
+    imagesrcset={heroPreload.srcset}
+    imagesizes={heroPreload.sizes}
+    type={heroPreload.type ?? "image/webp"}
+    fetchpriority="high"
+  />
+)}
+<!-- Font Awesome only for legacy pages that still render fa-* icons (about,
+     contact, translation banner). Redesigned pages use inline SVG. -->
+{fontAwesome && <link rel="stylesheet" href="/fonts/fontawesome/fontawesome.css" />}
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="author" content="Alimran Clinic" />
+<meta name="robots" content={robotsContent} />
+{!noindex && (
+  <>
+    <link rel="canonical" href={canonicalURL} />
+    <!-- Language alternates. Google requires the full set on every page of the
+         cluster, including the page itself; omitting the self-reference breaks
+         the return-link check and the annotations get ignored. -->
+    <link rel="alternate" hreflang="en" href={enURL} />
+    <link rel="alternate" hreflang="ar" href={arURL} />
+    <link rel="alternate" hreflang="x-default" href={enURL} />
+  </>
+)}
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.site)} />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:locale" content={locale === "ar" ? "ar_IQ" : "en_US"} />
+<meta property="og:locale:alternate" content={otherLocale === "ar" ? "ar_IQ" : "en_US"} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.site)} />
+
+<!-- Structured data -->
+<script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+
+<!-- Google Analytics — loaded on first user interaction or after the browser
+     goes idle (whichever comes first). Delaying gtag off the critical path
+     saves ~73 KiB of unused JS from the initial page load. The dataLayer
+     shim is defined synchronously so gtag() calls before load still queue. -->
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-3CWMPF92YB');
+  (function () {
+    var loaded = false;
+    function load() {
+      if (loaded) return;
+      loaded = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-3CWMPF92YB';
+      document.head.appendChild(s);
+    }
+    // Fire on any real interaction so opt-out analytics still capture the
+    // first real user event; use `requestIdleCallback` as a fallback so
+    // silent visits still get counted.
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (ev) {
+      addEventListener(ev, load, { once: true, passive: true });
+    });
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(load, { timeout: 5000 });
+    } else {
+      setTimeout(load, 3000);
+    }
+  })();
+</script>

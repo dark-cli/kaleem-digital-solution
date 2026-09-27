@@ -1,0 +1,653 @@
+---
+// Component showcase — demonstrates all 14 block widgets available in the template.
+// Bilingual: /en/dev-blocks/ (LTR) and /ar/dev-blocks/ (RTL).
+// Each widget shown twice: STRUCTURE (minimal placeholder) then IN USE (example content).
+// Dev only: deleted or ignored in production builds.
+export const prerender = true;
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Prose       from "../../components/blocks/Prose.astro";
+import Highlights  from "../../components/blocks/Highlights.astro";
+import Stats       from "../../components/blocks/Stats.astro";
+import Facts       from "../../components/blocks/Facts.astro";
+import ListRows    from "../../components/blocks/ListRows.astro";
+import ListWrap    from "../../components/blocks/ListWrap.astro";
+import ListColumns from "../../components/blocks/ListColumns.astro";
+import Quote       from "../../components/blocks/Quote.astro";
+import Panels      from "../../components/blocks/Panels.astro";
+import Media       from "../../components/blocks/Media.astro";
+import Cards       from "../../components/blocks/Cards.astro";
+import Pathway     from "../../components/blocks/Pathway.astro";
+import Row         from "../../components/blocks/Row.astro";
+import { currentLocale, toArabicDigits } from "../../lib/i18n";
+
+export function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
+}
+
+const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+
+const num = (s: string | number): string => {
+  const str = String(s);
+  return isAr ? toArabicDigits(str) : str;
+};
+
+const PLACEHOLDER_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(
+  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'>
+    <rect fill='#f4f7f8' width='400' height='300'/>
+    <text x='200' y='150' fill='#77858c' font-family='monospace' font-size='16' letter-spacing='2' text-anchor='middle' dominant-baseline='middle'>${isAr ? "صورة" : "IMAGE"}</text>
+  </svg>`.replace(/\n\s+/g, "")
+);
+
+const T = isAr ? {
+  eyebrow:   "معاينة المكوّنات",
+  title:     "مكتبة الكتل",
+  lede:      "14 كتلة محتوى لتكوين صفحاتك. كل كتلة معروضة مرتين — البنية (بيانات بسيطة)، ثم مثال حقيقي (محتوى كامل).",
+  structure: "البنية",
+  inUse:     "مثال",
+} : {
+  eyebrow:   "Component library",
+  title:     "Block widgets",
+  lede:      "14 content blocks to build your pages. Each widget shown twice — structure (minimal data, focus on layout) then example (realistic content).",
+  structure: "Structure",
+  inUse:     "Example",
+};
+
+const W = isAr ? {
+  prose:      { desc: "نص مع عنوان. يدعم روابط وتنسيق ماركداون بسيط.", fields: "Fields: heading?, body" },
+  highlights: { desc: "لوحة معلومات سريعة بـ 2–4 عناصر.", fields: "Fields: heading?, items[] {label, value}" },
+  stats:      { desc: "أرقام كبيرة داخل شبكة 2–6 خلايا.", fields: "Fields: heading?, intro?, items[] {value, label}" },
+  facts:      { desc: "قائمة مرقمة تلقائيًا من الحقائق.", fields: "Fields: heading?, items[]" },
+  listRows:   { desc: "أعمدة عمودية بتسمية وجسم.", fields: "Fields: heading, items[] {label, body, subtitle?}" },
+  listWrap:   { desc: "أعمدة متجاوبة ذاتية الضبط.", fields: "Fields: heading, items[]" },
+  listColumns:{ desc: "عمودان ثابتان دائمًا.", fields: "Fields: heading, items[]" },
+  quote:      { desc: "اقتباس مسحوب مع إسناد.", fields: "Fields: text, attribution?" },
+  panels:     { desc: "2–4 لوحات جنبًا إلى جنب.", fields: "Fields: heading?, intro?, note?, panels[]" },
+  media:      { desc: "صور أو فيديوهات، فردية أو شبكة.", fields: "Fields: heading?, items[] {kind, src, alt?, caption?}" },
+  pathway:    { desc: "مجموعات رقاقات روابط.", fields: "Fields: heading?, intro?, groups[]" },
+  row:        { desc: "صف من الصور، 2–4 أعمدة.", fields: "Fields: heading?, columns, items[]" },
+  cards:      { desc: "بطاقات روابط إلى صفحات أخرى.", fields: "Fields: heading?, items[] (مسارات)" },
+} : {
+  prose:      { desc: "Text with an optional heading. Supports markdown links and formatting.", fields: "Fields: heading?, body" },
+  highlights: { desc: "Quick reference panel with 2–4 key/value pairs.", fields: "Fields: heading?, items[] {label, value}" },
+  stats:      { desc: "Big numbers in a 2–6 cell grid.", fields: "Fields: heading?, intro?, items[] {value, label}" },
+  facts:      { desc: "Auto-numbered list of key facts.", fields: "Fields: heading?, items[]" },
+  listRows:   { desc: "Stacked vertical rows with label and body.", fields: "Fields: heading, items[] {label, body, subtitle?}" },
+  listWrap:   { desc: "Auto-fit responsive columns.", fields: "Fields: heading, items[]" },
+  listColumns:{ desc: "Two fixed columns side by side.", fields: "Fields: heading, items[]" },
+  quote:      { desc: "Pull quote with optional attribution.", fields: "Fields: text, attribution?" },
+  panels:     { desc: "2–4 side-by-side comparison or option panels.", fields: "Fields: heading?, intro?, note?, panels[]" },
+  media:      { desc: "Images or videos, single or grid.", fields: "Fields: heading?, items[] {kind, src, alt?, caption?}" },
+  pathway:    { desc: "Groups of chip-button links.", fields: "Fields: heading?, intro?, groups[]" },
+  row:        { desc: "Row of images, 2–4 columns.", fields: "Fields: heading?, columns, items[]" },
+  cards:      { desc: "Cards linking to other pages on your site.", fields: "Fields: heading?, items[] (paths)" },
+};
+
+const P = isAr ? {
+  heading:   "العنوان",
+  body:      "نص بديل يوضّح البنية. يمكن إضافة [روابط](/some-page/) داخل النص.\n\nفقرة ثانية تظهر عند وجود سطر فارغ.",
+  label:     (n: number) => `تسمية ${n}`,
+  value:     (n: number) => `القيمة ${n}`,
+  factItem:  (n: string) => `حقيقة ${n}`,
+  itemBody:  (n: string) => `جسم العنصر ${n}`,
+  chip:      (n: string) => `رقاقة ${n}`,
+  panelTitle:(n: string) => `عنوان اللوحة ${n}`,
+  panelItem: (n: string) => `عنصر ${n}`,
+  caption:   (n: string) => `شرح ${n}`,
+} : {
+  heading:   "Heading",
+  body:      "Placeholder text showing the block structure. You can add [links](/some-page/) inline.\n\nA second paragraph appears after a blank line.",
+  label:     (n: number) => `Label ${n}`,
+  value:     (n: number) => `Value ${n}`,
+  factItem:  (n: string) => `Fact ${n}`,
+  itemBody:  (n: string) => `Item body ${n}`,
+  chip:      (n: string) => `Chip ${n}`,
+  panelTitle:(n: string) => `Panel ${n}`,
+  panelItem: (n: string) => `Item ${n}`,
+  caption:   (n: string) => `Caption ${n}`,
+};
+
+const R = isAr ? {
+  proseHeading: "ما تقدمه هذه الخدمة",
+  proseBody: "هذا مثال على كتلة prose — نص عادي مع عنوان وفقرات متعددة. يمكن استخدام [روابط](/ar/treatments/) وتنسيق **غامق** و_مائل_ داخل النص.\n\nالفقرات تُفصل بسطور فارغة. هذا النمط مناسب للشروحات والأوصاف التفصيلية.",
+  statsHeading: "الإحصائيات",
+  stats: [
+    { value: "١٠٠٪", label: "رضا المريض" },
+    { value: "٢٤/٧", label: "الدعم المتاح" },
+    { value: "٥٠+", label: "سنة من الخبرة" },
+    { value: "١,٠٠٠+", label: "عميل سعيد" },
+  ],
+  factsHeading: "نقاط مهمة",
+  facts: [
+    "النقطة الأولى تشرح شيئًا أساسيًا حول الخدمة.",
+    "النقطة الثانية تركز على الفائدة الرئيسية.",
+    "النقطة الثالثة توضح ميزة تميز خدمتك عن الآخرين.",
+  ],
+  quote: "جودة الخدمة تحدد مصير العلاقة مع العميل.",
+  quoteAttribution: "— حكمة معروفة",
+  panelsHeading: "المراحل الثلاث",
+  panelsIntro: "عملنا يسير في ثلاث مراحل واضحة.",
+  panelsFour: [
+    { title: "التشاور الأول", subtitle: "فهم احتياجاتك", items: ["استماع شامل", "تقييم الوضع", "تحديد الأهداف"] },
+    { title: "التنفيذ", subtitle: "تطبيق الخطة", items: ["عمل احترافي", "تطبيق أفضل الممارسات", "متابعة دورية"] },
+    { title: "المتابعة", subtitle: "ضمان النتائج", items: ["تقييم النتائج", "التحسينات المستمرة", "دعم طويل الأمد"] },
+  ],
+  rowCaptions: ["المكتب", "فريق العمل", "المشاريع"],
+  pathwayHeading: "الخدمات الرئيسية",
+  pathwayGroups: [
+    { title: "الخدمات الأساسية", items: [
+      { name: "الاستشارة", href: "/en/" },
+      { name: "التقييم", href: "/en/" },
+      { name: "التقرير", href: "/en/" },
+    ] },
+    { title: "الخدمات المتقدمة", items: [
+      { name: "التطوير", href: "/en/" },
+      { name: "التدريب", href: "/en/" },
+      { name: "الدعم", href: "/en/" },
+    ] },
+  ],
+  cardsHeading: "قراءة ذات صلة",
+} : {
+  proseHeading: "About this service",
+  proseBody: "This is an example of a prose block — plain text with an optional heading and multiple paragraphs. You can use [links](/treatments/), **bold** and _italic_ formatting inline.\n\nParagraphs are separated by blank lines. This style works well for descriptions, explanations, and detailed content.",
+  statsHeading: "By the numbers",
+  stats: [
+    { value: "100%", label: "Client satisfaction" },
+    { value: "24/7", label: "Support available" },
+    { value: "50+", label: "Years of experience" },
+    { value: "1,000+", label: "Happy clients" },
+  ],
+  factsHeading: "Key points",
+  facts: [
+    "The first fact explains something fundamental about the service.",
+    "The second fact highlights the main benefit you provide.",
+    "The third fact shows what makes your offering unique.",
+  ],
+  quote: "Quality service is the foundation of every lasting business relationship.",
+  quoteAttribution: "— Industry wisdom",
+  panelsHeading: "Our three-step process",
+  panelsIntro: "We work through a clear, structured approach.",
+  panelsFour: [
+    { title: "Discovery", subtitle: "Understanding your needs", items: ["In-depth consultation", "Situation assessment", "Goal alignment"] },
+    { title: "Execution", subtitle: "Delivering results", items: ["Professional delivery", "Best practices applied", "Regular check-ins"] },
+    { title: "Support", subtitle: "Ensuring success", items: ["Results review", "Continuous improvement", "Long-term partnership"] },
+  ],
+  rowCaptions: ["Our office", "Our team", "Our work"],
+  pathwayHeading: "Main service categories",
+  pathwayGroups: [
+    { title: "Core services", items: [
+      { name: "Consultation", href: "/" },
+      { name: "Assessment", href: "/" },
+      { name: "Reporting", href: "/" },
+    ] },
+    { title: "Advanced services", items: [
+      { name: "Development", href: "/" },
+      { name: "Training", href: "/" },
+      { name: "Support", href: "/" },
+    ] },
+  ],
+  cardsHeading: "Related reading",
+};
+---
+
+<BaseLayout title={T.title + " (dev only)"} description="Component showcase">
+  <div class="wrap">
+    <header class="hd">
+      <p class="hd-eyebrow">{T.eyebrow}</p>
+      <h1>{T.title}</h1>
+      <p class="lede">{T.lede}</p>
+    </header>
+
+    {/* ─── prose ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(1)}</p>
+        <div>
+          <h2>prose</h2>
+          <p class="meta-desc">{W.prose.desc}</p>
+          <p class="meta-fields">{W.prose.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Prose heading={P.heading} body={P.body} locale={locale} />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Prose heading={R.proseHeading} body={R.proseBody} locale={locale} />
+      </div>
+    </section>
+
+    {/* ─── highlights ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(2)}</p>
+        <div>
+          <h2>highlights</h2>
+          <p class="meta-desc">{W.highlights.desc}</p>
+          <p class="meta-fields">{W.highlights.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Highlights
+          heading="Heading"
+          items={[
+            { label: P.label(1), value: P.value(1) },
+            { label: P.label(2), value: P.value(2) },
+            { label: P.label(3), value: P.value(3) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Highlights
+          items={R.stats.slice(0, 3)}
+          locale={locale}
+        />
+      </div>
+    </section>
+
+    {/* ─── stats ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(3)}</p>
+        <div>
+          <h2>stats</h2>
+          <p class="meta-desc">{W.stats.desc}</p>
+          <p class="meta-fields">{W.stats.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Stats
+          heading="Heading"
+          items={[
+            { value: P.value(1), label: P.label(1) },
+            { value: P.value(2), label: P.label(2) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Stats
+          heading={R.statsHeading}
+          items={R.stats}
+          locale={locale}
+        />
+      </div>
+    </section>
+
+    {/* ─── facts ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(4)}</p>
+        <div>
+          <h2>facts</h2>
+          <p class="meta-desc">{W.facts.desc}</p>
+          <p class="meta-fields">{W.facts.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Facts items={["Fact 1", "Fact 2"]} locale={locale} />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Facts heading={R.factsHeading} items={R.facts} locale={locale} />
+      </div>
+    </section>
+
+    {/* ─── listRows ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(5)}</p>
+        <div>
+          <h2>list (rows variant)</h2>
+          <p class="meta-desc">{W.listRows.desc}</p>
+          <p class="meta-fields">{W.listRows.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <ListRows
+          heading="Heading"
+          items={[
+            { label: P.label(1), body: P.itemBody(1) },
+            { label: P.label(2), body: P.itemBody(2) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <ListRows heading="Timeline" items={[
+          { label: isAr ? "٢٠٢٠" : "2020", body: isAr ? "البداية والتأسيس" : "Founded the company" },
+          { label: isAr ? "٢٠٢٢" : "2022", body: isAr ? "التوسع الإقليمي" : "Regional expansion" },
+          { label: isAr ? "٢٠٢٤" : "2024", body: isAr ? "تطوير المنتجات" : "Product launch" },
+        ]} locale={locale} />
+      </div>
+    </section>
+
+    {/* ─── listWrap ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(6)}</p>
+        <div>
+          <h2>list (wrap variant)</h2>
+          <p class="meta-desc">{W.listWrap.desc}</p>
+          <p class="meta-fields">{W.listWrap.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <ListWrap
+          heading="Heading"
+          items={[
+            { label: P.label(1), body: P.itemBody(1) },
+            { label: P.label(2), body: P.itemBody(2) },
+            { label: P.label(3), body: P.itemBody(3) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <ListWrap heading="Tags" items={[
+          { label: isAr ? "أساسي" : "Core", body: isAr ? "الخدمات الأساسية" : "Core services" },
+          { label: isAr ? "متقدم" : "Advanced", body: isAr ? "الخدمات المتقدمة" : "Advanced services" },
+          { label: isAr ? "دعم" : "Support", body: isAr ? "الدعم المستمر" : "Ongoing support" },
+        ]} locale={locale} />
+      </div>
+    </section>
+
+    {/* ─── listColumns ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(7)}</p>
+        <div>
+          <h2>list (columns variant)</h2>
+          <p class="meta-desc">{W.listColumns.desc}</p>
+          <p class="meta-fields">{W.listColumns.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <ListColumns
+          heading="Heading"
+          items={[
+            { label: P.label(1), body: P.itemBody(1) },
+            { label: P.label(2), body: P.itemBody(2) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <ListColumns heading={isAr ? "المقارنة" : "Comparison"} items={[
+          { label: isAr ? "خيار أ" : "Option A", body: isAr ? "الوصف الأول" : "First description" },
+          { label: isAr ? "خيار ب" : "Option B", body: isAr ? "الوصف الثاني" : "Second description" },
+          { label: isAr ? "خيار ج" : "Option C", body: isAr ? "الوصف الثالث" : "Third description" },
+        ]} locale={locale} />
+      </div>
+    </section>
+
+    {/* ─── quote ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(8)}</p>
+        <div>
+          <h2>quote</h2>
+          <p class="meta-desc">{W.quote.desc}</p>
+          <p class="meta-fields">{W.quote.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Quote text={P.heading} locale={locale} />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Quote text={R.quote} attribution={R.quoteAttribution} locale={locale} />
+      </div>
+    </section>
+
+    {/* ─── panels ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(9)}</p>
+        <div>
+          <h2>panels</h2>
+          <p class="meta-desc">{W.panels.desc}</p>
+          <p class="meta-fields">{W.panels.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Panels
+          heading="Heading"
+          panels={[
+            { title: R.panelsFour[0].title, items: R.panelsFour[0].items },
+            { title: R.panelsFour[1].title, items: R.panelsFour[1].items },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Panels
+          heading={R.panelsHeading}
+          intro={R.panelsIntro}
+          panels={R.panelsFour}
+          locale={locale}
+        />
+      </div>
+    </section>
+
+    {/* ─── media ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(10)}</p>
+        <div>
+          <h2>media</h2>
+          <p class="meta-desc">{W.media.desc}</p>
+          <p class="meta-fields">{W.media.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Media
+          items={[
+            { kind: "image", src: PLACEHOLDER_IMG, alt: "Placeholder", caption: P.caption(1) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Media
+          heading={isAr ? "صور من العمل" : "Our work"}
+          items={[
+            { kind: "image", src: PLACEHOLDER_IMG, alt: "Example 1", caption: isAr ? "مثال أول" : "Example one" },
+            { kind: "image", src: PLACEHOLDER_IMG, alt: "Example 2", caption: isAr ? "مثال ثاني" : "Example two" },
+          ]}
+          locale={locale}
+        />
+      </div>
+    </section>
+
+    {/* ─── pathway ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(11)}</p>
+        <div>
+          <h2>pathway</h2>
+          <p class="meta-desc">{W.pathway.desc}</p>
+          <p class="meta-fields">{W.pathway.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Pathway
+          heading="Heading"
+          groups={[
+            { title: R.pathwayGroups[0].title, items: R.pathwayGroups[0].items },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Pathway
+          heading={R.pathwayHeading}
+          groups={R.pathwayGroups}
+          locale={locale}
+        />
+      </div>
+    </section>
+
+    {/* ─── row ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(12)}</p>
+        <div>
+          <h2>row</h2>
+          <p class="meta-desc">{W.row.desc}</p>
+          <p class="meta-fields">{W.row.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <Row
+          columns="3"
+          items={[
+            { src: PLACEHOLDER_IMG, alt: "Item 1", caption: P.caption(1) },
+            { src: PLACEHOLDER_IMG, alt: "Item 2", caption: P.caption(2) },
+            { src: PLACEHOLDER_IMG, alt: "Item 3", caption: P.caption(3) },
+          ]}
+          locale={locale}
+        />
+        <p class="preview-tag mt">{T.inUse}</p>
+        <Row
+          heading={isAr ? "صور المكتب" : "Office gallery"}
+          columns="3"
+          items={R.rowCaptions.map((cap) => ({
+            src: PLACEHOLDER_IMG,
+            alt: cap,
+            caption: cap,
+          }))}
+          locale={locale}
+        />
+      </div>
+    </section>
+
+    {/* ─── cards ─── */}
+    <section class="showcase">
+      <div class="meta">
+        <p class="meta-code">{num(13)}</p>
+        <div>
+          <h2>cards</h2>
+          <p class="meta-desc">{W.cards.desc}</p>
+          <p class="meta-fields">{W.cards.fields}</p>
+        </div>
+      </div>
+      <div class="preview">
+        <p class="preview-tag">{T.structure}</p>
+        <div class="note">{isAr ? "ملاحظة: البطاقات تسحب محتواها من صفحات أخرى. أضف مسارات حقيقية عندما تكون لديك محتوى." : "Note: Cards pull their content from other pages. Add real paths when you create content."}</div>
+        <p class="preview-tag mt">{T.inUse}</p>
+        <div class="note">{isAr ? "أمثلة: /treatments/example-1/, /blog/article-one/, /services/service-name/" : "Examples: /treatments/example-1/, /blog/article-one/, /services/service-name/"}</div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .hd {
+    padding: 56px 0 44px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hd-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+
+  .hd h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    margin: 0 0 16px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  .lede {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--body);
+    max-width: 70ch;
+    margin: 0;
+  }
+
+  .showcase {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    padding: 44px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 860px) {
+    .showcase {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+
+  .meta {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    position: sticky;
+    top: 20px;
+  }
+
+  .meta-code {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0;
+    opacity: 0.3;
+    flex-shrink: 0;
+  }
+
+  .meta h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    font-family: monospace;
+  }
+
+  .meta-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--body);
+    margin: 0 0 8px;
+  }
+
+  .meta-fields {
+    font-size: 12px;
+    font-family: monospace;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .preview-tag {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 16px;
+  }
+
+  .preview-tag.mt {
+    margin-top: 44px;
+  }
+
+  .note {
+    padding: 16px;
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    font-size: 14px;
+    color: var(--body);
+    margin: 20px 0;
+  }
+</style>

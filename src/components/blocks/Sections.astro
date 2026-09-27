@@ -1,0 +1,120 @@
+---
+/**
+ * Sections — the single dispatcher for the unified widget catalog. Replaces
+ * both the older article/ArticleSections.astro and doctor/DoctorSections.astro.
+ *
+ * Any collection whose schema declares `sections: array(section)` renders its
+ * body through this component. Each block in the array is dispatched to its
+ * matching widget in src/components/blocks/.
+ */
+import Prose       from "./Prose.astro";
+import Highlights  from "./Highlights.astro";
+import Stats       from "./Stats.astro";
+import Facts       from "./Facts.astro";
+import ListRows    from "./ListRows.astro";
+import ListWrap    from "./ListWrap.astro";
+import ListColumns from "./ListColumns.astro";
+import Quote       from "./Quote.astro";
+import Panels      from "./Panels.astro";
+import Media       from "./Media.astro";
+import Pathway     from "./Pathway.astro";
+import Row         from "./Row.astro";
+import Cards       from "./Cards.astro";
+
+interface Props {
+  sections: any[];
+  locale: "en" | "ar";
+}
+const { sections, locale } = Astro.props;
+const isAr = locale === "ar";
+
+// Localised default headings used by widgets that fall back to a canonical
+// string when the editor left the heading empty.
+const factsDefaultHeading = isAr ? "حقائق أساسية" : "Key facts";
+const cardsDefaultHeading = isAr ? "قراءات ذات صلة" : "Related reading";
+
+// Sequentially assign anchor IDs for sections that have headings.
+// Must match the logic in buildToc (src/lib/toc.ts): id = "s-{n}".
+let _n = 0;
+const nextId = (s: any): string | undefined =>
+  s.heading ? `s-${++_n}` : undefined;
+
+// Index of the last `list` section — passed as isLast=true so the list
+// variant components can apply correct bottom-padding on doctor pages.
+const lastListIdx = sections.reduce(
+  (last: number, s: any, i: number) => (s.type === "list" ? i : last),
+  -1,
+);
+---
+
+{sections.map((s: any, i: number) => {
+  if (!s || !s.type) return null;
+
+  if (s.type === "prose")
+    return <Prose heading={s.heading} body={s.body} locale={locale} id={nextId(s)} />;
+
+  if (s.type === "highlights")
+    return <Highlights heading={s.heading} items={s.items} id={nextId(s)} />;
+
+  if (s.type === "stats")
+    return <Stats heading={s.heading} intro={s.intro} items={s.items} id={nextId(s)} />;
+
+  if (s.type === "facts")
+    return <Facts heading={s.heading ?? factsDefaultHeading} items={s.items} locale={locale} id={nextId(s)} />;
+
+  if (s.type === "list") {
+    const isLast = i === lastListIdx;
+    const id = nextId(s);
+    if (s.variant === "rows")
+      return <ListRows heading={s.heading} items={s.items} isLast={isLast} id={id} />;
+    if (s.variant === "wrap")
+      return <ListWrap heading={s.heading} items={s.items} isLast={isLast} id={id} />;
+    if (s.variant === "columns")
+      return <ListColumns heading={s.heading} items={s.items} isLast={isLast} id={id} />;
+    return null;
+  }
+
+  if (s.type === "quote")
+    return <Quote text={s.text} attribution={s.attribution} />;
+
+  if (s.type === "panels")
+    return <Panels
+      heading={s.heading}
+      intro={s.intro}
+      note={s.note}
+      panels={s.panels}
+      locale={locale}
+      id={nextId(s)}
+    />;
+
+  if (s.type === "media")
+    return <Media heading={s.heading} items={s.items} />;
+
+  if (s.type === "pathway")
+    return <Pathway
+      heading={s.heading}
+      intro={s.intro}
+      groups={s.groups}
+      locale={locale}
+      id={nextId(s)}
+    />;
+
+  if (s.type === "row")
+    return <Row
+      heading={s.heading}
+      columns={s.columns}
+      items={s.items}
+      locale={locale}
+      id={nextId(s)}
+    />;
+
+  if (s.type === "cards")
+    return <Cards
+      heading={s.heading ?? cardsDefaultHeading}
+      items={s.items}
+      locale={locale}
+      id={nextId(s)}
+    />;
+
+  return null;
+})}

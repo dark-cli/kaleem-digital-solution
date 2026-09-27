@@ -1,0 +1,100 @@
+---
+// Component to handle image layout in prose
+---
+
+<script>
+  function setupImageLayout() {
+    const prose = document.querySelector('.prose');
+    if (!prose) return;
+
+    // Handle multiple images in same paragraph
+    const allParagraphs = Array.from(prose.querySelectorAll('p'));
+
+    allParagraphs.forEach(p => {
+      const imgs = Array.from(p.querySelectorAll('img'));
+
+      if (imgs.length > 1) {
+        // Multiple images in same paragraph - create 2-column layout
+        p.style.display = 'flex';
+        p.style.flexWrap = 'wrap';
+        p.style.gap = '1rem';
+        p.style.margin = '1.5rem 0';
+
+        imgs.forEach((img, idx) => {
+          const wrapper = document.createElement('div');
+          wrapper.style.flex = '1 1 calc(50% - 0.5rem)';
+          wrapper.style.textAlign = 'center';
+          wrapper.style.minWidth = '0';
+
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+          img.style.display = 'block';
+          img.style.margin = '0 auto';
+
+          img.parentNode?.insertBefore(wrapper, img);
+          wrapper.appendChild(img);
+        });
+
+        // Remove text nodes (whitespace) from paragraph
+        Array.from(p.childNodes).forEach(node => {
+          if (node.nodeType === 3 && !node.textContent?.trim()) {
+            node.remove();
+          }
+        });
+      } else if (imgs.length === 1) {
+        // Single image: center it
+        p.style.textAlign = 'center';
+        p.style.margin = '1.5rem 0';
+
+        const img = imgs[0];
+        img.style.maxWidth = '85%';
+        img.style.height = 'auto';
+        img.style.display = 'inline-block';
+        img.style.margin = '0 auto';
+      }
+    });
+
+    // Handle consecutive image paragraphs
+    const imageParagraphs = allParagraphs.filter(p => p.querySelector('img') && !p.querySelectorAll('img').length > 1);
+    const groups: HTMLParagraphElement[][] = [];
+    let currentGroup: HTMLParagraphElement[] = [];
+
+    imageParagraphs.forEach(p => {
+      currentGroup.push(p);
+      const nextElement = p.nextElementSibling;
+      const nextIsImagePara = nextElement && nextElement.tagName === 'P' && nextElement.querySelector('img');
+
+      if (!nextIsImagePara) {
+        if (currentGroup.length > 0) groups.push([...currentGroup]);
+        currentGroup = [];
+      }
+    });
+
+    // Apply float layout to consecutive separate image paragraphs
+    groups.forEach(group => {
+      if (group.length >= 2) {
+        group.forEach((p, idx) => {
+          if (idx % 2 === 0 && idx < group.length - 1) {
+            p.style.float = 'left';
+            p.style.width = 'calc(50% - 0.5rem)';
+            p.style.marginRight = '1rem';
+          } else if (idx % 2 === 1) {
+            p.style.float = 'left';
+            p.style.width = 'calc(50% - 0.5rem)';
+            p.style.marginLeft = '1rem';
+          } else if (idx === group.length - 1 && idx % 2 === 0) {
+            p.style.float = 'none';
+            p.style.clear = 'both';
+            p.style.width = '100%';
+          }
+        });
+      }
+    });
+  }
+
+  // Run on page load
+  setupImageLayout();
+
+  // Re-run after view transitions
+  document.addEventListener('astro:page-load', setupImageLayout);
+</script>
