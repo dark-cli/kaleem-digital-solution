@@ -58,8 +58,8 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
         let stars = [];
         let animationId;
 
-        // Colors from design system
-        const colors = ['#f8c9b8', '#bfe6d6', '#d9ccf0', '#f7e7b0', '#c6ddf0', '#f9d2ae'];
+        // Colors - darker/more saturated for visibility
+        const colors = ['#f8c9b8', '#bfe6d6', '#d9ccf0', '#f7e7b0', '#c6ddf0', '#f9d2ae', '#1f1f1f', '#4a4a4a'];
 
         // Star shapes
         const shapes = ['circle', 'plus', 'diamond', 'fourpoint'];
@@ -67,12 +67,12 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
         function Star() {
           this.x = Math.random() * canvas.width;
           this.y = Math.random() * canvas.height;
-          this.size = 1.2 + Math.random() * 0.8; // slightly bigger than chalk dust
+          this.size = 2 + Math.random() * 1.5; // bigger and more visible
           this.color = colors[Math.floor(Math.random() * colors.length)];
           this.shape = shapes[Math.floor(Math.random() * shapes.length)];
           this.twinkleSpeed = 0.008 + Math.random() * 0.008;
           this.twinkleOffset = Math.random() * Math.PI * 2;
-          this.opacity = 0.4;
+          this.opacity = 0.6; // more opaque, easier to see
 
           // Slow movement toward 4 o'clock (120 degrees: right and down)
           this.vx = 0.005; // move right slowly
@@ -133,8 +133,8 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           for (let star of stars) {
-            // Twinkling: slow oscillation between 0.2 and 0.8 opacity
-            star.opacity = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(star.twinkleOffset + time * star.twinkleSpeed));
+            // Twinkling: slow oscillation between 0.5 and 1.0 opacity
+            star.opacity = 0.5 + 0.5 * (0.5 + 0.5 * Math.sin(star.twinkleOffset + time * star.twinkleSpeed));
 
             // Movement toward 4 o'clock
             star.x += star.vx;
