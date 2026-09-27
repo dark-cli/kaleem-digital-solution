@@ -6,6 +6,29 @@
 <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="4" result="n"/>
 <feDisplacementMap in="SourceGraphic" in2="n" scale="1.5"/>
 </filter>
+<style>
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes float-4oclock-1 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(60px, 80px); }
+}
+@keyframes float-4oclock-2 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(70px, 90px); }
+}
+.star {
+  animation: twinkle 3s ease-in-out infinite;
+}
+.star-1 {
+  animation: twinkle 3s ease-in-out infinite, float-4oclock-1 8s ease-in-out infinite;
+}
+.star-2 {
+  animation: twinkle 3.5s ease-in-out infinite, float-4oclock-2 9s ease-in-out infinite;
+}
+</style>
 </defs>
 <g filter="url(#pen)" stroke="#1f1f1f" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
 <!-- 1 · the old system: lilac box, corner peeled open, tangled data, unlocked padlock -->
@@ -30,8 +53,18 @@
 <circle cx="96" cy="470" r="22" fill="#f7e7b0"/>
 <circle cx="96" cy="470" r="7" fill="#f8c9b8"/>
 <path d="M118 470 H240 M216 470 V488 M232 470 V484" fill="none"/>
-<!-- sparkles -->
-<path d="M548 110 v18 M539 119 h18" stroke-width="3"/>
-<path d="M280 540 v14 M273 547 h14" stroke-width="3"/>
+<!-- sparkles - animated stars -->
+<!-- top-right 5-pointed star in butter -->
+<g class="star-1" transform="translate(548, 110)">
+<path d="M0,-10 L2.4,-3.1 L9.5,-3.1 L3.8,1.9 L6.2,8.8 L0,4.2 L-6.2,8.8 L-3.8,1.9 L-9.5,-3.1 L-2.4,-3.1 Z" fill="#f7e7b0" stroke="none"/>
+</g>
+<!-- bottom-center 4-pointed star in apricot -->
+<g class="star-2" transform="translate(280, 540)">
+<path d="M0,-11 L3,-3 L11,-3 L4,2 L7,10 L0,5 L-7,10 L-4,2 L-11,-3 L-3,-3 Z" fill="#f9d2ae" stroke="none"/>
+</g>
+<!-- middle 6-pointed star in sky blue -->
+<g class="star" transform="translate(420, 280)" style="animation-duration: 4s; animation-delay: 0.5s;">
+<path d="M0,-9 L2.6,-2.8 L8.2,-2.8 L3.5,1.7 L6.1,8.2 L0,4.2 L-6.1,8.2 L-3.5,1.7 L-8.2,-2.8 L-2.6,-2.8 Z" fill="#bfe6d6" stroke="none"/>
+</g>
 </g>
 </svg>
