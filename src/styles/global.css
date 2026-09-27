@@ -193,10 +193,17 @@ a.sk:hover, a.skb:hover, button.skb:hover { transform: translate(-1px, -1px); }
 .bg-paper { background-color: var(--k-paper); }
 .bg-paper-2 { background-color: var(--k-paper-2); }
 
-/* Header & footer: transparent backgrounds show the starfield through them. */
-header.board, footer.board {
+/* Header: transparent to show starfield through it. */
+header.board {
   background-color: transparent;
   background-image: none;
+}
+
+/* Footer: keep dark board background for readability. */
+footer.board {
+  background-color: var(--k-board);
+  background-image: radial-gradient(circle at 81% 50%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 89% 3%, rgba(247,227,154,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 80% 13%, rgba(198,221,240,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 92% 8%, rgba(246,193,208,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 60% 95%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 33% 9%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 11%, rgba(198,221,240,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 40% 29%, rgba(246,193,208,0.55) 0 0.6px, transparent 1.2px),radial-gradient(circle at 56% 14%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 38% 46%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 3% 55%, rgba(198,221,240,0.45) 0 0.5px, transparent 1.0px),radial-gradient(circle at 20% 6%, rgba(246,193,208,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 17% 79%, rgba(236,238,230,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 77% 28%, rgba(247,227,154,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 13% 20%, rgba(198,221,240,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 13% 76%, rgba(246,193,208,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 56% 11%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 14% 92%, rgba(247,227,154,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 80% 95%, rgba(198,221,240,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 74% 90%, rgba(246,193,208,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 37% 97%, rgba(236,238,230,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 93% 54%, rgba(247,227,154,0.35) 0 0.6px, transparent 1.2px);
+  background-size: 127px 271px,139px 181px,151px 271px,163px 331px,173px 373px,181px 181px,193px 293px,199px 163px,211px 419px,223px 251px,233px 373px,241px 283px,251px 389px,263px 401px,271px 127px,283px 293px,293px 193px,307px 347px,317px 181px,331px 211px,347px 389px,359px 163px;
 }
 
 /* Focus ring on the dark board uses sky (11:1) instead of the default blue. */
