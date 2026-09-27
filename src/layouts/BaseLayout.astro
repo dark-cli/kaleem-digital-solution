@@ -36,6 +36,7 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     <ClientRouter />
   </head>
   <body class="paper">
+    <canvas id="starfield" aria-hidden="true"></canvas>
     {!isProduction && (
       <div class="beta-ribbon" aria-label="Beta environment">
         {locale === "ar" ? "بيتا — بيئة اختبار" : "BETA — testing environment"}
@@ -48,6 +49,127 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     <Footer />
     <CallFab />
     <ImageLayout />
+
+    <!-- Starfield canvas: twinkling stars moving slowly toward 4 o'clock -->
+    <script is:inline>
+      (function() {
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let animationId;
+
+        // Colors from design system
+        const colors = ['#f8c9b8', '#bfe6d6', '#d9ccf0', '#f7e7b0', '#c6ddf0', '#f9d2ae'];
+
+        // Star shapes
+        const shapes = ['circle', 'plus', 'diamond', 'fourpoint'];
+
+        function Star() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = 1.2 + Math.random() * 0.8; // slightly bigger than chalk dust
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.shape = shapes[Math.floor(Math.random() * shapes.length)];
+          this.twinkleSpeed = 0.008 + Math.random() * 0.008;
+          this.twinkleOffset = Math.random() * Math.PI * 2;
+          this.opacity = 0.4;
+
+          // Slow movement toward 4 o'clock (120 degrees: right and down)
+          this.vx = 0.005; // move right slowly
+          this.vy = 0.008; // move down slowly
+        }
+
+        function drawStar(star) {
+          ctx.save();
+          ctx.fillStyle = star.color;
+          ctx.strokeStyle = star.color;
+          ctx.globalAlpha = star.opacity;
+          ctx.translate(star.x, star.y);
+
+          if (star.shape === 'circle') {
+            ctx.fillRect(-star.size/2, -star.size/2, star.size, star.size);
+          } else if (star.shape === 'plus') {
+            ctx.lineWidth = 0.4;
+            ctx.beginPath();
+            ctx.moveTo(-star.size, 0);
+            ctx.lineTo(star.size, 0);
+            ctx.moveTo(0, -star.size);
+            ctx.lineTo(0, star.size);
+            ctx.stroke();
+          } else if (star.shape === 'diamond') {
+            ctx.beginPath();
+            ctx.moveTo(0, -star.size);
+            ctx.lineTo(star.size, 0);
+            ctx.lineTo(0, star.size);
+            ctx.lineTo(-star.size, 0);
+            ctx.closePath();
+            ctx.fill();
+          } else if (star.shape === 'fourpoint') {
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(0, -star.size * 1.2);
+            ctx.lineTo(0, star.size * 1.2);
+            ctx.moveTo(-star.size * 1.2, 0);
+            ctx.lineTo(star.size * 1.2, 0);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+
+        function initStars() {
+          stars = [];
+          const starCount = Math.max(50, Math.floor((canvas.width * canvas.height) / 25000));
+          for (let i = 0; i < starCount; i++) {
+            stars.push(new Star());
+          }
+        }
+
+        function animate(time) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          for (let star of stars) {
+            // Twinkling: slow oscillation between 0.2 and 0.8 opacity
+            star.opacity = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(star.twinkleOffset + time * star.twinkleSpeed));
+
+            // Movement toward 4 o'clock
+            star.x += star.vx;
+            star.y += star.vy;
+
+            // Wrap around edges
+            if (star.x > canvas.width) star.x = -5;
+            if (star.y > canvas.height) star.y = -5;
+            if (star.x < -5) star.x = canvas.width;
+            if (star.y < -5) star.y = canvas.height;
+
+            drawStar(star);
+          }
+
+          animationId = requestAnimationFrame(animate);
+        }
+
+        function init() {
+          resizeCanvas();
+          initStars();
+          animate(0);
+        }
+
+        window.addEventListener('resize', () => {
+          resizeCanvas();
+          initStars();
+        });
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', init);
+        } else {
+          init();
+        }
+      })();
+    </script>
 
     <!-- Progressive HD-image swap. Any <img data-hires="…"> gets its source
          upgraded to the higher-quality version once the page finishes loading
@@ -110,6 +232,15 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     </script>
 
     <style is:global>
+      #starfield {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
       .soon-toast {
         position: fixed;
         left: 50%;
