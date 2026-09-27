@@ -92,9 +92,8 @@
   background-color: var(--k-paper);
 }
 
-/* Board: dark chalkboard. Header and footer ONLY. Starfield shows behind. */
+/* Board: transparent background showing starfield. Header and footer ONLY. */
 .board {
-  background-color: var(--k-board);
   color: var(--k-chalk);
 }
 
