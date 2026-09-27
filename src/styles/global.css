@@ -87,6 +87,16 @@
 }
 
 /* ─── Kaleem Textures (Pure CSS) ───────────────────────────────── */
+/* Scattered particle texture: radial-gradient specks with prime-number tiling.
+   Create the effect of pencil or chalk dust by layering tiny circles at
+   pseudo-random positions. Prime tile sizes (127px, 139px, etc.) prevent
+   visible repeating grids. Define --texture-image and --texture-size vars. */
+.texture-scattered {
+  background-color: var(--texture-bg-color);
+  background-image: var(--texture-image);
+  background-size: var(--texture-size);
+}
+
 /* Paper: faint pencil specks on cream. Use on <body> or page wrapper. */
 .paper {
   background-color: var(--k-paper);
