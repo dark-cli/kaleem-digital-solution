@@ -60,11 +60,33 @@ const T = isAr ? {
   o3:          "يمكن نقل الموقع بسهولة إلى أي خادم في أي وقت",
   o4:          "التطوير المستقبلي بدون الحاجة إلينا",
 
+  problemsHead: "المشاكل في الموقع القديم",
+  p1:          "تصميم فوضوي وغير واضح",
+  p2:          "نصوص غير منظّمة وصعبة القراءة",
+  p3:          "صور عشوائية وعناصر CSS مكسورة",
+  p4:          "عناصر غير محاذاة وتخطيط سيء",
+  p5:          "موقع بطيء جداً مع نسبة توقف عالية",
+  p6:          "روابط مكسورة وقوائم لا تستجيب",
+  p7:          "لا يعمل على الهواتف الذكية",
+  p8:          "المقالات مجرد كومة من النصوص بلا تنسيق",
+
   beforeAfterHead: "التحول المرئي",
   oldLabel:    "الموقع القديم",
-  oldDesc:     "WordPress بطيء، بيانات مبعثرة، لا تحكم حقيقي",
+  oldDesc:     "فوضوي، بطيء، مكسور، غير متوافق مع الهواتف",
   newLabel:    "الموقع الجديد",
-  newDesc:     "Astro سريع، بيانات منظّفة، تحكم كامل",
+  newDesc:     "نظيف، سريع جداً (97/100 PageSpeed)، حديث، مُحسّن",
+
+  featuresHead: "ميزات الموقع الجديد",
+  f1:          "تخطيط نظيف وواضح مع رسالة مباشرة",
+  f2:          "صور عالية الجودة تظهر الأهمية",
+  f3:          "مقالات معاد كتابتها بمعلومات مستخرجة بعناية",
+  f4:          "تخطيط نظيف وقابل للقراءة",
+  f5:          "محرك بحث متقدم للعثور على المقالات بسهولة",
+  f6:          "مكتبة للتصفح والاستكشاف",
+  f7:          "دعم البحث بالذكاء الاصطناعي (LLM)",
+  f8:          "جاهز للتكامل مع أي تطبيق ذكاء اصطناعي",
+  f9:          "ثيم فاتح وغامق",
+  f10:         "سرعة فائقة وموثوقية 99.9%",
 
   ctaHead:      "جاهز لتحرير نظامك الرقمي؟",
   ctaLabel:     "احجز تدقيق مجاني",
@@ -119,11 +141,33 @@ const T = isAr ? {
   o3:          "Site can move to any server anytime without losing anything",
   o4:          "Future development possible without depending on us",
 
+  problemsHead: "Problems with the Legacy Site",
+  p1:          "Cluttered and confusing design",
+  p2:          "Unreadable and disorganized text",
+  p3:          "Random AI-generated images and broken CSS elements",
+  p4:          "Misaligned elements and poor layout",
+  p5:          "Painfully slow with poor uptime",
+  p6:          "Broken links and unresponsive menus",
+  p7:          "No mobile support whatsoever",
+  p8:          "Articles were just walls of text with no visual structure",
+
   beforeAfterHead: "The Visual Transformation",
   oldLabel:    "The Old Site",
-  oldDesc:     "Slow WordPress, scattered data, no real control",
+  oldDesc:     "Chaotic, slow, broken, not mobile-friendly",
   newLabel:    "The New Site",
-  newDesc:     "Fast Astro, clean data, complete control",
+  newDesc:     "Clean, lightning-fast (97/100 PageSpeed), modern, optimized",
+
+  featuresHead: "New Website Features",
+  f1:          "Clean layout with direct messaging",
+  f2:          "High-quality images showing what matters",
+  f3:          "Articles rewritten with carefully extracted information",
+  f4:          "Clean, readable layout throughout",
+  f5:          "Advanced search to find articles instantly",
+  f6:          "Library to browse and discover content",
+  f7:          "AI-powered search (LLM integration)",
+  f8:          "Plug and play ready for any AI application",
+  f9:          "Dark and light themes",
+  f10:         "Lightning-fast with 99.9% uptime",
 
   ctaHead:      "Ready to liberate your digital platform?",
   ctaLabel:     "Book a free audit",
@@ -138,6 +182,129 @@ const T = isAr ? {
       <h1 class="hero-h1">{T.h1}</h1>
       <p class="hero-subtitle">{T.subtitle}</p>
       <p class="hero-lede">{T.lede}</p>
+    </div>
+  </section>
+
+  <!-- ─── PROBLEMS GRID ──────────────────────────────────── -->
+  <section class="problems-section bg-paper-2">
+    <div class="container">
+      <h2 class="section-heading">{T.problemsHead}</h2>
+      <div class="problems-grid">
+        <div class="sk problem-card bg-butter">
+          <span class="problem-icon">✕</span>
+          <p>{T.p1}</p>
+        </div>
+        <div class="sk problem-card bg-peach">
+          <span class="problem-icon">✕</span>
+          <p>{T.p2}</p>
+        </div>
+        <div class="sk problem-card bg-apricot">
+          <span class="problem-icon">✕</span>
+          <p>{T.p3}</p>
+        </div>
+        <div class="sk problem-card bg-lilac">
+          <span class="problem-icon">✕</span>
+          <p>{T.p4}</p>
+        </div>
+        <div class="sk problem-card bg-butter">
+          <span class="problem-icon">✕</span>
+          <p>{T.p5}</p>
+        </div>
+        <div class="sk problem-card bg-peach">
+          <span class="problem-icon">✕</span>
+          <p>{T.p6}</p>
+        </div>
+        <div class="sk problem-card bg-sky">
+          <span class="problem-icon">✕</span>
+          <p>{T.p7}</p>
+        </div>
+        <div class="sk problem-card bg-apricot">
+          <span class="problem-icon">✕</span>
+          <p>{T.p8}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BEFORE & AFTER ──────────────────────────────────── -->
+  <section class="before-after-section">
+    <div class="container">
+      <h2 class="section-heading">{T.beforeAfterHead}</h2>
+      <div class="before-after-grid">
+        <div class="before-column">
+          <div class="sk window before-mockup">
+            <div class="window-chrome" data-peach></div>
+            <div class="window-body mockup-screenshot">
+              <img src="/assets/illustrations/alimran-old.png" alt="Old Alimran website screenshot" class="screenshot-img" />
+            </div>
+          </div>
+          <div class="before-label">
+            <h3>{T.oldLabel}</h3>
+            <p>{T.oldDesc}</p>
+          </div>
+        </div>
+        <div class="after-column">
+          <div class="sk window after-mockup">
+            <div class="window-chrome" data-sky></div>
+            <div class="window-body mockup-screenshot">
+              <img src="/assets/illustrations/alimran-new.png" alt="New Alimran website screenshot" class="screenshot-img" />
+            </div>
+          </div>
+          <div class="after-label">
+            <h3>{T.newLabel}</h3>
+            <p>{T.newDesc}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES GRID ───────────────────────────────────── -->
+  <section class="features-section bg-paper-2">
+    <div class="container">
+      <h2 class="section-heading">{T.featuresHead}</h2>
+      <div class="features-grid">
+        <div class="sk feature-card bg-sky">
+          <span class="feature-icon">✓</span>
+          <p>{T.f1}</p>
+        </div>
+        <div class="sk feature-card bg-mint">
+          <span class="feature-icon">✓</span>
+          <p>{T.f2}</p>
+        </div>
+        <div class="sk feature-card bg-lilac">
+          <span class="feature-icon">✓</span>
+          <p>{T.f3}</p>
+        </div>
+        <div class="sk feature-card bg-butter">
+          <span class="feature-icon">✓</span>
+          <p>{T.f4}</p>
+        </div>
+        <div class="sk feature-card bg-apricot">
+          <span class="feature-icon">✓</span>
+          <p>{T.f5}</p>
+        </div>
+        <div class="sk feature-card bg-peach">
+          <span class="feature-icon">✓</span>
+          <p>{T.f6}</p>
+        </div>
+        <div class="sk feature-card bg-sky">
+          <span class="feature-icon">✓</span>
+          <p>{T.f7}</p>
+        </div>
+        <div class="sk feature-card bg-butter">
+          <span class="feature-icon">✓</span>
+          <p>{T.f8}</p>
+        </div>
+        <div class="sk feature-card bg-lilac">
+          <span class="feature-icon">✓</span>
+          <p>{T.f9}</p>
+        </div>
+        <div class="sk feature-card bg-mint">
+          <span class="feature-icon">✓</span>
+          <p>{T.f10}</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -389,6 +556,37 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
+  /* Problems Grid */
+  .problems-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .problem-card {
+    padding: var(--k-space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-3);
+  }
+
+  .problem-icon {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--k-ink);
+  }
+
+  .problem-card p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--k-ink);
+  }
+
   /* Before & After */
   .before-after-section {
     padding: var(--k-space-10) 0;
@@ -439,6 +637,37 @@ const T = isAr ? {
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  /* Features Grid */
+  .features-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .feature-card {
+    padding: var(--k-space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-3);
+  }
+
+  .feature-icon {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--k-ink);
+  }
+
+  .feature-card p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--k-ink);
   }
 
   /* Results */
@@ -593,8 +822,10 @@ const T = isAr ? {
     }
 
     .hero-section,
+    .problems-section,
     .section-pair,
     .before-after-section,
+    .features-section,
     .results-section,
     .tech-section,
     .process-section,
