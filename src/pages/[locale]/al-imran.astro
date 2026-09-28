@@ -88,6 +88,11 @@ const T = isAr ? {
   f9:          "ثيم فاتح وغامق",
   f10:         "سرعة فائقة وموثوقية 99.9%",
 
+  pageComparisonsHead: "تحويل كل صفحة",
+  homepageLabel: "الصفحة الرئيسية",
+  articlesLabel: "صفحات المقالات",
+  libraryLabel:  "المكتبة والاستكشاف",
+
   ctaHead:      "جاهز لتحرير نظامك الرقمي؟",
   ctaLabel:     "احجز تدقيق مجاني",
 
@@ -169,6 +174,11 @@ const T = isAr ? {
   f9:          "Dark and light themes",
   f10:         "Lightning-fast with 99.9% uptime",
 
+  pageComparisonsHead: "Every page transformed",
+  homepageLabel: "Homepage",
+  articlesLabel: "Article pages",
+  libraryLabel:  "Library & Discovery",
+
   ctaHead:      "Ready to liberate your digital platform?",
   ctaLabel:     "Book a free audit",
 };
@@ -235,7 +245,7 @@ const T = isAr ? {
           <div class="sk window before-mockup">
             <div class="window-chrome" data-peach></div>
             <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/alimran-old.png" alt="Old Alimran website screenshot" class="screenshot-img" />
+              <img src="/assets/illustrations/old-homepage.png" alt="Old Alimran website screenshot" class="screenshot-img" />
             </div>
           </div>
           <div class="before-label">
@@ -324,33 +334,83 @@ const T = isAr ? {
     </div>
   </section>
 
-  <!-- ─── BEFORE & AFTER ──────────────────────────────────── -->
-  <section class="before-after-section">
+  <!-- ─── PAGE-BY-PAGE COMPARISONS ───────────────────────── -->
+  <section class="page-comparisons-section">
     <div class="container">
-      <h2 class="section-heading">{T.beforeAfterHead}</h2>
-      <div class="before-after-grid">
-        <div class="before-column">
-          <div class="sk window before-mockup">
-            <div class="window-chrome" data-peach></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/alimran-old.png" alt="Old Alimran website screenshot" class="screenshot-img" />
+      <h2 class="section-heading">{T.pageComparisonsHead}</h2>
+      <div class="comparisons-grid">
+        <!-- Homepage -->
+        <div class="comparison-group">
+          <h3 class="comparison-label">{T.homepageLabel}</h3>
+          <div class="comparison-row">
+            <div class="comparison-column">
+              <div class="sk window comparison-window">
+                <div class="window-chrome" data-peach></div>
+                <div class="window-body mockup-screenshot">
+                  <img src="/assets/illustrations/old-homepage.png" alt="Old homepage" class="screenshot-img" />
+                </div>
+              </div>
+              <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
-          </div>
-          <div class="before-label">
-            <h3>{T.oldLabel}</h3>
-            <p>{T.oldDesc}</p>
+            <div class="comparison-column">
+              <div class="sk window comparison-window">
+                <div class="window-chrome" data-sky></div>
+                <div class="window-body mockup-screenshot">
+                  <img src="/assets/illustrations/new-homepage.png" alt="New homepage" class="screenshot-img" />
+                </div>
+              </div>
+              <p class="comparison-label-small">{T.newLabel}</p>
+            </div>
           </div>
         </div>
-        <div class="after-column">
-          <div class="sk window after-mockup">
-            <div class="window-chrome" data-sky></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/alimran-new.png" alt="New Alimran website screenshot" class="screenshot-img" />
+
+        <!-- Articles -->
+        <div class="comparison-group">
+          <h3 class="comparison-label">{T.articlesLabel}</h3>
+          <div class="comparison-row">
+            <div class="comparison-column">
+              <div class="sk window comparison-window">
+                <div class="window-chrome" data-peach></div>
+                <div class="window-body mockup-screenshot">
+                  <img src="/assets/illustrations/old-articles-1.png" alt="Old article page" class="screenshot-img" />
+                </div>
+              </div>
+              <p class="comparison-label-small">{T.oldLabel}</p>
+            </div>
+            <div class="comparison-column">
+              <div class="sk window comparison-window">
+                <div class="window-chrome" data-sky></div>
+                <div class="window-body mockup-screenshot">
+                  <img src="/assets/illustrations/new-articles-1.png" alt="New article page" class="screenshot-img" />
+                </div>
+              </div>
+              <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
-          <div class="after-label">
-            <h3>{T.newLabel}</h3>
-            <p>{T.newDesc}</p>
+        </div>
+
+        <!-- Library & Discovery -->
+        <div class="comparison-group">
+          <h3 class="comparison-label">{T.libraryLabel}</h3>
+          <div class="comparison-row">
+            <div class="comparison-column">
+              <div class="sk window comparison-window">
+                <div class="window-chrome" data-peach></div>
+                <div class="window-body mockup-screenshot">
+                  <img src="/assets/illustrations/old-articles-2.png" alt="Old library page" class="screenshot-img" />
+                </div>
+              </div>
+              <p class="comparison-label-small">{T.oldLabel}</p>
+            </div>
+            <div class="comparison-column">
+              <div class="sk window comparison-window">
+                <div class="window-chrome" data-sky></div>
+                <div class="window-body mockup-screenshot">
+                  <img src="/assets/illustrations/library-feature.png" alt="New library page" class="screenshot-img" />
+                </div>
+              </div>
+              <p class="comparison-label-small">{T.newLabel}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -607,7 +667,7 @@ const T = isAr ? {
 
   .before-mockup,
   .after-mockup {
-    height: 320px;
+    aspect-ratio: 16 / 9;
   }
 
   .before-label h3,
@@ -624,6 +684,58 @@ const T = isAr ? {
     font-size: 15px;
     line-height: 1.6;
     color: var(--k-ink-muted);
+  }
+
+  /* Page-by-Page Comparisons */
+  .page-comparisons-section {
+    padding: var(--k-space-10) 0;
+    background: var(--k-paper-2);
+  }
+
+  .comparisons-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--k-space-9);
+  }
+
+  .comparison-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-5);
+  }
+
+  .comparison-label {
+    margin: 0;
+    font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 700;
+    color: var(--k-ink);
+    text-align: center;
+  }
+
+  .comparison-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--k-space-6);
+  }
+
+  .comparison-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-4);
+  }
+
+  .comparison-window {
+    aspect-ratio: 16 / 9;
+  }
+
+  .comparison-label-small {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--k-ink-muted);
+    font-family: var(--k-font-mono);
+    letter-spacing: 0.05em;
   }
 
   .mockup-screenshot {
@@ -814,6 +926,9 @@ const T = isAr ? {
     .before-after-grid {
       grid-template-columns: 1fr;
     }
+    .comparison-row {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 672px) {
@@ -825,6 +940,7 @@ const T = isAr ? {
     .problems-section,
     .section-pair,
     .before-after-section,
+    .page-comparisons-section,
     .features-section,
     .results-section,
     .tech-section,
