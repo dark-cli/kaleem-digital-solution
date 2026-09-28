@@ -9,29 +9,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="Page not found — Kaleem" description="The page you're looking for doesn't exist." noindex>
-  <section class="nf paper">
-    <div class="container nf-inner">
-      <div class="sk nf-card">
-        <span class="nf-code" aria-hidden="true">404</span>
+  <section class="nf">
+    <div class="sk nf-card bg-butter">
+      <span class="nf-code" aria-hidden="true">404</span>
 
-        <!-- English (default) -->
-        <div class="nf-body nf-en">
-          <h1>Page not found</h1>
-          <p class="nf-lede">The page <code class="nf-path"></code> doesn't exist or has been moved.</p>
-          <div class="nf-actions">
-            <a class="skb skb-mint" href="/en/">← Back to home</a>
-            <a class="skb skb-paper" href="/en/contact/">Contact us</a>
-          </div>
+      <!-- English (default) -->
+      <div class="nf-body nf-en">
+        <h1>Page not found</h1>
+        <p class="nf-lede">The page <code class="nf-path"></code> doesn't exist or has been moved.</p>
+        <div class="nf-actions">
+          <a class="skb skb-mint" href="/en/">← Back to home</a>
+          <a class="skb skb-lilac" href="/en/contact/">Contact us</a>
         </div>
+      </div>
 
-        <!-- Arabic (revealed by JS when relevant) -->
-        <div class="nf-body nf-ar" hidden>
-          <h1>الصفحة غير موجودة</h1>
-          <p class="nf-lede">الصفحة <code class="nf-path"></code> غير موجودة أو تم نقلها.</p>
-          <div class="nf-actions">
-            <a class="skb skb-mint" href="/ar/">→ عودة إلى الصفحة الرئيسية</a>
-            <a class="skb skb-paper" href="/ar/contact/">اتصل بنا</a>
-          </div>
+      <!-- Arabic (revealed by JS when relevant) -->
+      <div class="nf-body nf-ar" hidden>
+        <h1>الصفحة غير موجودة</h1>
+        <p class="nf-lede">الصفحة <code class="nf-path"></code> غير موجودة أو تم نقلها.</p>
+        <div class="nf-actions">
+          <a class="skb skb-mint" href="/ar/">→ عودة إلى الصفحة الرئيسية</a>
+          <a class="skb skb-lilac" href="/ar/contact/">اتصل بنا</a>
         </div>
       </div>
     </div>
@@ -84,23 +82,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 </script>
 
 <style>
+  /* Fill the whole area between header and footer and center the card
+     both horizontally and vertically. Uses main's own flex layout so
+     the card sits in the middle even on short pages. */
   .nf {
-    padding: var(--k-space-10) 0 var(--k-space-11);
-    min-height: 70vh;
+    min-height: calc(100vh - var(--header-h, 96px) - 200px);
     display: flex;
     align-items: center;
-  }
-
-  .nf-inner {
-    max-width: var(--k-max);
-    margin: 0 auto;
-    padding: 0 var(--k-gutter-desktop);
-    display: flex;
     justify-content: center;
+    padding: var(--k-space-8) var(--k-gutter-desktop);
   }
 
   .nf-card {
-    background: var(--k-butter);
     max-width: 640px;
     width: 100%;
     text-align: center;
@@ -109,7 +102,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .nf-code {
     display: block;
     font-family: var(--k-font-mono);
-    font-size: clamp(72px, 14vw, 128px);
+    font-size: clamp(88px, 16vw, 160px);
     line-height: 1;
     color: var(--k-ink);
     letter-spacing: -0.04em;
@@ -149,5 +142,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     justify-content: center;
     flex-wrap: wrap;
     gap: 16px;
+  }
+
+  @media (max-width: 672px) {
+    .nf { padding: var(--k-space-8) var(--k-gutter-mobile); }
   }
 </style>
