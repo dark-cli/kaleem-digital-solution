@@ -20,8 +20,8 @@ const T = isAr ? {
   problem2: "بيانات مُقفلة في منصة لا تملكها، مع شركة لا تدعمك ولا تستطيع الانتقال منها؟",
   problem3: "موقع قديم بطيء ومُكسّر، مبني على تقنيات متقادمة، وليس لديك المفاتيح الرقمية الحقيقية؟",
   problemSolution: "هذا ما بنينا كليم لحله.",
-  methodHeading: "خمس خطوات لتحرير نظامك الرقمي",
-  methodDesc: "نفس العملية الموثوقة: تقييم، استخراج، تنظيف، إعادة بناء، ودعم مستمر.",
+  methodHeading: "أربع خطوات لتحرير نظامك الرقمي",
+  methodDesc: "نفس العملية الموثوقة: تقييم، استخراج، تنظيف، وتسليم كامل.",
   m01: "التقييم والاستخراج",
   m01Desc: "نفحص النظام القديم، نستخرج البيانات، ونتأكد من أن كل شيء وثّق ومحفوظ.",
   m01Quote: "الخطوة الأولى نحو الحرية هي معرفة حقيقة وضعك.",
@@ -34,9 +34,6 @@ const T = isAr ? {
   m04: "تسليم المفاتيح",
   m04Desc: "نسلّمك النظام كاملاً، المفاتيح، الكود، والبيانات — كل شيء باسمك وبملكيتك.",
   m04Quote: "الحرية الحقيقية هي القوة على اختيار طريقك الخاص.",
-  m05: "الدعم، ثم الحرية",
-  m05Desc: "إصلاحات مجانية وأسئلة لفترة محددة، ثم الدفع حسب الاستخدام أو مزود آخر — اختيارك.",
-  m05Quote: "الحرية الحقيقية هي أن تخلق الحرية للآخرين.",
   servicesHeading: "ما نقدمه",
   allServicesLink: "جميع الخدمات",
   s1: "استخراج البيانات",
@@ -95,8 +92,8 @@ const T = isAr ? {
   problem2: "Data locked in a platform you don't own, supported by a company that won't help you leave?",
   problem3: "An aging website that's slow, broken, built on outdated tech, with no real digital keys in your hands?",
   problemSolution: "That's exactly what we built Kaleem to fix.",
-  methodHeading: "Five steps to digital freedom",
-  methodDesc: "The same proven process: audit, extract, clean, rebuild, and ongoing support.",
+  methodHeading: "Four steps to digital freedom",
+  methodDesc: "The same proven process: audit, extract, clean, and hand over the keys.",
   m01: "Audit & extract",
   m01Desc: "We examine the legacy system, extract the data safely, and document everything that matters.",
   m01Quote: "The first step toward freedom is knowing the truth of your situation.",
@@ -109,9 +106,6 @@ const T = isAr ? {
   m04: "Hand over the keys",
   m04Desc: "You receive the code, keys, data, and docs—everything in your name, complete ownership.",
   m04Quote: "True freedom is the power to choose your own path.",
-  m05: "Support, then freedom",
-  m05Desc: "Free fixes and guidance for a set period, then pay-as-you-go, monthly plan, or another provider—your choice.",
-  m05Quote: "The purpose of freedom is to create it for others.",
   servicesHeading: "What we do",
   allServicesLink: "All services",
   s1: "Data extraction",
@@ -227,11 +221,6 @@ const T = isAr ? {
           <span class="method-num">04</span>
           <h3>{T.m04}</h3>
           <p>{T.m04Desc}</p>
-        </li>
-        <li class="sk card-peach">
-          <span class="method-num">05</span>
-          <h3>{T.m05}</h3>
-          <p>{T.m05Desc}</p>
         </li>
       </ol>
     </div>
@@ -497,8 +486,10 @@ const T = isAr ? {
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 28px;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
   .method-grid li {
