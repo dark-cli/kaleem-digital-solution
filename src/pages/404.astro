@@ -106,11 +106,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   }
 
   /* "404" as a cutout to the night sky.
-     `background-clip: text` fills the glyph shapes with the background
-     (sky color + scattered stars) while `color: transparent` hides the
-     usual text fill. All background layers share the same 300px tile so
-     they drift together — the letters look like a peephole to a moving
-     mini-starfield without touching the main canvas. */
+     Uses `background-clip: text` so the glyph shapes are filled with the
+     sky (--k-board board color plus a repeating 4-point-sparkle SVG
+     tile). Animation direction, tile size, and speed are matched to the
+     main starfield settings in StarfieldControls.astro so the visual
+     reads as one continuous night sky through a keyhole.
+
+     Settings match:
+       • Direction: forward (background-position drifts to negative)
+       • Tile: 400px (main uses 100vmax; small tile keeps stars dense
+         inside each glyph)
+       • Speed: 400px / 24s = ~17 px/s ≈ main sky at speed 3.45
+       • Shape: 4-point sparkles, same as main sky default
+       • Colors: white majority with Kaleem palette accents */
   .nf-code {
     display: block;
     font-family: var(--k-font-mono);
@@ -119,29 +127,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     letter-spacing: -0.04em;
     font-weight: 700;
     color: transparent;
-    background-image:
-      radial-gradient(circle at 12% 24%, #fff 0 1.4px, transparent 2.8px),
-      radial-gradient(circle at 78% 12%, #f7e39a 0 1.1px, transparent 2.2px),
-      radial-gradient(circle at 42% 67%, #fff 0 1.6px, transparent 3.2px),
-      radial-gradient(circle at 89% 43%, #c6ddf0 0 1px, transparent 2px),
-      radial-gradient(circle at 24% 88%, #fff 0 1.3px, transparent 2.6px),
-      radial-gradient(circle at 65% 31%, #d9ccf0 0 1.1px, transparent 2.2px),
-      radial-gradient(circle at 8% 62%, #fff 0 1.4px, transparent 2.8px),
-      radial-gradient(circle at 55% 8%, #fff 0 1px, transparent 2px),
-      radial-gradient(circle at 33% 42%, #bfe6d6 0 1.2px, transparent 2.4px),
-      radial-gradient(circle at 91% 82%, #fff 0 1.3px, transparent 2.6px);
     background-color: var(--k-board);
-    background-size: 300px 300px;
+    /* 200px tile with 18 fat 4-point sparkles — small tile means each glyph
+       sees several stars; bigger sparkles read at text-clip scale. Palette
+       matches the main sky's default color mix. Positions and colors are
+       pseudo-random. */
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg%3E%3Cpath fill='%23ffffff' d='M20 30 L23 38 L31 41 L23 44 L20 52 L17 44 L9 41 L17 38 Z'/%3E%3Cpath fill='%23f7e7b0' d='M85 22 L89 34 L101 38 L89 42 L85 54 L81 42 L69 38 L81 34 Z'/%3E%3Cpath fill='%23ffffff' d='M155 40 L158 48 L166 51 L158 54 L155 62 L152 54 L144 51 L152 48 Z'/%3E%3Cpath fill='%23c6ddf0' d='M180 100 L184 112 L196 116 L184 120 L180 132 L176 120 L164 116 L176 112 Z'/%3E%3Cpath fill='%23ffffff' d='M50 80 L53 88 L61 91 L53 94 L50 102 L47 94 L39 91 L47 88 Z'/%3E%3Cpath fill='%23d9ccf0' d='M115 90 L119 102 L131 106 L119 110 L115 122 L111 110 L99 106 L111 102 Z'/%3E%3Cpath fill='%23ffffff' d='M30 140 L33 148 L41 151 L33 154 L30 162 L27 154 L19 151 L27 148 Z'/%3E%3Cpath fill='%23bfe6d6' d='M90 150 L94 162 L106 166 L94 170 L90 182 L86 170 L74 166 L86 162 Z'/%3E%3Cpath fill='%23ffffff' d='M160 160 L163 168 L171 171 L163 174 L160 182 L157 174 L149 171 L157 168 Z'/%3E%3Cpath fill='%23f9d2ae' d='M5 65 L9 77 L21 81 L9 85 L5 97 L1 85 L-11 81 L1 77 Z'/%3E%3Cpath fill='%23ffffff' d='M170 5 L173 13 L181 16 L173 19 L170 27 L167 19 L159 16 L167 13 Z'/%3E%3Cpath fill='%23f8c9b8' d='M45 175 L49 187 L61 191 L49 195 L45 207 L41 195 L29 191 L41 187 Z'/%3E%3Cpath fill='%23ffffff' d='M130 55 L133 63 L141 66 L133 69 L130 77 L127 69 L119 66 L127 63 Z'/%3E%3Cpath fill='%23ffffff' d='M75 115 L78 123 L86 126 L78 129 L75 137 L72 129 L64 126 L72 123 Z'/%3E%3Cpath fill='%23f7e7b0' d='M195 65 L198 73 L206 76 L198 79 L195 87 L192 79 L184 76 L192 73 Z'/%3E%3Cpath fill='%23ffffff' d='M10 105 L13 113 L21 116 L13 119 L10 127 L7 119 L-1 116 L7 113 Z'/%3E%3Cpath fill='%23c6ddf0' d='M145 130 L148 138 L156 141 L148 144 L145 152 L142 144 L134 141 L142 138 Z'/%3E%3Cpath fill='%23ffffff' d='M100 190 L103 198 L111 201 L103 204 L100 212 L97 204 L89 201 L97 198 Z'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    background-repeat: repeat;
     background-clip: text;
     -webkit-background-clip: text;
-    animation: nf-code-drift 32s linear infinite;
+    animation: nf-code-drift 12s linear infinite;
     /* subtle inner outline so the shape reads even on very small screens */
     -webkit-text-stroke: 1px rgba(31, 31, 31, 0.85);
   }
 
   @keyframes nf-code-drift {
     from { background-position: 0 0; }
-    to   { background-position: -300px -300px; }
+    to   { background-position: -200px -200px; }
   }
 
   .nf-body h1 {
