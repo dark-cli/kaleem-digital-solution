@@ -122,13 +122,23 @@
       'float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7)))*43758.5453); }',
       'vec2 h22(vec2 p){ return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))))*43758.5453); }',
 
-      // SDF: 4-point sparkle. Effective radius varies with angle:
-      //   1 + k*cos(4θ) → large at cardinals (points), small at diagonals
-      //   (concave dips). k=0.55 gives fuller star with visible body.
+      // 4-point sparkle: same polygon as the CSS clip-path we used before.
+      //   Vertices (relative to center): (±1, 0), (0, ±1) tips and
+      //   (±0.22, ±0.22) concave points. Straight-line edges give a
+      //   proper 4-point star with sharp points and sharp inner dips.
+      //
+      //   Trick: fold the point to the first octant (ap.x >= ap.y),
+      //   then compute the signed distance to the one relevant polygon
+      //   edge — the line from tip (r, 0) to concave (0.22r, 0.22r).
+      //   By symmetry this defines the entire star.
       'float sdSparkle(vec2 p, float r){',
-      '  float ang = atan(p.y, p.x);',
-      '  float shape = 1.0 + 0.55 * cos(4.0 * ang);',
-      '  return length(p) - r * shape;',
+      '  vec2 ap = abs(p);',
+      '  vec2 q = ap.x >= ap.y ? ap : ap.yx;',
+      '  vec2 a = vec2(r, 0.0);',
+      '  vec2 b = vec2(r * 0.22, r * 0.22);',
+      '  vec2 ba = b - a;',
+      '  vec2 pa = q - a;',
+      '  return (pa.x * ba.y - pa.y * ba.x) / length(ba);',
       '}',
 
       'vec3 pickColor(float seed){',
@@ -299,8 +309,11 @@
       P.twinkle = parseFloat(twinkle.value);
       P.twdur = parseFloat(twdur.value);
       P.twfade = parseFloat(twfade.value);
-      if (dir.value === 'reverse') { P.dirX = 1; P.dirY = 1; }
-      else                         { P.dirX = -1; P.dirY = -1; }
+      // "Forward ↘" = stars drift down and to the right; "Reverse ↖" = up-left.
+      // In the shader, uDir.x = +1 makes stars appear to move right, and
+      // uDir.y = -1 makes them move down (fragCoord.y is bottom-up).
+      if (dir.value === 'reverse') { P.dirX = -1; P.dirY =  1; }
+      else                         { P.dirX =  1; P.dirY = -1; }
       outs.speed.textContent = P.speed.toFixed(2);
       outs.dot.textContent = P.dot.toFixed(2);
       outs.tile.textContent = P.tile.toFixed(0);
