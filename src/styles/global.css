@@ -29,6 +29,7 @@
   /* Kaleem Colour Palette — DESIGN-SYSTEM §2 */
   --k-paper: #faf6ee;
   --k-paper-2: #f3ecdf;
+  --k-gray: #e6e2d8;      /* neutral warm gray — for neutral button fills */
   --k-ink: #1f1f1f;
   --k-ink-muted: #4a4a4a;
   --k-board: #1d2320;
@@ -255,39 +256,75 @@
 .sk > *:last-child  { margin-block-end: 0; }
 .sk > * + *         { margin-block-start: var(--k-space-4); } /* 16px */
 
-/* Sketch button (primary/secondary differ only by fill colour). */
-.skb {
-  display: inline-flex; align-items: center; gap: 12px;
+/* ─── Button widgets ───────────────────────────────────────────
+   Two standard buttons + a shared color-variant palette.
+
+     .skb   — ELEVATED / SKETCH button. Ink outline + offset "second
+              pen line" shadow. Nudges on hover. Use for primary CTAs
+              and anywhere a button should read as raised.
+     .fbtn  — FLAT button. Same size / typography, but no offset
+              shadow. Use for secondary actions, toolbar-style
+              buttons, and dense UI (nav, chrome).
+
+   Color variants apply to BOTH widgets — one class defines the fill:
+     .skb-mint / .fbtn-mint       — mint pastel
+     .skb-butter / .fbtn-butter   — butter pastel
+     .skb-lilac / .fbtn-lilac     — lilac pastel
+     .skb-peach / .fbtn-peach     — peach pastel
+     .skb-sky / .fbtn-sky         — sky pastel
+     .skb-apricot / .fbtn-apricot — apricot pastel
+     .skb-paper / .fbtn-paper     — cream (neutral, subtle)
+     .skb-gray / .fbtn-gray       — warm gray (neutral, more distinct)
+
+   HTML:
+     <a class="skb skb-lilac" href="…">Get started</a>
+     <a class="fbtn fbtn-paper" href="…">Details</a>
+*/
+
+/* Shared base (both widgets). */
+.skb, .fbtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
   height: 52px; padding: 0 22px;
   border: var(--k-line) solid var(--k-ink);
   border-radius: var(--k-radius-sketch-btn);
-  box-shadow: 3px 3px 0 -1px var(--k-paper), 3px 3px 0 1px var(--k-ink);
-  color: var(--k-ink); text-decoration: none; font: inherit; font-weight: 600; font-size: 17px;
-  cursor: pointer; transition: transform 120ms ease;
+  color: var(--k-ink); text-decoration: none;
+  font: inherit; font-weight: 600; font-size: 17px;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
+  background: transparent;
 }
 
-a.sk, a.skb, button.skb { transition: transform 120ms ease; }
-a.sk:hover, a.skb:hover, button.skb:hover { transform: translate(-1px, -1px); }
+/* Elevated: sketchy shadow that lifts the button off the surface. */
+.skb {
+  box-shadow: 3px 3px 0 -1px var(--k-paper), 3px 3px 0 1px var(--k-ink);
+}
+.skb:hover, .skb:focus-visible { transform: translate(-1px, -1px); }
 
-/* Sketch-button color variants. Available site-wide. */
-.skb-mint   { background: var(--k-mint);   color: var(--k-ink); }
-.skb-butter { background: var(--k-butter); color: var(--k-ink); }
-.skb-lilac  { background: var(--k-lilac);  color: var(--k-ink); }
-.skb-peach  { background: var(--k-peach);  color: var(--k-ink); }
-.skb-sky    { background: var(--k-sky);    color: var(--k-ink); }
-.skb-apricot{ background: var(--k-apricot);color: var(--k-ink); }
-.skb-paper  { background: var(--k-paper);  color: var(--k-ink); }
+/* Flat: no shadow. Hover deepens the fill instead of nudging. */
+.fbtn:hover, .fbtn:focus-visible {
+  filter: brightness(0.94);
+}
 
-/* Buttons that follow block content in a normal flow get consistent
-   breathing room. Uses adjacent-sibling selectors so button-to-button
-   groups (e.g. .hero-ctas in a flex row) are NOT affected — flex/grid
-   containers still manage their own spacing via `gap`. */
+/* Compact size modifier — shorter, tighter padding, smaller type. */
+.skb-sm, .fbtn-sm {
+  height: 40px; padding: 0 14px; font-size: 14px; gap: 8px;
+}
+
+/* Color variants — one rule serves both button widgets. */
+.skb-mint,    .fbtn-mint    { background: var(--k-mint); }
+.skb-butter,  .fbtn-butter  { background: var(--k-butter); }
+.skb-lilac,   .fbtn-lilac   { background: var(--k-lilac); }
+.skb-peach,   .fbtn-peach   { background: var(--k-peach); }
+.skb-sky,     .fbtn-sky     { background: var(--k-sky); }
+.skb-apricot, .fbtn-apricot { background: var(--k-apricot); }
+.skb-paper,   .fbtn-paper   { background: var(--k-paper); }
+.skb-gray,    .fbtn-gray    { background: var(--k-gray); }
+
+/* Buttons following block content in normal flow get consistent
+   breathing room. Adjacent-sibling selector so button-to-button rows
+   (managed by flex/grid gap) are unaffected. */
 :where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dt, dd, blockquote,
-       .case-tags, .k-tag) + .skb,
-:where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dt, dd, blockquote,
-       .case-tags, .k-tag) + a.skb,
-:where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dt, dd, blockquote,
-       .case-tags, .k-tag) + button.skb {
+       .case-tags, .k-tag) + :is(.skb, .fbtn, a.skb, a.fbtn, button.skb, button.fbtn) {
   margin-block-start: var(--k-space-4);
 }
 
@@ -573,45 +610,9 @@ html[dir="rtl"] .eyebrow {
   font-size: 12px;
 }
 
-/* Buttons — HANDOFF §2.5 */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  min-height: 48px;
-  padding: 0 24px;
-  border-radius: 2px;
-  font-size: 15px;
-  font-weight: 500;
-  font-family: var(--font-body);
-  white-space: nowrap;
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-.btn-primary {
-  background: var(--accent);
-  color: var(--white);
-  border-color: var(--accent);
-}
-.btn-primary:hover, .btn-primary:focus-visible {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  color: var(--white);
-  text-decoration: none;
-}
-.btn-secondary {
-  background: var(--white);
-  color: var(--accent);
-  border-color: var(--line-strong);
-}
-.btn-secondary:hover, .btn-secondary:focus-visible {
-  border-color: var(--accent);
-  color: var(--accent-hover);
-  text-decoration: none;
-}
-.btn-sm { min-height: 40px; padding: 0 18px; font-size: 14px; }
+/* Legacy .btn / .btn-primary / .btn-secondary REMOVED — use .skb (elevated)
+   or .fbtn (flat) with the shared color variants. See "Button widgets"
+   section above. */
 
 /* Diagonal-hatch photo placeholder — HANDOFF §1.7 (values from prototype) */
 .photo-slot {

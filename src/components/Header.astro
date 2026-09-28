@@ -77,10 +77,10 @@ const ctaLabel = locale === "ar" ? "ابدأ معنا" : "Get started";
 
     <!-- Right actions -->
     <div class="header-actions">
-      <a class="lang-switch" href={altHref} aria-label={altLabel} title={altLabel}>
+      <a class="fbtn fbtn-sm fbtn-paper" href={altHref} aria-label={altLabel} title={altLabel}>
         {altLabel}
       </a>
-      <a class="skb cta-btn" href={L("/contact/")}>
+      <a class="skb skb-lilac" href={L("/contact/")}>
         {ctaLabel}
       </a>
       <button
@@ -123,7 +123,7 @@ const ctaLabel = locale === "ar" ? "ابدأ معنا" : "Get started";
       <a class="drawer-link" href={altHref}>{altLabel}</a>
     </li>
   </ul>
-  <a class="skb cta-btn" href={L("/contact/")}>{ctaLabel}</a>
+  <a class="skb skb-lilac" href={L("/contact/")}>{ctaLabel}</a>
 </aside>
 <div id="menu-scrim" class="menu-scrim" aria-hidden="true"></div>
 
@@ -267,38 +267,8 @@ const ctaLabel = locale === "ar" ? "ابدأ معنا" : "Get started";
     margin-inline-start: auto;
   }
 
-  .lang-switch {
-    display: inline-block;
-    padding: 8px 14px;
-    font-size: 13px;
-    color: var(--k-chalk);
-    text-decoration: none;
-    border: 1px solid var(--k-chalk-muted);
-    border-radius: 4px;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-
-  .lang-switch:hover {
-    color: var(--k-chalk);
-    border-color: var(--k-chalk);
-  }
-
-  .lang-switch:focus-visible {
-    outline: 3px solid var(--k-sky);
-    outline-offset: 3px;
-  }
-
-  /* CTA button (lilac sketch button) */
-  .cta-btn {
-    background-color: var(--k-lilac);
-    color: var(--k-ink);
-  }
-
-  .cta-btn:hover {
-    background-color: var(--k-lilac);
-    transform: translate(-1px, -1px);
-  }
+  /* Header right-side buttons use the global .skb / .fbtn widgets —
+     no local overrides needed. */
 
   /* ─── Menu button ──────────────────────────────────────────── */
   .menu-btn {
