@@ -60,6 +60,12 @@ const T = isAr ? {
   o3:          "يمكن نقل الموقع بسهولة إلى أي خادم في أي وقت",
   o4:          "التطوير المستقبلي بدون الحاجة إلينا",
 
+  beforeAfterHead: "التحول المرئي",
+  oldLabel:    "الموقع القديم",
+  oldDesc:     "WordPress بطيء، بيانات مبعثرة، لا تحكم حقيقي",
+  newLabel:    "الموقع الجديد",
+  newDesc:     "Astro سريع، بيانات منظّفة، تحكم كامل",
+
   ctaHead:      "جاهز لتحرير نظامك الرقمي؟",
   ctaLabel:     "احجز تدقيق مجاني",
 
@@ -113,6 +119,12 @@ const T = isAr ? {
   o3:          "Site can move to any server anytime without losing anything",
   o4:          "Future development possible without depending on us",
 
+  beforeAfterHead: "The Visual Transformation",
+  oldLabel:    "The Old Site",
+  oldDesc:     "Slow WordPress, scattered data, no real control",
+  newLabel:    "The New Site",
+  newDesc:     "Fast Astro, clean data, complete control",
+
   ctaHead:      "Ready to liberate your digital platform?",
   ctaLabel:     "Book a free audit",
 };
@@ -140,6 +152,46 @@ const T = isAr ? {
         <div class="sk card-mint">
           <h2>{T.solution}</h2>
           <p>{T.solutionDesc}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BEFORE & AFTER ──────────────────────────────────── -->
+  <section class="before-after-section">
+    <div class="container">
+      <h2 class="section-heading">{T.beforeAfterHead}</h2>
+      <div class="before-after-grid">
+        <div class="before-column">
+          <div class="sk window before-mockup">
+            <div class="window-chrome" data-peach></div>
+            <div class="window-body mockup-content">
+              <svg class="mockup-icon" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+                <rect x="10" y="12" width="60" height="56" rx="2" fill="none" stroke="#1f1f1f" stroke-width="2"/>
+                <path d="M10 24h60M16 32h20M16 42h30M16 52h15" stroke="#1f1f1f" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="before-label">
+            <h3>{T.oldLabel}</h3>
+            <p>{T.oldDesc}</p>
+          </div>
+        </div>
+        <div class="after-column">
+          <div class="sk window after-mockup">
+            <div class="window-chrome" data-sky></div>
+            <div class="window-body mockup-content">
+              <svg class="mockup-icon" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="28" r="8" fill="none" stroke="#1f1f1f" stroke-width="2"/>
+                <rect x="16" y="42" width="48" height="24" rx="2" fill="none" stroke="#1f1f1f" stroke-width="2"/>
+                <path d="M20 48h40M20 54h30M20 60h25" stroke="#1f1f1f" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="after-label">
+            <h3>{T.newLabel}</h3>
+            <p>{T.newDesc}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -344,6 +396,49 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
+  /* Before & After */
+  .before-after-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .before-after-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--k-space-8);
+  }
+
+  .before-column,
+  .after-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-5);
+  }
+
+  .before-mockup,
+  .after-mockup {
+    height: 320px;
+  }
+
+  .before-label h3,
+  .after-label h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--k-ink);
+  }
+
+  .before-label p,
+  .after-label p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--k-ink-muted);
+  }
+
+  .mockup-icon {
+    opacity: 0.5;
+  }
+
   /* Results */
   .results-section {
     padding: var(--k-space-10) 0;
@@ -485,6 +580,9 @@ const T = isAr ? {
     .pair-grid {
       grid-template-columns: 1fr;
     }
+    .before-after-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 672px) {
@@ -494,6 +592,7 @@ const T = isAr ? {
 
     .hero-section,
     .section-pair,
+    .before-after-section,
     .results-section,
     .tech-section,
     .process-section,
