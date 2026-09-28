@@ -247,22 +247,22 @@ const T = isAr ? {
       <h2 class="section-heading">{T.beforeAfterHead}</h2>
       <p class="showcase-description">{T.designShowcaseDesc}</p>
       <div class="showcase-grid">
-        <div class="showcase-item">
+        <a href="https://alimranmed.com" target="_blank" class="showcase-item">
           <WindowWidget src="/assets/illustrations/new-home-dark.png" alt="Homepage" chromeColor="sky-shader" />
           <p class="showcase-label">{T.homeLabel}</p>
-        </div>
-        <div class="showcase-item">
+        </a>
+        <a href="https://alimranmed.com" target="_blank" class="showcase-item">
           <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt="Article page" chromeColor="sky-shader" />
           <p class="showcase-label">{T.articleLabel}</p>
-        </div>
-        <div class="showcase-item">
+        </a>
+        <a href="https://alimranmed.com" target="_blank" class="showcase-item">
           <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt="Article details" chromeColor="sky-shader" />
           <p class="showcase-label">{T.articleLabel}</p>
-        </div>
-        <div class="showcase-item">
+        </a>
+        <a href="https://alimranmed.com" target="_blank" class="showcase-item">
           <WindowWidget src="/assets/illustrations/new-library-dark.png" alt="Library" chromeColor="sky-shader" />
           <p class="showcase-label">{T.libraryLabel}</p>
-        </div>
+        </a>
       </div>
     </div>
   </section>
@@ -342,11 +342,15 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.homepageLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <WindowWidget src="/assets/illustrations/old-homepage.png" alt="Old homepage" />
+              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
+                <WindowWidget src="/assets/illustrations/old-homepage.png" alt="Old homepage" />
+              </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <WindowWidget src="/assets/illustrations/new-homepage.png" alt="New homepage" chromeColor="sky-shader" />
+              <a href="https://alimranmed.com" target="_blank" class="comparison-link">
+                <WindowWidget src="/assets/illustrations/new-homepage.png" alt="New homepage" chromeColor="sky-shader" />
+              </a>
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
@@ -357,11 +361,15 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.articlesLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <WindowWidget src="/assets/illustrations/old-articles-1.png" alt="Old article page" />
+              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
+                <WindowWidget src="/assets/illustrations/old-articles-1.png" alt="Old article page" />
+              </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <WindowWidget src="/assets/illustrations/new-articles-1.png" alt="New article page" chromeColor="sky-shader" />
+              <a href="https://alimranmed.com" target="_blank" class="comparison-link">
+                <WindowWidget src="/assets/illustrations/new-articles-1.png" alt="New article page" chromeColor="sky-shader" />
+              </a>
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
@@ -372,11 +380,15 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.libraryLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <WindowWidget src="/assets/illustrations/old-articles-2.png" alt="Old library page" />
+              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
+                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt="Old library page" />
+              </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <WindowWidget src="/assets/illustrations/library-feature.png" alt="New library page" chromeColor="sky-shader" />
+              <a href="https://alimranmed.com" target="_blank" class="comparison-link">
+                <WindowWidget src="/assets/illustrations/library-feature.png" alt="New library page" chromeColor="sky-shader" />
+              </a>
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
@@ -692,6 +704,29 @@ const T = isAr ? {
     gap: var(--k-space-4);
   }
 
+  .showcase-item {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-4);
+    cursor: pointer;
+    transition: transform 150ms ease;
+  }
+
+  .showcase-item:hover {
+    transform: translateY(-4px);
+  }
+
+  .comparison-link {
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    transition: transform 150ms ease;
+  }
+
+  .comparison-link:hover {
+    transform: translateY(-4px);
+  }
 
   .comparison-label-small {
     margin: 0;
