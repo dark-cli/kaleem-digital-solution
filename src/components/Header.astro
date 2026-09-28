@@ -216,15 +216,17 @@ const ctaLabel = locale === "ar" ? "ابدأ معنا" : "Get started";
     font-family: var(--k-font-mono);
     font-size: 20px;
     font-weight: 700;
-    color: var(--k-sky);
+    color: var(--k-butter);
     letter-spacing: 0.05em;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 8px rgba(0, 0, 0, 0.35);
   }
 
   .logo-sub {
     font-family: var(--k-font-ar);
     font-size: 11px;
-    color: var(--k-chalk-dim);
-    font-weight: 400;
+    color: var(--k-chalk);
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
   }
 
   .site-logo:focus-visible {
@@ -241,22 +243,35 @@ const ctaLabel = locale === "ar" ? "ابدأ معنا" : "Get started";
   }
 
   .nav-link {
-    padding: 8px 20px;
+    /* Bright chalk text with a soft dark scrim behind it (via text-shadow)
+       so links stay legible over the animated starfield without needing
+       an opaque bar behind the header. */
+    padding: 8px 16px;
     font-size: 15px;
-    font-weight: 500;
-    color: var(--k-chalk-muted);
+    font-weight: 600;
+    color: var(--k-chalk);
     text-decoration: none;
-    transition: color 0.15s ease;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55), 0 0 8px rgba(0, 0, 0, 0.35);
+    transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2),
+                color 140ms ease;
+    display: inline-block;
+    line-height: 1.2;
   }
 
-  .nav-link:hover {
-    color: var(--k-chalk);
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: #fff;
+    transform: translateY(-2px);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
   }
 
   .nav-link.active {
-    color: var(--k-sky);
+    color: var(--k-butter);
     text-decoration: underline;
-    text-underline-offset: 4px;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
   }
 
   /* ─── Header actions (right side) ─────────────────────────── */
