@@ -254,9 +254,9 @@ const T = isAr ? {
           </div>
           <a class="skb skb-lilac" href={L("/work/")}>{T.caseCTA}</a>
         </div>
-        <div class="sk case-mockup">
-          <div class="mockup-header" data-star-window></div>
-          <div class="mockup-content">[Clinic website screenshot]</div>
+        <div class="sk window case-mockup">
+          <div class="window-chrome" data-star-window></div>
+          <div class="window-body mockup-content">[Clinic website screenshot]</div>
         </div>
       </div>
     </div>
@@ -671,48 +671,9 @@ const T = isAr ? {
     background: var(--k-apricot);
   }
 
-  .case-mockup {
-    height: 380px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 0;
-  }
-
-  .mockup-header {
-    height: 40px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 16px;
-    /* Match the parent .sk card's INNER top corners (outer radius minus
-       the 2px border width). This is what the parent's overflow:hidden
-       actually clips children to, and the [data-star-window] utility
-       reads these values and gives the fixed star window the same corners
-       so it fits flush against the card edge. */
-    border-top-left-radius: 8px 3px;
-    border-top-right-radius: 2px 10px;
-  }
-
-  .mockup-header::before,
-  .mockup-header::after {
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-  }
-
-  .mockup-header::before {
-    background: var(--k-peach);
-  }
-
-  .mockup-header::after {
-    background: var(--k-butter);
-  }
-
+  /* Just page-specific tweaks on top of the .window widget. */
+  .case-mockup { height: 380px; }
   .mockup-content {
-    flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;

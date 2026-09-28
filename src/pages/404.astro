@@ -10,26 +10,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout title="Page not found — Kaleem" description="The page you're looking for doesn't exist." noindex>
   <section class="nf">
-    <div class="sk nf-card" data-star-window>
-      <span class="nf-code" aria-hidden="true">404</span>
+    <div class="sk window nf-card">
+      <div class="window-chrome" data-star-window></div>
+      <div class="window-body bg-butter nf-body-wrap">
+        <span class="nf-code" aria-hidden="true">404</span>
 
-      <!-- English (default) -->
-      <div class="nf-body nf-en">
-        <h1>Page not found</h1>
-        <p class="nf-lede">The page <code class="nf-path"></code> doesn't exist or has been moved.</p>
-        <div class="nf-actions">
-          <a class="skb skb-mint" href="/en/">← Back to home</a>
-          <a class="skb skb-lilac" href="/en/contact/">Contact us</a>
+        <!-- English (default) -->
+        <div class="nf-body nf-en">
+          <h1>Page not found</h1>
+          <p class="nf-lede">The page <code class="nf-path"></code> doesn't exist or has been moved.</p>
+          <div class="nf-actions">
+            <a class="skb skb-mint" href="/en/">← Back to home</a>
+            <a class="skb skb-lilac" href="/en/contact/">Contact us</a>
+          </div>
         </div>
-      </div>
 
-      <!-- Arabic (revealed by JS when relevant) -->
-      <div class="nf-body nf-ar" hidden>
-        <h1>الصفحة غير موجودة</h1>
-        <p class="nf-lede">الصفحة <code class="nf-path"></code> غير موجودة أو تم نقلها.</p>
-        <div class="nf-actions">
-          <a class="skb skb-mint" href="/ar/">→ عودة إلى الصفحة الرئيسية</a>
-          <a class="skb skb-lilac" href="/ar/contact/">اتصل بنا</a>
+        <!-- Arabic (revealed by JS when relevant) -->
+        <div class="nf-body nf-ar" hidden>
+          <h1>الصفحة غير موجودة</h1>
+          <p class="nf-lede">الصفحة <code class="nf-path"></code> غير موجودة أو تم نقلها.</p>
+          <div class="nf-actions">
+            <a class="skb skb-mint" href="/ar/">→ عودة إلى الصفحة الرئيسية</a>
+            <a class="skb skb-lilac" href="/ar/contact/">اتصل بنا</a>
+          </div>
         </div>
       </div>
     </div>
@@ -54,7 +57,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
 
     function apply() {
-      if (!document.querySelector(".nf-inner")) return;
+      if (!document.querySelector(".nf-card")) return;
       document.querySelectorAll(".nf-path").forEach(function (el) {
         el.textContent = location.href;
       });
@@ -82,9 +85,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 </script>
 
 <style>
-  /* Fill the whole area between header and footer and center the card
-     both horizontally and vertically. Uses main's own flex layout so
-     the card sits in the middle even on short pages. */
+  /* Fill the space between header and footer and center the window
+     both horizontally and vertically. */
   .nf {
     min-height: calc(100vh - var(--header-h, 96px) - 200px);
     display: flex;
@@ -93,14 +95,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     padding: var(--k-space-8) var(--k-gutter-desktop);
   }
 
-  /* The card is a see-through window to the starfield (data-star-window),
-     so its own background is transparent. Text colors switch to chalk
-     tones so the copy stays readable over the dark sky. */
   .nf-card {
     max-width: 640px;
     width: 100%;
+  }
+
+  .nf-body-wrap {
     text-align: center;
-    color: var(--k-chalk);
+    color: var(--k-ink);
   }
 
   .nf-code {
@@ -108,20 +110,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-family: var(--k-font-mono);
     font-size: clamp(88px, 16vw, 160px);
     line-height: 1;
-    color: var(--k-butter);
+    color: var(--k-ink);
     letter-spacing: -0.04em;
     font-weight: 700;
-    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
   }
 
   .nf-body h1 {
     margin: 0;
     font-size: clamp(28px, 4vw, 40px);
-    color: var(--k-chalk);
+    color: var(--k-ink);
   }
 
   .nf-lede {
-    color: var(--k-chalk-muted);
+    color: var(--k-ink-muted);
     font-size: 17px;
     line-height: 1.65;
     max-width: 42ch;
