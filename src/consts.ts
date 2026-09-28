@@ -1,9 +1,9 @@
-export const SITE_TITLE = "Kaleem — Smart Home Solutions for Iraq";
+export const SITE_TITLE = "Kaleem — Digital Solutions for Iraq";
 export const SITE_NAME  = "Kaleem";
 export const SITE_DESCRIPTION =
-  "Iraq's first localized smart home ecosystem, with a voice assistant that speaks the Iraqi dialect. Residential and commercial automation, engineered in Basra.";
+  "Kaleem: we extract, clean, and modernize legacy systems. From data jailbreaking to web platform rebuilds, we give clients their digital freedom back.";
 export const SITE_DESCRIPTION_AR =
-  "أول منظومة منزل ذكي مصممة للعراق، ومساعد صوتي يتحدث لهجتك. حلول الأتمتة للمنازل والمؤسسات، بهندسة عراقية من البصرة.";
+  "كليم: نُحرّر البيانات، نُنظّفها، ونُحدّثها. من استخراج قواعد البيانات المهجورة إلى إعادة بناء المنصات، نعيد حريتك الرقمية.";
 
 export const CONTACT = {
   // Same number rings both offices; kept as a single entry so the site
