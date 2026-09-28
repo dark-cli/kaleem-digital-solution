@@ -44,15 +44,17 @@ const T = isAr ? {
   t3:          "Open standards — لا قفل في التقنيات",
   t4:          "Git workflow — كل التاريخ موثّق",
 
-  processHead:  "العملية",
-  p1Title:     "1. الاستخراج",
-  p1:          "فحص قاعدة البيانات القديمة، نسخ احتياطية كاملة، استخراج كل محتوى.",
-  p2Title:     "2. التنظيف",
-  p2:          "إزالة النسخ المكررة، توحيد التنسيقات، إصلاح الصور والروابط.",
-  p3Title:     "3. إعادة البناء",
+  processHead:  "العملية — خمس خطوات",
+  p1Title:     "1. التقييم",
+  p1:          "تحديد موقع الأنظمة والحسابات والبيانات: الأجهزة، مزودو الخدمات، قواعد البيانات القديمة.",
+  p2Title:     "2. الاستخراج والتنظيف",
+  p2:          "استخراج البيانات، إزالة النسخ المكررة، توحيد التنسيقات، إصلاح الصور والروابط.",
+  p3Title:     "3. البناء على معايير مفتوحة",
   p3:          "بناء Astro site، جميع المقالات كـ markdown، تصميم عصري متجاوب.",
-  p4Title:     "4. الترحيل",
-  p4:          "نشر على Cloudflare، إعادة توجيه النطاق القديم، تدريب الفريق.",
+  p4Title:     "4. تسليم المفاتيح",
+  p4:          "الحسابات والنطاق باسمك، المستودع في حسابك، التوثيق الكامل، إزالة صلاحياتنا.",
+  p5Title:     "5. الدعم، ثم الحرية",
+  p5:          "إصلاحات مجانية وأسئلة لفترة محددة، ثم الدفع حسب الاستخدام أو مزود آخر — اختيارك.",
 
   ownershipHead: "الملكية الحقيقية",
   o1:          "كل شيء — الكود، البيانات، المستودع — ملك للمركز",
@@ -130,15 +132,17 @@ const T = isAr ? {
   t3:          "Open standards — no technology lock-in",
   t4:          "Git workflow — every change tracked and reversible",
 
-  processHead:  "The Process",
-  p1Title:     "1. Extraction",
-  p1:          "Audit legacy database, complete backups, extract all content.",
-  p2Title:     "2. Cleaning",
-  p2:          "Remove duplicates, standardize formats, fix images and links.",
-  p3Title:     "3. Rebuild",
+  processHead:  "The Process — Five Steps",
+  p1Title:     "1. Audit",
+  p1:          "Map where your systems, accounts and data really are: devices, providers, legacy databases.",
+  p2Title:     "2. Extract & Clean",
+  p2:          "Get your data out, remove duplicates, standardize formats, fix images and links.",
+  p3Title:     "3. Rebuild on Open Standards",
   p3:          "Build Astro site, all articles as markdown, modern responsive design.",
-  p4Title:     "4. Migration",
-  p4:          "Deploy to Cloudflare, redirect old domain, train team.",
+  p4Title:     "4. Hand Over the Keys",
+  p4:          "Accounts and domain in your name, code repository in your account, full documentation, our access removed.",
+  p5Title:     "5. Support, Then Freedom",
+  p5:          "Free fixes and guidance for a set period, then pay-as-you-go, monthly plan, or another provider — your choice.",
 
   ownershipHead: "True Ownership",
   o1:          "Everything — code, data, repository — belongs to the clinic",
@@ -504,6 +508,10 @@ const T = isAr ? {
         <div class="sk process-step bg-mint">
           <h3>{T.p4Title}</h3>
           <p>{T.p4}</p>
+        </div>
+        <div class="sk process-step bg-peach">
+          <h3>{T.p5Title}</h3>
+          <p>{T.p5}</p>
         </div>
       </div>
     </div>
