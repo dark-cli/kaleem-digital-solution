@@ -300,9 +300,11 @@
 }
 .skb:hover, .skb:focus-visible { transform: translate(-1px, -1px); }
 
-/* Flat: no shadow. Hover deepens the fill instead of nudging. */
+/* Flat: no shadow. Hover mirrors .skb's subtle nudge — keeps the widget
+   pair feeling consistent, and avoids color-shift on hover which read
+   as "activated" when we only want feedback. */
 .fbtn:hover, .fbtn:focus-visible {
-  filter: brightness(0.94);
+  transform: translate(-1px, -1px);
 }
 
 /* Compact size modifier — shorter, tighter padding, smaller type. */
