@@ -33,23 +33,23 @@
       </div>
 
       <label>
-        <span>Speed <output id="star-speed-out">3.45</output></span>
-        <input type="range" id="star-speed" min="0.05" max="50" step="0.05" value="3.45" />
+        <span>Speed <output id="star-speed-out">0.55</output></span>
+        <input type="range" id="star-speed" min="0.05" max="50" step="0.05" value="0.55" />
       </label>
 
       <label>
-        <span>Dot size <output id="star-dot-out">4.1</output></span>
-        <input type="range" id="star-dot" min="0.5" max="30" step="0.1" value="4.1" />
+        <span>Dot size <output id="star-dot-out">5.4</output></span>
+        <input type="range" id="star-dot" min="0.5" max="30" step="0.1" value="5.4" />
       </label>
 
       <label>
-        <span>Tile <output id="star-tile-out">55</output></span>
-        <input type="range" id="star-tile" min="20" max="400" step="5" value="55" />
+        <span>Tile <output id="star-tile-out">95</output></span>
+        <input type="range" id="star-tile" min="20" max="400" step="5" value="95" />
       </label>
 
       <label>
-        <span>Color mix <output id="star-color-out">0.58</output></span>
-        <input type="range" id="star-color" min="0" max="1" step="0.01" value="0.58" />
+        <span>Color mix <output id="star-color-out">0.83</output></span>
+        <input type="range" id="star-color" min="0" max="1" step="0.01" value="0.83" />
       </label>
 
       <label>
@@ -58,20 +58,20 @@
       </label>
 
       <label>
-        <span>Twinkle time <output id="star-twdur-out">4.0</output></span>
-        <input type="range" id="star-twdur" min="0.3" max="20" step="0.1" value="4" />
+        <span>Twinkle time <output id="star-twdur-out">0.9</output></span>
+        <input type="range" id="star-twdur" min="0.3" max="20" step="0.1" value="0.9" />
       </label>
 
       <label>
-        <span>Fade to <output id="star-twfade-out">0.69</output></span>
-        <input type="range" id="star-twfade" min="0" max="1" step="0.01" value="0.69" />
+        <span>Fade to <output id="star-twfade-out">0.51</output></span>
+        <input type="range" id="star-twfade" min="0" max="1" step="0.01" value="0.51" />
       </label>
 
       <label>
         <span>Direction</span>
         <select id="star-direction">
-          <option value="normal" selected>Forward ↘</option>
-          <option value="reverse">Reverse ↖</option>
+          <option value="normal">Forward ↘</option>
+          <option value="reverse" selected>Reverse ↖</option>
         </select>
       </label>
     </div>
@@ -278,9 +278,9 @@
 
     // ── Params (read from CSS vars + slider inputs) ──
     const P = {
-      speed: 3.45, dot: 4.1, tile: 55,
-      colorMix: 0.58, twinkle: 0.5, twdur: 4, twfade: 0.69,
-      dirX: -1, dirY: -1
+      speed: 0.55, dot: 5.4, tile: 95,
+      colorMix: 0.83, twinkle: 0.5, twdur: 0.9, twfade: 0.51,
+      dirX: -1, dirY: 1
     };
     // Base drift speed: 60 world-px per second at speed=1. Multiplier
     // applied per frame from the speed slider.
@@ -329,9 +329,9 @@
       });
     });
     reset.addEventListener('click', function () {
-      speed.value = 3.45; dot.value = 4.1; tile.value = 55;
-      color.value = 0.58; twinkle.value = 0.5; twdur.value = 4;
-      twfade.value = 0.69; dir.value = 'normal';
+      speed.value = 0.55; dot.value = 5.4; tile.value = 95;
+      color.value = 0.83; twinkle.value = 0.5; twdur.value = 0.9;
+      twfade.value = 0.51; dir.value = 'reverse';
       readParams();
     });
     toggle.addEventListener('click', function () {
@@ -431,9 +431,8 @@
     inset-block-end: 24px;
     inset-inline-start: 24px;
     z-index: 1100;
-    /* Shown by default while tuning the WebGL shader. Flip to `display: none`
-       once defaults are dialed in. */
-    display: flex;
+    /* Hidden by default. Flip to `display: flex` to expose the tuner. */
+    display: none;
     align-items: flex-end;
     gap: 12px;
     font-family: var(--k-font-en, system-ui);
