@@ -33,18 +33,18 @@ const T = isAr ? {
   m04Desc: "نسلّمك الكود والبيانات والحسابات والتوثيق — كل شيء باسمك وملكك بالكامل.",
   servicesHeading: "ما نقدّمه",
   allServicesLink: "جميع الخدمات",
-  s1: "استخراج البيانات",
-  s1Desc: "نستعيد البيانات من الأنظمة القديمة بأمان، مع الحفاظ على تاريخها وسياقها دون أي فقدان.",
-  s2: "تحديث منصات الويب",
-  s2Desc: "نحوّل المواقع القديمة إلى تطبيقات ويب حديثة وسريعة وآمنة.",
-  s3: "إعادة هيكلة قواعد البيانات",
-  s3Desc: "ننظّف البيانات المبعثرة، ونوحّد صيغها، ونبني قواعد بيانات واضحة الهيكل وقابلة للتوسّع.",
-  s4: "بنية تحتية مفتوحة",
-  s4Desc: "نبني على تقنيات مفتوحة المصدر ومعايير معتمدة لا تحبس بياناتك أبداً.",
-  s5: "الانتقال من الأنظمة القديمة",
-  s5Desc: "ننقلك من الأنظمة المغلقة إلى بدائل حديثة دون فقدان البيانات أو توقّف العمل.",
-  s6: "التدريب والدعم",
-  s6Desc: "ندرّب فريقك على النظام الجديد، ونقدّم دعماً محلياً مستمراً بالعربية والإنجليزية.",
+  s1: "تحرير الأنظمة",
+  s1Desc: "نُخرج بياناتك من الأنظمة القديمة والمغلقة، ونحوّلها إلى معايير مفتوحة، ونسلّمك المفاتيح.",
+  s2: "المواقع وتطبيقات الويب",
+  s2Desc: "مواقع سريعة بلغتين، يحرّرها فريقك بنفسه، وبأقل تكلفة استضافة ممكنة.",
+  s3: "تطبيقات الهاتف",
+  s3Desc: "تطبيقات أندرويد و iOS لعملائك أو لفريقك، منشورة باسمك.",
+  s4: "أنظمة الإدارة والمتاجر",
+  s4Desc: "أنظمة مخزون ونقاط بيع وإدارة، على السحابة أو داخل مقرّك.",
+  s5: "الشبكات والأمن",
+  s5Desc: "كاميرات مراقبة وأنظمة أمن وشبكات منظّمة، وكل كلمات المرور بين يديك.",
+  s6: "الاستشارات والتدريب",
+  s6Desc: "نساعدك على أن تقرّر ما تبنيه أو تشتريه أو تُبقيه أو تستبدله، وندرّب فريقك.",
   keepKeys: "ملكية رقمية حقيقية",
   k1: "تحكّم كامل — الكود والبيانات والخوادم ملكك",
   k2: "معايير مفتوحة — لا ارتهان لمزوّد، ولا تغييرات مفاجئة من طرف آخر",
@@ -96,18 +96,18 @@ const T = isAr ? {
   m04Desc: "You receive the code, data, accounts, and documentation — everything in your name, fully yours.",
   servicesHeading: "What we do",
   allServicesLink: "All services",
-  s1: "Data extraction",
-  s1Desc: "Safely recover data from legacy systems, preserving its history and context without loss.",
-  s2: "Web platform modernization",
-  s2Desc: "Turn aging websites into modern, fast, and secure web applications.",
-  s3: "Database restructuring",
-  s3Desc: "Clean messy data, unify formats, and build clear, scalable database structures.",
-  s4: "Open infrastructure",
-  s4Desc: "Build on proven open-source technology and industry standards that never lock your data in.",
-  s5: "Legacy migration",
-  s5Desc: "Move from closed, proprietary systems to modern alternatives without data loss or downtime.",
-  s6: "Training & support",
-  s6Desc: "We train your team on the new system and provide ongoing local support in Arabic and English.",
+  s1: "The Jailbreak",
+  s1Desc: "We get your data out of old, locked systems, convert it to open standards, and hand you the keys.",
+  s2: "Websites & web apps",
+  s2Desc: "Fast, bilingual websites your team can edit, at the lowest possible hosting cost.",
+  s3: "Mobile apps",
+  s3Desc: "Android and iOS apps for your customers or your team, published in your name.",
+  s4: "Management & store systems",
+  s4Desc: "Inventory, point-of-sale and management systems, in the cloud or on-site.",
+  s5: "Networks & security",
+  s5Desc: "Surveillance cameras, security systems and organised networks, with every password in your hands.",
+  s6: "Consulting & training",
+  s6Desc: "We help you decide what to build, buy, keep or replace — and train your team.",
   keepKeys: "True digital ownership",
   k1: "Full control — you own the code, the data, and the servers",
   k2: "Open standards — no lock-in, no surprise changes from a vendor",
@@ -137,7 +137,8 @@ const T = isAr ? {
   bookAudit: "Book a free audit",
   howWeWork: "How we work",
   learnMore: "Learn more",
-};---
+};
+---
 
 <BaseLayout title={T.title} description={T.description}>
   <!-- ─── HERO ───────────────────────────────────────────────── -->
@@ -216,37 +217,37 @@ const T = isAr ? {
         <a href={L("/services/")}>{T.allServicesLink}</a>
       </div>
       <div class="services-grid">
-        <a href={L("/services/")} class="sk card-butter">
+        <a href={L("/services/") + "#jailbreak"} class="sk card-butter">
           <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 6H6V26H26V14"></path><rect x="20" y="3" width="9" height="9" fill="#faf6ee"></rect></svg>
           <h3>{T.s1}</h3>
           <p>{T.s1Desc}</p>
           <span class="learn-more">{T.learnMore}</span>
         </a>
-        <a href={L("/services/")} class="sk card-sky">
+        <a href={L("/services/") + "#websites"} class="sk card-sky">
           <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M4 11h24"></path><path d="M8 8.5h1M11 8.5h1"></path></svg>
           <h3>{T.s2}</h3>
           <p>{T.s2Desc}</p>
           <span class="learn-more">{T.learnMore}</span>
         </a>
-        <a href={L("/services/")} class="sk card-peach">
+        <a href={L("/services/") + "#mobile"} class="sk card-peach">
           <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="3" width="12" height="26" rx="3"></rect><path d="M14 25h4"></path></svg>
           <h3>{T.s3}</h3>
           <p>{T.s3Desc}</p>
           <span class="learn-more">{T.learnMore}</span>
         </a>
-        <a href={L("/services/")} class="sk card-mint">
+        <a href={L("/services/") + "#systems"} class="sk card-mint">
           <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v16c0 2.2 4.5 4 10 4s10-1.8 10-4V8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path></svg>
           <h3>{T.s4}</h3>
           <p>{T.s4Desc}</p>
           <span class="learn-more">{T.learnMore}</span>
         </a>
-        <a href={L("/services/")} class="sk card-apricot">
+        <a href={L("/services/") + "#networks"} class="sk card-apricot">
           <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 9l18-4l2 9l-18 4z"></path><path d="M14 16v8H6"></path><circle cx="20" cy="10" r="1.5"></circle></svg>
           <h3>{T.s5}</h3>
           <p>{T.s5Desc}</p>
           <span class="learn-more">{T.learnMore}</span>
         </a>
-        <a href={L("/services/")} class="sk card-lilac">
+        <a href={L("/services/") + "#consulting"} class="sk card-lilac">
           <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h22v14H14l-6 5v-5H5z"></path><path d="M10 11h12M10 15h8"></path></svg>
           <h3>{T.s6}</h3>
           <p>{T.s6Desc}</p>

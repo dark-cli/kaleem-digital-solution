@@ -1,24 +1,18 @@
-# Alimran Medical Center
+# Kaleem
 
-> Neurosurgery, pain medicine, brain stimulation, physiotherapy and rehabilitation delivered from a single clinic in Basra, Iraq. The consultant is Hussein Imran Mousa; patients are assessed once and treated by four departments working from that assessment. Site is bilingual — English at /en/, Arabic at /ar/ — and organises content by clinical taxonomy rather than by content type.
+> Kaleem (كليم) is an Iraqi digital solutions company based in Basra and Baghdad. We get organizations' data out of old, locked systems, convert it to open standards, rebuild their websites, apps and systems, and hand over every key — code, data, domain and accounts — in the client's name. Site is bilingual — English at /en/, Arabic at /ar/.
 
 ## Primary sections
 
-- [Home](https://alimran.clinic/en/): consultant overview and referral pathways
-- [Conditions & Procedures](https://alimran.clinic/en/conditions/): brain, spine and pain pathways with the treatments offered under each
-- [Library](https://alimran.clinic/en/library/): unified, searchable index of every published article across conditions, procedures, editorial blog posts and case reports
-- [Consultant CV](https://alimran.clinic/en/doctors/hussein-imran-mousa/): training, memberships, appointments and publications
-- [Blog](https://alimran.clinic/en/blog/): editorial articles written for patients before their first appointment
-
-## Content collections
-
-- [Conditions](https://alimran.clinic/en/treatments/): clinical reference on the conditions we assess and treat, grouped by pathway (brain, spine, pain) — ~108 pages
-- [Procedures](https://alimran.clinic/en/services/): treatments, interventions and surgeries offered, grouped by category (physiotherapy, chiropractic, brain stimulation, radiofrequency, surgery, regenerative medicine) — ~90 pages
-- [Blog](https://alimran.clinic/en/blog/): editorial articles for patients — ~20 posts
-- [Cases](https://alimran.clinic/en/cases/): representative case reports
+- [Home](https://kaleem.dev/en/): what we do, how we work, and our values
+- [Services](https://kaleem.dev/en/services/): six services — The Jailbreak (data liberation), websites and web apps, mobile apps, management and store systems, networks and security, consulting and training — plus our working terms
+- [Work](https://kaleem.dev/en/work/): case studies
+- [Alimran Medical Center case study](https://kaleem.dev/en/al-imran/): 600 articles extracted from a legacy WordPress site and rebuilt on Astro and Cloudflare Workers
+- [About](https://kaleem.dev/en/about/): our story, mission and values
+- [Contact](https://kaleem.dev/en/contact/): phone, WhatsApp, email and a free audit
 
 ## Optional
 
-- [Sitemap index](https://alimran.clinic/sitemap-index.xml)
-- Contact: +964 780 1926 801, +964 770 6774 773, info@alimranmed.com
-- Address: Breaha, Alnkba Medical Collection, Basra, Iraq
+- [Sitemap index](https://kaleem.dev/sitemap-index.xml)
+- Contact: +964 781 100 0302, info@kaleem.dev
+- Offices: Basra and Baghdad, Iraq

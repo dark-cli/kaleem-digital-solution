@@ -1,10 +1,10 @@
 /**
- * JSON-LD builders for page-level structured data. The clinic itself is
- * declared once in BaseHead with `@id: <site>#clinic`; pages reference it
- * instead of repeating the organisation.
+ * JSON-LD builders for page-level structured data. The organisation itself
+ * is declared once in BaseHead with `@id: <site>/#organization`; pages
+ * reference it instead of repeating it.
  */
 
-export const CLINIC_ID = "https://alimran.clinic/#clinic";
+export const CLINIC_ID = "https://kaleem.dev/#organization";
 
 type Locale = "en" | "ar";
 type FaqItem = { question: string; answer: string };

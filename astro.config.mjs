@@ -13,7 +13,7 @@ import { serializeWithLastmod } from "./src/lib/sitemap-lastmod.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://alimran.clinic/",
+  site: "https://kaleem.dev/",
   i18n: {
     defaultLocale: "en",
     locales: ["en", "ar"],

@@ -1,5 +1,5 @@
-# Robots.txt for Alimran Medical Center — alimran.clinic
-# Last updated: 2026-09-20
+# Robots.txt for Kaleem — kaleem.dev
+# Last updated: 2026-09-28
 
 # Default rules for all crawlers
 User-agent: *
@@ -7,7 +7,7 @@ Allow: /
 Disallow: /admin/
 
 # Sitemap location
-Sitemap: https://alimran.clinic/sitemap-index.xml
+Sitemap: https://kaleem.dev/sitemap-index.xml
 
 # ─────────────────────────────────────────────────────────────────
 # LLM/AI Crawlers — explicitly allow for content discovery

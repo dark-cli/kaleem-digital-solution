@@ -80,7 +80,7 @@ const ctaLabel = locale === "ar" ? "احجز تقييماً مجانياً" : "B
       <a class="fbtn fbtn-sm fbtn-paper" href={altHref} aria-label={altLabel} title={altLabel}>
         {altLabel}
       </a>
-      <a class="skb skb-lilac" href={L("/contact/")}>
+      <a class="skb skb-lilac header-cta" href={L("/contact/")}>
         {ctaLabel}
       </a>
       <button
@@ -449,6 +449,10 @@ const ctaLabel = locale === "ar" ? "احجز تقييماً مجانياً" : "B
   @media (max-width: 671px) {
     .menu-btn {
       display: inline-flex;
+    }
+    /* The drawer carries the same CTA; there's no room for it here. */
+    .header-cta {
+      display: none;
     }
     .header-row {
       padding: 0 var(--k-gutter-mobile);

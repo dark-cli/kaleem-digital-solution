@@ -1,109 +1,471 @@
 ---
+/**
+ * Services — built from the "Services · pastel" artboards on the Kaleem
+ * Website design canvas. Six services, one shared method and handover,
+ * then the working terms every job runs on.
+ */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
-import { topicOf, isLocale, pickForLocale, localizedHref, currentLocale } from "../../../lib/i18n";
+import { currentLocale, localizedHref } from "../../../lib/i18n";
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
 }
 
 const locale = currentLocale(Astro);
-const all = await getCollection("services");
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
 
-let entries: typeof all;
-if (locale === "ar") {
-  const topics = Array.from(new Set(all.map((e) => topicOf(e.id))));
-  entries = topics
-    .map((topic) => pickForLocale(all, topic, "ar"))
-    .filter((x): x is NonNullable<typeof x> => !!x)
-    .map(({ entry }) => entry);
-} else {
-  entries = all.filter((e) => isLocale(e.id, "en"));
-}
+const T = isAr ? {
+  title:       "الخدمات — كليم",
+  description: "تحرير الأنظمة، والمواقع وتطبيقات الويب، وتطبيقات الهاتف، وأنظمة الإدارة، والشبكات والأمن، والاستشارات — ست خدمات بطريقة واحدة، وتنتهي كلها بتسليمك المفاتيح.",
+  h1:          "ست خدمات، وطريقة واحدة",
+  lede:        "كل خدمة تتبع خطواتنا نفسها، وتنتهي بالتسليم نفسه: بياناتك ونطاقك وحساباتك باسمك، والمفاتيح كلها بين يديك.",
+  navLabel:    "الخدمات",
+  signature:   "خدمتنا المميّزة",
+  whoFor:      "لمن هذه الخدمة",
+  whatWeDo:    "ما نقدّمه",
+  youReceive:  "ما تستلمه",
+  termsHead:   "واضح من البداية",
+  termsNote:   "نعمل بالساعة أو بسعر ثابت لكل أمر عمل، مع اشتراك شهري اختياري. تكاليف الاستضافة والنطاقات والأجهزة والخدمات الخارجية تدفعها للمزوّد مباشرة، دون أي زيادة منّا.",
+  ctaHead:     "لست متأكداً أي خدمة تحتاج؟ ابدأ بتقييم مجاني.",
+  ctaLabel:    "احجز تقييماً مجانياً",
+} : {
+  title:       "Services — Kaleem",
+  description: "The Jailbreak, websites and web apps, mobile apps, management systems, networks and security, and consulting — six services, one method, and every key handed to you.",
+  h1:          "Six services, one method",
+  lede:        "Every service follows the same steps and ends with the same handover: your data, domain and accounts in your name, and every key in your hands.",
+  navLabel:    "Services",
+  signature:   "Our signature",
+  whoFor:      "Who it's for",
+  whatWeDo:    "What we do",
+  youReceive:  "You receive",
+  termsHead:   "Clear from the start",
+  termsNote:   "We work by the hour or at a fixed price per work order, with an optional monthly plan. Hosting, domains, hardware and outside services are paid directly to the provider — we never mark them up.",
+  ctaHead:     "Not sure which service you need? Start with a free audit.",
+  ctaLabel:    "Book a free audit",
+};
 
-type Entry = (typeof entries)[number];
-const byCategory = new Map<string, Entry[]>();
-const topLevel: Entry[] = [];
-for (const entry of entries) {
-  const topic = topicOf(entry.id);
-  if (topic.includes("/")) {
-    const [cat] = topic.split("/");
-    if (!byCategory.has(cat)) byCategory.set(cat, []);
-    byCategory.get(cat)!.push(entry);
-  } else {
-    topLevel.push(entry);
-  }
-}
+// Icons match the homepage service cards.
+const ICONS = {
+  jailbreak: `<path d="M18 6H6V26H26V14"></path><rect x="20" y="3" width="9" height="9" fill="#faf6ee"></rect>`,
+  web:       `<rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M4 11h24"></path><path d="M8 8.5h1M11 8.5h1"></path>`,
+  mobile:    `<rect x="10" y="3" width="12" height="26" rx="3"></rect><path d="M14 25h4"></path>`,
+  systems:   `<ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v16c0 2.2 4.5 4 10 4s10-1.8 10-4V8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path>`,
+  networks:  `<path d="M4 9l18-4l2 9l-18 4z"></path><path d="M14 16v8H6"></path><circle cx="20" cy="10" r="1.5"></circle>`,
+  consulting:`<path d="M5 6h22v14H14l-6 5v-5H5z"></path><path d="M10 11h12M10 15h8"></path>`,
+};
 
-// For AR: use Arabic titles for category landing pages
-const categoryTitles = new Map<string, string>();
-if (locale === "ar") {
-  for (const entry of entries) {
-    const topic = topicOf(entry.id);
-    categoryTitles.set(topic, entry.data.title);
-  }
-}
+type Service = {
+  id: string; icon: keyof typeof ICONS; bg: string; chip: string;
+  short: string; name: string; lede: string; who: string;
+  items: string[]; formats?: string; receive: string; signature?: boolean;
+};
 
-const categories = [...byCategory.entries()]
-  .sort((a, b) => a[0].localeCompare(b[0]))
-  .map(([slug, list]) => ({
-    slug,
-    pretty: locale === "ar"
-      ? (categoryTitles.get(slug) || slug.split("-").map((w) => w[0].toUpperCase() + w.slice(1)).join(" "))
-      : slug.split("-").map((w) => w[0].toUpperCase() + w.slice(1)).join(" "),
-    count: list.length,
-  }));
+const SERVICES: Service[] = isAr ? [
+  {
+    id: "jailbreak", icon: "jailbreak", bg: "bg-butter", chip: "bg-butter", signature: true,
+    short: "تحرير الأنظمة", name: "تحرير الأنظمة",
+    lede: "نُخرج بياناتك من الأنظمة القديمة والمغلقة، ونحوّلها إلى معايير مفتوحة، ونسلّمك المفاتيح.",
+    who: "لكل من علق بموقع أو تطبيق أو نظام قديم: بيانات دخول مفقودة، أو بيانات موزّعة بينك وبين المزوّد، أو صيغ غير قياسية، أو مزوّد يصعّب عليك المغادرة.",
+    items: [
+      "نحدّد أين توجد بياناتك فعلاً",
+      "نستخرجها: المحتوى والوسائط وسجلات العملاء والمنتجات والإعدادات",
+      "ننظّفها ونعيد ترتيبها",
+      "نحوّلها إلى معايير مفتوحة مثل",
+      "نعيد البناء أو الاستضافة بأدوات مفتوحة المصدر",
+      "نستعيد ما يخصّك: النطاقات القديمة، وملفك التجاري على Google، وصفحات التواصل الاجتماعي",
+    ],
+    formats: "Markdown · CSV · JSON · SQL",
+    receive: "بياناتك بصيغ مفتوحة، والنظام الجديد، والتوثيق، وكل الحسابات باسمك.",
+  },
+  {
+    id: "websites", icon: "web", bg: "bg-sky", chip: "bg-paper",
+    short: "المواقع", name: "المواقع وتطبيقات الويب",
+    lede: "مواقع سريعة بلغتين، يحرّرها فريقك بنفسه، وبأقل تكلفة استضافة ممكنة.",
+    who: "الشركات والمتاجر والعيادات والمؤسسات التي تحتاج حضوراً واضحاً على الإنترنت.",
+    items: [
+      "العربية والإنجليزية في موقع واحد",
+      "مواقع ثابتة لا تحتاج خادماً مستأجراً متى أمكن، وتطبيقات ويب بخادم عند الحاجة",
+      "لوحة تحرير مع معاينة مباشرة، ليحرّر فريقك الصفحات بنفسه",
+      "السرعة، والتوافق مع الهاتف، والتهيئة التقنية لمحركات البحث",
+      "عند الطلب: نماذج تواصل، وأسئلة شائعة، وحجز مواعيد، ومساعد محادثة بالذكاء الاصطناعي، وبريد على نطاقك",
+    ],
+    receive: "الموقع، والنطاق وحساب الاستضافة باسمك، ومستودع الكود في حسابك، وتدريب على التحرير.",
+  },
+  {
+    id: "mobile", icon: "mobile", bg: "bg-peach", chip: "bg-peach",
+    short: "تطبيقات الهاتف", name: "تطبيقات الهاتف",
+    lede: "تطبيقات أندرويد و iOS لعملائك أو لفريقك، منشورة باسمك.",
+    who: "من يحتاج تطبيقاً لعملائه أو لموظفيه، أو لديه تطبيق قديم يحتاج إلى إعادة بناء.",
+    items: [
+      "تطبيقات للطلبات والحجوزات والكتالوجات وبرامج الولاء والاستخدام الداخلي",
+      "تحديث التطبيقات القديمة وإعادة بنائها مع نقل بياناتها",
+      "النشر عبر حسابات المطوّر الخاصة بك",
+    ],
+    receive: "التطبيق منشوراً عبر حساباتك، ومستودع الكود في حسابك.",
+  },
+  {
+    id: "systems", icon: "systems", bg: "bg-mint", chip: "bg-mint",
+    short: "أنظمة الإدارة", name: "أنظمة الإدارة والمتاجر",
+    lede: "أنظمة مخزون ونقاط بيع وإدارة، على السحابة أو داخل مقرّك.",
+    who: "المتاجر والمكاتب والمؤسسات التي تدير عملها بالورق أو جداول البيانات أو برامج قديمة.",
+    items: [
+      "أنظمة المخزون ونقاط البيع والمتاجر",
+      "أنظمة إدارة المكاتب والعيادات والمؤسسات، وبرامج سطح المكتب",
+      "سجلات العملاء أو المرضى أو الأعضاء، بصلاحيات وصول متّفق عليها كتابياً",
+      "خادم سحابي أو محلي حسب اختيارك، مع شرح الفرق في التكلفة ومكان حفظ البيانات",
+      "الانتقال من جداول البيانات أو الورق أو البرامج القديمة",
+    ],
+    receive: "النظام وبياناته، وبيانات الدخول الإدارية، والتوثيق، وتدريب المستخدمين.",
+  },
+  {
+    id: "networks", icon: "networks", bg: "bg-apricot", chip: "bg-apricot",
+    short: "الشبكات والأمن", name: "الشبكات والأمن",
+    lede: "كاميرات مراقبة وأنظمة أمن وشبكات منظّمة، وكل كلمات المرور بين يديك.",
+    who: "المكاتب والمتاجر والعيادات والمنشآت التي تحتاج إلى مراقبة أو شبكة منظّمة.",
+    items: [
+      "كاميرات المراقبة: التوريد والتركيب والإعداد",
+      "أنظمة أمن أخرى، مثل التحكم بالدخول، وربطها معاً",
+      "شبكات منفصلة للموظفين والزوار، وواي فاي، وأجهزة توجيه ونقاط وصول",
+      "بوابات واي فاي للزوار تعرض موقعك وتمنحهم وصولاً مجانياً لمدة محدودة",
+    ],
+    receive: "بيانات الدخول الإدارية لكل جهاز، ومخطط الشبكة، وتوثيق التركيب.",
+  },
+  {
+    id: "consulting", icon: "consulting", bg: "bg-lilac", chip: "bg-lilac",
+    short: "الاستشارات", name: "الاستشارات والتدريب",
+    lede: "نساعدك على أن تقرّر ما تبنيه أو تشتريه أو تُبقيه أو تستبدله، وندرّب فريقك.",
+    who: "المدراء الذين يحتاجون إلى قرار تقني واضح، أو فريق يريد إدارة أنظمته بثقة.",
+    items: [
+      "استشارات وتخطيط تقني",
+      "تحليل البحث والسوق من بيانات Search Console و Analytics",
+      "تدريب الموظفين: موقعك، وملفك التجاري على Google، والتقييمات، ووسائل التواصل الاجتماعي",
+      "عند الطلب، تنسيق فرق الإعلام والعلامة التجارية لحملاتك",
+    ],
+    receive: "توصيات مكتوبة، وخطة واضحة، وفريق يعرف كيف يدير أنظمته.",
+  },
+] : [
+  {
+    id: "jailbreak", icon: "jailbreak", bg: "bg-butter", chip: "bg-butter", signature: true,
+    short: "The Jailbreak", name: "The Jailbreak",
+    lede: "We get your data out of old, locked systems, convert it to open standards, and hand you the keys.",
+    who: "Anyone stuck with an old website, app or system: lost logins, data split between you and your provider, non-standard formats, a provider who makes leaving hard.",
+    items: [
+      "Find where your data actually lives",
+      "Extract it: content, media, customer and product records, settings",
+      "Clean and restructure it",
+      "Convert it to open standards such as",
+      "Rebuild or re-host on open-source tools",
+      "Recover what's yours: old domains, Google Business profiles and social pages",
+    ],
+    formats: "Markdown · CSV · JSON · SQL",
+    receive: "Your data in open formats, the new system, documentation, and every account in your name.",
+  },
+  {
+    id: "websites", icon: "web", bg: "bg-sky", chip: "bg-paper",
+    short: "Websites", name: "Websites & web apps",
+    lede: "Fast, bilingual websites your team can edit, at the lowest possible hosting cost.",
+    who: "Companies, shops, clinics and institutions that need a clear presence online.",
+    items: [
+      "Arabic and English in one site",
+      "Static sites with no server to rent where possible; web apps with a backend when needed",
+      "A content editor with live preview, so your team edits pages itself",
+      "Speed, mobile layout and technical SEO",
+      "On request: contact forms, FAQ, booking, AI chat assistants, email on your own domain",
+    ],
+    receive: "The site, its domain and hosting account in your name, the code repository in your account, and editor training.",
+  },
+  {
+    id: "mobile", icon: "mobile", bg: "bg-peach", chip: "bg-peach",
+    short: "Mobile apps", name: "Mobile apps",
+    lede: "Android and iOS apps for your customers or your team, published in your name.",
+    who: "Anyone who needs an app for customers or staff, or has an old app that needs rebuilding.",
+    items: [
+      "Apps for ordering, bookings, catalogues, loyalty and internal use",
+      "Upgrades and rebuilds of old apps, with their data migrated",
+      "Published under your own developer accounts",
+    ],
+    receive: "The app published under your accounts, and the code repository in your account.",
+  },
+  {
+    id: "systems", icon: "systems", bg: "bg-mint", chip: "bg-mint",
+    short: "Systems", name: "Management & store systems",
+    lede: "Inventory, point-of-sale and management systems, in the cloud or on-site.",
+    who: "Shops, offices and institutions running on paper, spreadsheets or outdated software.",
+    items: [
+      "Inventory, point-of-sale and store systems",
+      "Office, clinic and institution management; desktop applications",
+      "Customer, patient or member records, with access rules agreed in writing",
+      "Cloud or on-site servers — your choice, with the cost and data trade-offs explained",
+      "Migration from spreadsheets, paper or old software",
+    ],
+    receive: "The system and its data, admin credentials, documentation and user training.",
+  },
+  {
+    id: "networks", icon: "networks", bg: "bg-apricot", chip: "bg-apricot",
+    short: "Networks & security", name: "Networks & security",
+    lede: "Surveillance cameras, security systems and organised networks, with every password in your hands.",
+    who: "Offices, shops, clinics and facilities that need surveillance or a well-organised network.",
+    items: [
+      "Surveillance cameras: supply, installation and configuration",
+      "Other security systems, such as access control, and their integration",
+      "Separate staff and guest networks, Wi-Fi, routers and access points",
+      "Guest Wi-Fi portals that show visitors your website and give timed free access",
+    ],
+    receive: "Admin credentials for every device, a network diagram and installation notes.",
+  },
+  {
+    id: "consulting", icon: "consulting", bg: "bg-lilac", chip: "bg-lilac",
+    short: "Consulting", name: "Consulting & training",
+    lede: "We help you decide what to build, buy, keep or replace — and train your team.",
+    who: "Managers who need a clear technology decision, or a team that wants to run its own systems with confidence.",
+    items: [
+      "Technology advice and planning",
+      "Search and market analysis from your Search Console and Analytics data",
+      "Staff training: your website, Google Business, reviews, social media",
+      "On request, coordinating media and branding teams for your campaigns",
+    ],
+    receive: "Written recommendations, a clear plan, and a team that knows how to run its systems.",
+  },
+];
+
+const TERMS = isAr ? [
+  { big: "أمر عمل", text: "كل عمل يبدأ بأمر مكتوب: النطاق، والسعر الثابت أو سقف الساعات، والمدة." },
+  { big: "30–50%", mono: true, text: "دفعة مقدّمة قبل البدء، والباقي عند التسليم." },
+  { num: "14", unit: "يوماً", text: "إصلاحات وتعديلات صغيرة مجانية بعد كل تسليم." },
+  { num: "60", unit: "يوماً", text: "استشارات مجانية بعد كل تسليم، تشمل جلسة تدريب." },
+] : [
+  { big: "Work order", text: "Every job starts in writing: scope, fixed price or hour cap, and timeline." },
+  { big: "30–50%", mono: true, text: "Paid up front before we start; the rest on delivery." },
+  { num: "14", unit: "days", text: "Free fixes and small edits after every handover." },
+  { num: "60", unit: "days", text: "Free advice after every handover, including a training session." },
+];
 ---
 
-<BaseLayout
-  title={locale === "ar" ? "الخدمات — كليم" : "Services — Kaleem"}
-  description={locale === "en" ? "Data extraction, web platform modernization, database restructuring, legacy migration, and training — everything Kaleem offers." : "استخراج البيانات، وتحديث منصات الويب، وإعادة هيكلة قواعد البيانات، والانتقال من الأنظمة القديمة، والتدريب — كل ما تقدّمه كليم."}
->
-  <div class="container page">
-    <header class="page-head">
-      <h1>{locale === "ar" ? "الخدمات" : "Services"}</h1>
-      <p class="lede">{locale === "ar" ? "كل ما نقدّمه، مصنّفاً حسب المجال." : "Everything we offer, grouped by area."}</p>
-    </header>
+<BaseLayout title={T.title} description={T.description}>
+  <section class="svc-hero bg-sky">
+    <div class="container svc-hero-grid">
+      <div class="svc-hero-text">
+        <h1>{T.h1}</h1>
+        <p class="svc-lede">{T.lede}</p>
+        <nav class="svc-chips" aria-label={T.navLabel}>
+          {SERVICES.map((s) => (
+            <a class={`svc-chip ${s.chip}`} href={`#${s.id}`}>{s.short}</a>
+          ))}
+        </nav>
+      </div>
+      <svg class="svc-hero-art" width="340" height="300" viewBox="0 0 340 300" aria-hidden="true">
+        <g stroke="#1f1f1f" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+          <rect x="30" y="40" width="120" height="100" fill="#f7e7b0"></rect>
+          <rect x="180" y="20" width="120" height="100" fill="#faf6ee"></rect>
+          <rect x="60" y="170" width="120" height="100" fill="#bfe6d6"></rect>
+          <rect x="210" y="150" width="110" height="100" fill="#f8c9b8"></rect>
+          <path d="M60 70h60M60 95h40M210 50h60M210 75h40M90 200h60M90 225h40M240 180h50M240 205h30" fill="none" stroke-width="3"></path>
+          <path d="M150 90c20 0 20 -20 30 -20M180 220c15 0 20 -20 30 -20" fill="none" stroke-width="2.5" stroke-dasharray="2 7"></path>
+        </g>
+      </svg>
+    </div>
+  </section>
 
-    <div class="grid">
-      {categories.map((c) => (
-        <a class="card cat" href={localizedHref(`/services/${c.slug}/`, locale)}>
-          <h3>{c.pretty}</h3>
-          <span class="count">
-            {locale === "en" ? `${c.count} ${c.count === 1 ? "item" : "items"}` : c.count}
-          </span>
-        </a>
-      ))}
-      {topLevel.map((e) => (
-        <a class="card cat" href={localizedHref(`/services/${topicOf(e.id)}/`, locale)}>
-          <h3>{e.data.title}</h3>
-          {locale === "en" && e.data.description && <span class="count">{e.data.description}</span>}
-        </a>
+  <section class="svc-list">
+    <div class="container svc-stack">
+      {SERVICES.map((s) => (
+        <article id={s.id} class={`sk svc-card ${s.bg}`}>
+          <div class="svc-col">
+            <div class="svc-icon-row">
+              <svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true" set:html={ICONS[s.icon]}></svg>
+              {s.signature && <span class="k-tag bg-paper">{T.signature}</span>}
+            </div>
+            <h2>{s.name}</h2>
+            <p class="svc-card-lede">{s.lede}</p>
+            <h3 class="svc-label">{T.whoFor}</h3>
+            <p>{s.who}</p>
+          </div>
+          <div class="svc-col">
+            <h3 class="svc-label">{T.whatWeDo}</h3>
+            <ul class="svc-items">
+              {s.items.map((item, i) => (
+                <li>
+                  {item}
+                  {s.formats && i === 3 && <> <bdi class="svc-formats">{s.formats}</bdi></>}
+                </li>
+              ))}
+            </ul>
+            <div class="svc-receive">
+              <h3 class="svc-label">{T.youReceive}</h3>
+              <p>{s.receive}</p>
+            </div>
+          </div>
+        </article>
       ))}
     </div>
-  </div>
+  </section>
+
+  <section class="svc-terms bg-paper-2">
+    <div class="container">
+      <h2>{T.termsHead}</h2>
+      <div class="terms-grid">
+        {TERMS.map((t) => (
+          <div class="sk bg-paper term">
+            {t.big
+              ? <span class:list={["term-big", { mono: t.mono }]}><bdi>{t.big}</bdi></span>
+              : <span class="term-big"><span class="mono">{t.num}</span> {t.unit}</span>}
+            <p>{t.text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="terms-note">{T.termsNote}</p>
+    </div>
+  </section>
+
+  <section class="svc-cta bg-mint">
+    <div class="container">
+      <h2>{T.ctaHead}</h2>
+      <a class="skb skb-butter" href={L("/contact/")}>{T.ctaLabel}</a>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .page { padding-block: 1.5rem 2.5rem; }
-  @media (min-width: 640px) { .page { padding-block: 3rem 4rem; } }
-  .page-head { text-align: center; max-width: 60ch; margin: 0 auto 1.5rem; }
-  @media (min-width: 640px) { .page-head { margin-bottom: 3rem; } }
-  .page-head .lede { color: var(--ink-soft); font-size: 1.1rem; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
+  .container {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
   }
-  .cat {
+
+  /* Hero */
+  .svc-hero { padding: 80px 0 88px; }
+  .svc-hero-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+  }
+  .svc-hero-text { display: flex; flex-direction: column; gap: 24px; max-width: 820px; }
+  .svc-hero h1 {
+    margin: 0;
+    font-family: var(--k-font-serif);
+    font-size: 64px;
+    line-height: 72px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--k-ink);
+  }
+  .svc-lede { margin: 0; font-size: 21px; line-height: 36px; max-width: 720px; color: var(--k-ink); }
+  .svc-chips { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .svc-chip {
+    min-height: 44px;
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid var(--k-ink);
+    border-radius: 36px;
+    color: var(--k-ink);
     text-decoration: none;
-    color: inherit;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .svc-chip:hover { transform: translateY(-2px); }
+  .svc-hero-art { flex-shrink: 0; }
+
+  /* Service cards */
+  .svc-list { padding: 88px 0; }
+  .svc-stack { display: flex; flex-direction: column; gap: 48px; }
+  .svc-card {
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 64px;
+    scroll-margin-top: 120px;
+    color: var(--k-ink);
+  }
+  .svc-col { display: flex; flex-direction: column; gap: 16px; }
+  .svc-col p { margin: 0; font-size: 16px; line-height: 28px; }
+  .svc-icon-row { display: flex; align-items: center; gap: 12px; }
+  .svc-card h2 {
+    margin: 0;
+    font-family: var(--k-font-serif);
+    font-size: 38px;
+    line-height: 56px;
+    font-weight: 700;
+  }
+  .svc-col .svc-card-lede { font-size: 19px; line-height: 32px; }
+  .svc-label { margin: 8px 0 0; font-size: 15px; font-weight: 700; }
+  .svc-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    text-align: start;
+    gap: 10px;
+    font-size: 17px;
+    line-height: 28px;
   }
-  .cat:hover { text-decoration: none; }
-  .cat h3 { color: var(--brand); margin: 0; }
-  .count { color: var(--ink-muted); font-size: 0.85rem; }
+  .svc-items li::before { content: "— "; }
+  .svc-formats { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 15px; }
+  .svc-receive {
+    margin-top: 8px;
+    padding: 20px 24px;
+    background: var(--k-paper);
+    border: 2px dashed var(--k-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .svc-receive .svc-label { margin: 0; }
+
+  /* Terms */
+  .svc-terms {
+    padding: 88px 0;
+    border-top: 2px solid var(--k-ink);
+    border-bottom: 2px solid var(--k-ink);
+  }
+  .svc-terms h2 {
+    margin: 0 0 40px;
+    font-family: var(--k-font-serif);
+    font-size: 44px;
+    line-height: 64px;
+    font-weight: 700;
+    color: var(--k-ink);
+  }
+  .terms-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+  .term { padding: 28px; display: flex; flex-direction: column; gap: 10px; color: var(--k-ink); }
+  .term p { margin: 0; font-size: 16px; line-height: 28px; }
+  .term-big { font-size: 30px; line-height: 44px; font-weight: 700; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 600; }
+  .terms-note { margin: 40px 0 0; font-size: 17px; line-height: 30px; max-width: 920px; color: var(--k-ink); }
+
+  /* CTA */
+  .svc-cta { padding: 96px 0; }
+  .svc-cta .container { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
+  .svc-cta h2 {
+    margin: 0;
+    max-width: 900px;
+    font-family: var(--k-font-serif);
+    font-size: 52px;
+    line-height: 62px;
+    font-weight: 700;
+    color: var(--k-ink);
+  }
+
+  @media (max-width: 1055px) {
+    .svc-hero-art { display: none; }
+    .svc-card { grid-template-columns: 1fr; gap: 32px; }
+    .terms-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 671px) {
+    .container { padding: 0 var(--k-gutter-mobile); }
+    .svc-hero { padding: 56px 0 64px; }
+    .svc-hero h1 { font-size: 40px; line-height: 50px; }
+    .svc-lede { font-size: 18px; line-height: 30px; }
+    .svc-list, .svc-terms { padding: 56px 0; }
+    .svc-stack { gap: 28px; }
+    .svc-card { padding: 24px; gap: 24px; }
+    .svc-card h2 { font-size: 30px; line-height: 42px; }
+    .terms-grid { grid-template-columns: 1fr; }
+    .svc-terms h2 { font-size: 34px; line-height: 48px; }
+    .svc-cta { padding: 56px 0; }
+    .svc-cta h2 { font-size: 34px; line-height: 46px; }
+  }
 </style>
