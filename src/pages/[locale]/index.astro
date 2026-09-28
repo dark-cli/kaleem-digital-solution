@@ -706,8 +706,13 @@ const T = isAr ? {
     align-items: center;
     gap: 8px;
     padding: 0 16px;
-    /* The [data-star-window] utility (see global.css) turns this into a
-       transparent see-through window revealing the animated starfield. */
+    /* Match the parent .sk card's INNER top corners (outer radius minus
+       the 2px border width). This is what the parent's overflow:hidden
+       actually clips children to, and the [data-star-window] utility
+       reads these values and gives the fixed star window the same corners
+       so it fits flush against the card edge. */
+    border-top-left-radius: 8px 3px;
+    border-top-right-radius: 2px 10px;
   }
 
   .mockup-header::before,

@@ -2,8 +2,16 @@
 // Copyright (c) 2026 Kaleem Digital Solutions — https://kaleem.dev
 // Canvas 2D starfield + control panel. Renders hundreds of stars into
 // three shared canvases (body, header window, mockup window) at 60fps
-// with a single rAF loop. Way lighter than the DOM-based version.
+// with a single rAF loop.
+//
+// The entire block is wrapped in `transition:persist` so it survives
+// Astro view transitions — the canvas isn't destroyed, the script runs
+// once, no cleanup dance needed. The persist name must be identical on
+// every page (it is — BaseLayout is used everywhere).
 ---
+
+<div id="starfield-persist" transition:persist="starfield">
+  <canvas id="starfield-canvas" class="star-canvas" aria-hidden="true"></canvas>
 
 <div class="star-controls" id="star-controls" data-collapsed="false">
   <button class="star-controls-toggle" id="star-controls-toggle" aria-label="Toggle starfield controls">
@@ -86,7 +94,15 @@
   //   • Loop pauses when document.hidden.
   //   • Scroll handler for mockup rect is rAF-throttled.
   (function () {
-    if (window.__starCanvasInit) window.__starCanvasInit();
+    // Re-entrancy: view transitions swap the DOM (canvas is destroyed and
+    // rebuilt) but the previous script instance still holds stale closures
+    // — its RAF loop, event listeners, and ResizeObserver keep pointing at
+    // detached elements. Before doing anything, tear down the previous
+    // instance so we start clean.
+    if (window.__starfieldCleanup) {
+      try { window.__starfieldCleanup(); } catch (e) {}
+      window.__starfieldCleanup = null;
+    }
 
     const TAU = Math.PI * 2;
     // Unit polygons for each shape. Points normalized to [-1, 1] radius.
@@ -367,14 +383,17 @@
     function startRAF() { if (!raf) raf = requestAnimationFrame(render); }
 
     // ── Set up header window canvas
+    // Injected canvases go INSIDE the persistent wrapper so they survive
+    // Astro view transitions along with the main starfield canvas.
+    const persistHost = document.getElementById('starfield-persist') || document.body;
     function ensureHeaderCanvas() {
       const header = document.querySelector('header.board');
       if (!header) return;
-      if (!headerCanvasRef) {
+      if (!headerCanvasRef || !headerCanvasRef.isConnected) {
         headerCanvasRef = document.createElement('canvas');
         headerCanvasRef.className = 'star-canvas star-canvas--header';
         headerCanvasRef.setAttribute('aria-hidden', 'true');
-        document.body.appendChild(headerCanvasRef);
+        persistHost.appendChild(headerCanvasRef);
       }
       const updateH = function () {
         const h = header.getBoundingClientRect().height;
@@ -391,11 +410,11 @@
     // ── Set up mockup window canvas + scroll handler (rAF-throttled)
     function ensureMockupCanvas() {
       if (!document.querySelector('[data-star-window]')) return;
-      if (!mockupCanvasRef) {
+      if (!mockupCanvasRef || !mockupCanvasRef.isConnected) {
         mockupCanvasRef = document.createElement('canvas');
         mockupCanvasRef.className = 'star-canvas star-canvas--mockup';
         mockupCanvasRef.setAttribute('aria-hidden', 'true');
-        document.body.appendChild(mockupCanvasRef);
+        persistHost.appendChild(mockupCanvasRef);
       }
       const updateClip = function () {
         mockupPending = false;
@@ -403,21 +422,44 @@
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         let picked = null;
+        let pickedEl = null;
         targets.forEach(function (el) {
           const r = el.getBoundingClientRect();
           if (r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw) {
-            picked = picked || r;
+            if (!picked) { picked = r; pickedEl = el; }
           }
         });
         if (!picked) {
           mockupCanvasRef.style.clipPath = 'inset(50% 50% 50% 50%)';
           return;
         }
+        // Read per-corner border-radius so sketchy / rounded windows are
+        // clipped to their real shape instead of a plain rectangle. Values
+        // come back like "10px 5px" for elliptical corners.
+        const cs = window.getComputedStyle(pickedEl);
+        const tl = cs.borderTopLeftRadius || '0';
+        const tr = cs.borderTopRightRadius || '0';
+        const br = cs.borderBottomRightRadius || '0';
+        const bl = cs.borderBottomLeftRadius || '0';
+        // clip-path inset() supports elliptical corners via
+        //   `round tl-h tr-h br-h bl-h / tl-v tr-v br-v bl-v`
+        // getComputedStyle already returns either one or two space-separated
+        // values per corner (e.g. "10px" or "10px 5px") which is a valid
+        // <length-percentage>{1,2} for each corner. Rejoin into one round
+        // clause by splitting into horizontal/vertical pairs.
+        function parts(v) {
+          const p = v.trim().split(/\s+/);
+          return { h: p[0] || '0', v: p[1] || p[0] || '0' };
+        }
+        const P = { tl: parts(tl), tr: parts(tr), br: parts(br), bl: parts(bl) };
+        const roundClause =
+          ' round ' + P.tl.h + ' ' + P.tr.h + ' ' + P.br.h + ' ' + P.bl.h +
+          ' / '     + P.tl.v + ' ' + P.tr.v + ' ' + P.br.v + ' ' + P.bl.v;
         mockupCanvasRef.style.clipPath =
           'inset(' + Math.max(0, picked.top) + 'px ' +
                      Math.max(0, vw - picked.right) + 'px ' +
                      Math.max(0, vh - picked.bottom) + 'px ' +
-                     Math.max(0, picked.left) + 'px)';
+                     Math.max(0, picked.left) + 'px' + roundClause + ')';
       };
       const queueUpdate = function () {
         if (mockupPending) return;
@@ -501,12 +543,13 @@
       panel.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
     });
 
-    // Pause the loop when the tab isn't visible.
-    document.addEventListener('visibilitychange', function () {
+    // Named handlers so we can remove them precisely in cleanup.
+    function visHandler() {
       if (document.hidden) stopRAF();
       else { start = 0; startRAF(); }
-    });
+    }
 
+    document.addEventListener('visibilitychange', visHandler);
     window.addEventListener('resize', resizeAll);
 
     function init() {
@@ -521,19 +564,49 @@
       startRAF();
     }
 
-    window.__starCanvasInit = function () {
-      stopRAF();
-      init();
-    };
-
     init();
 
-    // Astro view transitions: re-init on each page-load event.
-    document.addEventListener('astro:page-load', function () {
-      window.__starCanvasInit();
-    });
+    // Register cleanup for future script instances (only relevant if the
+    // persist wrapper is somehow missing — normally the script only runs
+    // once and this teardown is never called).
+    window.__starfieldCleanup = function () {
+      stopRAF();
+      window.removeEventListener('resize', resizeAll);
+      document.removeEventListener('visibilitychange', visHandler);
+      if (window.__starMockupScroll) {
+        window.removeEventListener('scroll', window.__starMockupScroll);
+        window.removeEventListener('resize', window.__starMockupScroll);
+        window.__starMockupScroll = null;
+      }
+      if (window.__starHeaderObs) {
+        window.__starHeaderObs.disconnect();
+        window.__starHeaderObs = null;
+      }
+    };
+
+    // View-transition rebinding. The starfield canvases persist across
+    // navigations (transition:persist), but header.board and any
+    // [data-star-window] elements are DIFFERENT DOM nodes on each new
+    // page. Rebind the ResizeObserver + scroll clip-path to the new
+    // targets after each swap. RAF and star data keep running unaffected.
+    function rebindTargets() {
+      if (window.__starHeaderObs) {
+        window.__starHeaderObs.disconnect();
+        window.__starHeaderObs = null;
+      }
+      if (window.__starMockupScroll) {
+        window.removeEventListener('scroll', window.__starMockupScroll);
+        window.removeEventListener('resize', window.__starMockupScroll);
+        window.__starMockupScroll = null;
+      }
+      ensureHeaderCanvas();
+      ensureMockupCanvas();
+      resizeAll();
+    }
+    document.addEventListener('astro:page-load', rebindTargets);
   })();
 </script>
+</div>
 
 <style>
   .star-controls {

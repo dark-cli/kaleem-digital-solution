@@ -156,7 +156,10 @@ header.board {
 /* ─── Reusable "star window" utility ─────────────────────────────
    Any element with data-star-window="" becomes a see-through window
    revealing the animated starfield. StarfieldControls JS auto-detects
-   these and keeps the mockup-canvas clip-path aligned to their rect. */
+   these and keeps the mockup-canvas clip-path aligned to their rect.
+   The JS also reads each element's computed border-radius corners and
+   applies them to the clip-path — so the window follows sketchy /
+   rounded shapes, not just plain rectangles. */
 [data-star-window] {
   background: transparent !important;
   position: relative;
@@ -179,13 +182,24 @@ header.board {
 }
 
 /* ─── Kaleem Component Classes ────────────────────────────────────── */
-/* Sketch card: uneven 2px ink outline + offset second pen line. */
+/* Sketch card: uneven 2px ink outline + offset second pen line.
+   Ships with default internal padding and child rhythm so every card
+   looks the same by default. Card variants can still override via
+   local padding (see .card-butter, .case-mockup, etc). */
 .sk {
   border: var(--k-line) solid var(--k-ink);
   border-radius: var(--k-radius-sketch);
   box-shadow: var(--k-sketch-offset) var(--k-sketch-offset) 0 -2px var(--k-paper),
               var(--k-sketch-offset) var(--k-sketch-offset) 0 0 var(--k-ink);
+  padding: var(--k-space-7);       /* 32px */
 }
+
+/* Normalized child spacing inside sketch cards: kill the natural
+   margin above the first child and below the last, and give every
+   subsequent direct child a consistent gap from the previous. */
+.sk > *:first-child { margin-block-start: 0; }
+.sk > *:last-child  { margin-block-end: 0; }
+.sk > * + *         { margin-block-start: var(--k-space-4); } /* 16px */
 
 /* Sketch button (primary/secondary differ only by fill colour). */
 .skb {
@@ -200,6 +214,19 @@ header.board {
 
 a.sk, a.skb, button.skb { transition: transform 120ms ease; }
 a.sk:hover, a.skb:hover, button.skb:hover { transform: translate(-1px, -1px); }
+
+/* Buttons that follow block content in a normal flow get consistent
+   breathing room. Uses adjacent-sibling selectors so button-to-button
+   groups (e.g. .hero-ctas in a flex row) are NOT affected — flex/grid
+   containers still manage their own spacing via `gap`. */
+:where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dt, dd, blockquote,
+       .case-tags, .k-tag) + .skb,
+:where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dt, dd, blockquote,
+       .case-tags, .k-tag) + a.skb,
+:where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dt, dd, blockquote,
+       .case-tags, .k-tag) + button.skb {
+  margin-block-start: var(--k-space-4);
+}
 
 /* Line icons (inline SVG, 32×32 viewBox). */
 .ico { fill: none; stroke: var(--k-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

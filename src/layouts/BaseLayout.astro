@@ -37,10 +37,9 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     <ClientRouter />
   </head>
   <body>
-    <!-- Site-wide animated starfield (Canvas 2D). Rendered by StarfieldControls
-         JS. Two more canvases are created dynamically for the sticky-header
-         window and any [data-star-window] element. -->
-    <canvas id="starfield-canvas" class="star-canvas" aria-hidden="true"></canvas>
+    <!-- Starfield canvas + controls now live inside <StarfieldControls />,
+         wrapped in transition:persist so they survive Astro navigations. -->
+
     {!isProduction && (
       <div class="beta-ribbon" aria-label="Beta environment">
         {locale === "ar" ? "بيتا — بيئة اختبار" : "BETA — testing environment"}
