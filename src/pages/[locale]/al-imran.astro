@@ -667,7 +667,7 @@ const T = isAr ? {
 
   .before-mockup,
   .after-mockup {
-    aspect-ratio: 16 / 9;
+    /* Window sizes to image aspect ratio */
   }
 
   .before-label h3,
@@ -725,7 +725,7 @@ const T = isAr ? {
   }
 
   .comparison-window {
-    aspect-ratio: 16 / 9;
+    /* Window sizes to image aspect ratio */
   }
 
   .comparison-label-small {
@@ -746,8 +746,7 @@ const T = isAr ? {
 
   .screenshot-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
   }
 
