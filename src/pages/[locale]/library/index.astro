@@ -197,7 +197,7 @@ function fmtDate(d: Date | null): string {
 
     <div class="lib-more" id="lib-more" data-page-size={PAGE_SIZE} data-show-more={T.showMore} data-showing={T.showing} data-of={T.of}>
       <p class="lib-more-count" id="lib-more-count"></p>
-      <button type="button" class="lib-more-btn" id="lib-more-btn">{T.showMore}</button>
+      <button type="button" class="fbtn fbtn-paper" id="lib-more-btn">{T.showMore}</button>
     </div>
   </section>
 </BaseLayout>
@@ -420,20 +420,11 @@ function fmtDate(d: Date | null): string {
     font-family: var(--font-mono);
     font-size: 12px; letter-spacing: 0.06em; color: var(--muted); margin: 0;
   }
-  .lib-more-btn {
-    font-family: var(--font-body);
-    font-size: 14px; font-weight: 500;
-    color: var(--accent);
-    background: var(--white);
-    border: 1px solid var(--accent);
-    padding: 12px 28px;
-    cursor: pointer;
-    transition: color 0.15s ease, background-color 0.15s ease;
-  }
-  .lib-more-btn:hover { color: var(--white); background: var(--accent); }
-  .lib-more-btn[hidden] { display: none; }
+  /* "Show more" button uses the global .fbtn.fbtn-paper widget. The
+     [hidden] rule below is needed because .fbtn's `display: inline-flex`
+     otherwise overrides the browser's default hidden behavior. */
+  #lib-more-btn[hidden] { display: none; }
   :global(html[dir="rtl"]) .lib-more-count { font-family: var(--font-body); letter-spacing: 0.02em; font-size: 13px; }
-  :global(html[dir="rtl"]) .lib-more-btn   { font-size: 15px; }
 
   /* AR typography overrides */
   :global(html[dir="rtl"]) .intro-eyebrow,

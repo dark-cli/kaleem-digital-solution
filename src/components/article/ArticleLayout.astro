@@ -109,7 +109,7 @@ const crumbSep = locale === "ar" ? "‹" : "›";
         <div class="art-call-card">
           <p class="art-call-label">{callLabel}</p>
           <p class="art-call-body">{callBody}</p>
-          <a class="art-call-btn" href={callHref} dir="ltr">{CONTACT.phones[0]}</a>
+          <a class="skb skb-mint" href={callHref} dir="ltr">{CONTACT.phones[0]}</a>
         </div>
       </aside>
 
@@ -122,8 +122,8 @@ const crumbSep = locale === "ar" ? "‹" : "›";
             <p>{ctaBody}</p>
           </div>
           <div class="art-cta-buttons">
-            <a class="btn btn-primary art-cta-btn" href={callHref} dir="ltr">{CONTACT.phones[0]}</a>
-            <a class="btn btn-secondary art-cta-btn" href={secondCallHref} dir="ltr">{CONTACT.phones[1]}</a>
+            <a class="skb skb-mint" href={callHref} dir="ltr">{CONTACT.phones[0]}</a>
+            <a class="fbtn fbtn-paper" href={secondCallHref} dir="ltr">{CONTACT.phones[1]}</a>
           </div>
         </section>
 
@@ -230,14 +230,8 @@ const crumbSep = locale === "ar" ? "‹" : "›";
     color: var(--accent); margin: 0 0 10px;
   }
   .art-call-body { font-size: 14px; line-height: 1.72; color: var(--body); margin: 0 0 16px; }
-  .art-call-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 100%; min-height: 44px; padding: 0 16px;
-    background: var(--accent); color: var(--white);
-    font-size: 14.5px; font-weight: 500; border-radius: 2px;
-    text-decoration: none;
-  }
-  .art-call-btn:hover { background: var(--accent-hover); color: var(--white); text-decoration: none; }
+  /* Article-sidebar call button uses .skb.skb-mint — no local override
+     needed. */
 
   /* ── Article body ──────────────────────────────────────────── */
   .art-body { padding: clamp(32px, 4.5vw, 56px) 0 0; min-width: 0; }
