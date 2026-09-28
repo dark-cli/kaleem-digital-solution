@@ -105,14 +105,43 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     color: var(--k-ink);
   }
 
+  /* "404" as a cutout to the night sky.
+     `background-clip: text` fills the glyph shapes with the background
+     (sky color + scattered stars) while `color: transparent` hides the
+     usual text fill. All background layers share the same 300px tile so
+     they drift together — the letters look like a peephole to a moving
+     mini-starfield without touching the main canvas. */
   .nf-code {
     display: block;
     font-family: var(--k-font-mono);
-    font-size: clamp(88px, 16vw, 160px);
+    font-size: clamp(96px, 18vw, 180px);
     line-height: 1;
-    color: var(--k-ink);
     letter-spacing: -0.04em;
     font-weight: 700;
+    color: transparent;
+    background-image:
+      radial-gradient(circle at 12% 24%, #fff 0 1.4px, transparent 2.8px),
+      radial-gradient(circle at 78% 12%, #f7e39a 0 1.1px, transparent 2.2px),
+      radial-gradient(circle at 42% 67%, #fff 0 1.6px, transparent 3.2px),
+      radial-gradient(circle at 89% 43%, #c6ddf0 0 1px, transparent 2px),
+      radial-gradient(circle at 24% 88%, #fff 0 1.3px, transparent 2.6px),
+      radial-gradient(circle at 65% 31%, #d9ccf0 0 1.1px, transparent 2.2px),
+      radial-gradient(circle at 8% 62%, #fff 0 1.4px, transparent 2.8px),
+      radial-gradient(circle at 55% 8%, #fff 0 1px, transparent 2px),
+      radial-gradient(circle at 33% 42%, #bfe6d6 0 1.2px, transparent 2.4px),
+      radial-gradient(circle at 91% 82%, #fff 0 1.3px, transparent 2.6px);
+    background-color: var(--k-board);
+    background-size: 300px 300px;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: nf-code-drift 32s linear infinite;
+    /* subtle inner outline so the shape reads even on very small screens */
+    -webkit-text-stroke: 1px rgba(31, 31, 31, 0.85);
+  }
+
+  @keyframes nf-code-drift {
+    from { background-position: 0 0; }
+    to   { background-position: -300px -300px; }
   }
 
   .nf-body h1 {
