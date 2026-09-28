@@ -70,11 +70,11 @@ const T = isAr ? {
   p7:          "لا يعمل على الهواتف الذكية",
   p8:          "المقالات مجرد كومة من النصوص بلا تنسيق",
 
-  beforeAfterHead: "التحول المرئي",
-  oldLabel:    "الموقع القديم",
-  oldDesc:     "فوضوي، بطيء، مكسور، غير متوافق مع الهواتف",
-  newLabel:    "الموقع الجديد",
-  newDesc:     "نظيف، سريع جداً (97/100 PageSpeed)، حديث، مُحسّن",
+  beforeAfterHead: "التصميم الحديث",
+  designShowcaseDesc: "تصميم حديث متوافق مع الهواتف بنسبة مئة بالمئة، مع ثيم فاتح وغامق وسهل الاستخدام.",
+  homeLabel:   "الصفحة الرئيسية",
+  articleLabel: "صفحات المقالات",
+  libraryLabel: "المكتبة",
 
   featuresHead: "ميزات الموقع الجديد",
   f1:          "تخطيط نظيف وواضح مع رسالة مباشرة",
@@ -156,11 +156,11 @@ const T = isAr ? {
   p7:          "No mobile support whatsoever",
   p8:          "Articles were just walls of text with no visual structure",
 
-  beforeAfterHead: "The Visual Transformation",
-  oldLabel:    "The Old Site",
-  oldDesc:     "Chaotic, slow, broken, not mobile-friendly",
-  newLabel:    "The New Site",
-  newDesc:     "Clean, lightning-fast (97/100 PageSpeed), modern, optimized",
+  beforeAfterHead: "The Modern Design",
+  designShowcaseDesc: "Fully responsive design with dark and light themes, built for speed and clarity with every interaction carefully considered.",
+  homeLabel:   "Homepage",
+  articleLabel: "Article pages",
+  libraryLabel: "Library",
 
   featuresHead: "New Website Features",
   f1:          "Clean layout with direct messaging",
@@ -236,34 +236,47 @@ const T = isAr ? {
     </div>
   </section>
 
-  <!-- ─── BEFORE & AFTER ──────────────────────────────────── -->
-  <section class="before-after-section">
+  <!-- ─── DESIGN SHOWCASE ────────────────────────────────── -->
+  <section class="design-showcase-section">
     <div class="container">
       <h2 class="section-heading">{T.beforeAfterHead}</h2>
-      <div class="before-after-grid">
-        <div class="before-column">
-          <div class="sk window before-mockup">
-            <div class="window-chrome" data-peach></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/old-homepage.png" alt="Old Alimran website screenshot" class="screenshot-img" />
-            </div>
-          </div>
-          <div class="before-label">
-            <h3>{T.oldLabel}</h3>
-            <p>{T.oldDesc}</p>
-          </div>
-        </div>
-        <div class="after-column">
-          <div class="sk window after-mockup">
+      <p class="showcase-description">{T.designShowcaseDesc}</p>
+      <div class="showcase-grid">
+        <div class="showcase-item">
+          <div class="sk window showcase-window">
             <div class="window-chrome" data-sky></div>
             <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/alimran-new.png" alt="New Alimran website screenshot" class="screenshot-img" />
+              <img src="/assets/illustrations/new-home-dark.png" alt="Homepage" class="screenshot-img" />
             </div>
           </div>
-          <div class="after-label">
-            <h3>{T.newLabel}</h3>
-            <p>{T.newDesc}</p>
+          <p class="showcase-label">{T.homeLabel}</p>
+        </div>
+        <div class="showcase-item">
+          <div class="sk window showcase-window">
+            <div class="window-chrome" data-sky></div>
+            <div class="window-body mockup-screenshot">
+              <img src="/assets/illustrations/new-article-1-dark.png" alt="Article page" class="screenshot-img" />
+            </div>
           </div>
+          <p class="showcase-label">{T.articleLabel}</p>
+        </div>
+        <div class="showcase-item">
+          <div class="sk window showcase-window">
+            <div class="window-chrome" data-sky></div>
+            <div class="window-body mockup-screenshot">
+              <img src="/assets/illustrations/new-article-2-dark.png" alt="Article details" class="screenshot-img" />
+            </div>
+          </div>
+          <p class="showcase-label">{T.articleLabel}</p>
+        </div>
+        <div class="showcase-item">
+          <div class="sk window showcase-window">
+            <div class="window-chrome" data-sky></div>
+            <div class="window-body mockup-screenshot">
+              <img src="/assets/illustrations/new-library-dark.png" alt="Library" class="screenshot-img" />
+            </div>
+          </div>
+          <p class="showcase-label">{T.libraryLabel}</p>
         </div>
       </div>
     </div>
@@ -647,43 +660,42 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
-  /* Before & After */
-  .before-after-section {
+  /* Design Showcase */
+  .design-showcase-section {
     padding: var(--k-space-10) 0;
   }
 
-  .before-after-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--k-space-8);
+  .showcase-description {
+    margin: 0 auto var(--k-space-9);
+    max-width: 60ch;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--k-ink-muted);
+    text-align: center;
   }
 
-  .before-column,
-  .after-column {
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--k-space-7);
+  }
+
+  .showcase-item {
     display: flex;
     flex-direction: column;
-    gap: var(--k-space-5);
+    gap: var(--k-space-4);
   }
 
-  .before-mockup,
-  .after-mockup {
+  .showcase-window {
     /* Window sizes to image aspect ratio */
   }
 
-  .before-label h3,
-  .after-label h3 {
+  .showcase-label {
     margin: 0;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
     color: var(--k-ink);
-  }
-
-  .before-label p,
-  .after-label p {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--k-ink-muted);
   }
 
   /* Page-by-Page Comparisons */
@@ -922,11 +934,11 @@ const T = isAr ? {
     .pair-grid {
       grid-template-columns: 1fr;
     }
-    .before-after-grid {
-      grid-template-columns: 1fr;
-    }
     .comparison-row {
       grid-template-columns: 1fr;
+    }
+    .showcase-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
   }
 
@@ -938,7 +950,7 @@ const T = isAr ? {
     .hero-section,
     .problems-section,
     .section-pair,
-    .before-after-section,
+    .design-showcase-section,
     .page-comparisons-section,
     .features-section,
     .results-section,
@@ -951,6 +963,10 @@ const T = isAr ? {
 
     .hero-h1 {
       font-size: clamp(32px, 6vw, 48px);
+    }
+
+    .showcase-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
