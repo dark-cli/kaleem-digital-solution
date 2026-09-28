@@ -1,186 +1,249 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection, render } from "astro:content";
-import TranslationBanner from "../../components/TranslationBanner.astro";
-import { topicOf, isLocale, pickForLocale, localizedHref, currentLocale } from "../../lib/i18n";
+import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export async function getStaticPaths() {
   return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
 }
 
 const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
 
-const all = await getCollection("pages");
-const aboutTopics = ["about/mission", "about/vision", "about/values"];
-
-let rendered: { entry: any; Content: any }[];
-let anyFallback = false;
-
-if (locale === "ar") {
-  const picks = aboutTopics.map((topic) => pickForLocale(all, topic, "ar"));
-  anyFallback = picks.some((p) => p && p.fallback);
-  const items = picks.filter((x): x is NonNullable<typeof x> => !!x);
-  rendered = await Promise.all(items.map(async ({ entry }) => {
-    const { Content } = await render(entry);
-    return { entry, Content };
-  }));
-} else {
-  const aboutPages = all
-    .filter((e) => isLocale(e.id, "en") && e.data.category === "about")
-    .sort((a, b) => {
-      const order = ["about/mission", "about/vision", "about/values"];
-      return order.indexOf(topicOf(a.id)) - order.indexOf(topicOf(b.id));
-    });
-  rendered = await Promise.all(aboutPages.map(async (entry) => {
-    const { Content } = await render(entry);
-    return { entry, Content };
-  }));
-}
-
-const ICON: Record<string, string> = {
-  mission: "fa-solid fa-bullseye",
-  vision:  "fa-solid fa-eye",
-  values:  "fa-solid fa-heart",
-};
-
-const T = (locale === "ar" && !anyFallback) ? {
-  title:    "من نحن — مركز العمران الطبي",
-  eyebrow:  "من نحن",
-  h1:       "رعاية تُصغي إلى المريض، وطبٌ يفكر.",
-  lede:     "مركز العمران الطبي عيادة متخصصة في الأعصاب والجهاز العضلي الهيكلي في البصرة، العراق. فريقنا متعدد التخصصات يجمع خبرة الاستشاريين الجراحية مع أحدث أساليب التأهيل والتحفيز الدماغي وإدارة الألم.",
-  ctaTitle: "أطباؤنا",
-  ctaSub:   "استشاريون معتمدون بخبرة عقود متراكمة.",
-  ctaLabel: "تعرّف على الفريق",
+const T = isAr ? {
+  title:        "من نحن — كليم",
+  description:  "كليم فريق بناء وتحرير أنظمة رقمية في البصرة. نحرر بياناتك من الأنظمة المغلقة ونعيد المفاتيح لك.",
+  eyebrow:      "من نحن",
+  h1:           "أنظمة تعمل لك، ليس لمزودها.",
+  lede:         "كليم فريق صغير من مطورين ومهندسي شبكات في البصرة. نبني مواقع وتطبيقات وأنظمة إدارة — ونحرر الأنظمة التي حبستك سنوات.",
+  storyHead:    "لماذا نفعل هذا",
+  storyBody:    "كل شركة قابلناها في البصرة كانت لديها نفس المشكلة: موقع لا يمكنهم تسجيل الدخول إليه، نظام لا يستطيع أحد تعديله، مزود اختفى ومعه كل البيانات. الحل ليس أدوات أكثر — بل أدوات مفتوحة، وحسابات باسمك، ووثائق يفهمها أي مطور.",
+  valuesHead:   "قيمنا",
+  v1: "الحرية على الحبس",
+  v1Desc: "يمكنك المغادرة من أي مزود، بما فيه نحن، متى شئت.",
+  v2: "بياناتك لك",
+  v2Desc: "المحتوى والبيانات والنطاق والحسابات باسمك.",
+  v3: "المفتوح على المغلق",
+  v3Desc: "تنسيقات وأدوات قياسية يمكن لأي مطور التقاطها.",
+  v4: "البسيط على المكلف",
+  v4Desc: "لا خوادم أو اشتراكات لا تحتاجها.",
+  v5: "أرقام صادقة",
+  v5Desc: "نتائج حقيقية وذات تاريخ. لا ترتيبات بحث موعودة.",
+  v6: "شرح كل شيء",
+  v6Desc: "نوثق ما نبنيه ونتدرب على فريقك.",
+  ctaHead:      "احجز تدقيقاً مجانياً",
+  ctaLede:      "أسئلة قليلة، ملخص واحد يوضح ما يمكن تحريره وكيف.",
+  ctaLabel:     "احجز تدقيقاً مجانياً",
 } : {
-  title:    "About — Alimran Medical Center",
-  eyebrow:  "About Us",
-  h1:       "Care that listens, medicine that thinks.",
-  lede:     "Alimran Medical Center is a specialised neurology and musculoskeletal clinic in Basra, Iraq. Our multidisciplinary team combines consultant-led surgical expertise with modern rehabilitation, brain-stimulation, and pain-management techniques.",
-  ctaTitle: "Meet our doctors",
-  ctaSub:   "Board-certified consultants with decades of combined experience.",
-  ctaLabel: "See the team",
+  title:        "About — Kaleem",
+  description:  "Kaleem is a Basra-based team that builds — and unlocks — digital systems. We free your data from locked platforms and hand you the keys.",
+  eyebrow:      "About",
+  h1:           "Systems that work for you, not your vendor.",
+  lede:         "Kaleem is a small team of developers and network engineers in Basra. We build websites, apps and management systems — and we free the ones that have kept you stuck for years.",
+  storyHead:    "Why we do this",
+  storyBody:    "Every business we meet in Basra has the same problem: a website they can't log into, a system no one can edit, a provider that vanished with all the data. The answer isn't more tools — it's open tools, accounts in your name, and documentation any developer can read.",
+  valuesHead:   "Our values",
+  v1: "Freedom over lock-in",
+  v1Desc: "You can leave any provider, us included, whenever you choose.",
+  v2: "Your data is yours",
+  v2Desc: "Content, data, domain and accounts in your name.",
+  v3: "Open over closed",
+  v3Desc: "Standard formats and tools any developer can pick up.",
+  v4: "Simple over expensive",
+  v4Desc: "No servers or subscriptions you don't need.",
+  v5: "Honest numbers",
+  v5Desc: "Real, dated results. No promised search rankings.",
+  v6: "Explain everything",
+  v6Desc: "We document what we build and train your team.",
+  ctaHead:      "Book a free audit",
+  ctaLede:      "A few questions, one summary of what can be freed and how.",
+  ctaLabel:     "Book a free audit",
 };
+
+const values = [
+  { t: T.v1, d: T.v1Desc, bg: "bg-mint" },
+  { t: T.v2, d: T.v2Desc, bg: "bg-butter" },
+  { t: T.v3, d: T.v3Desc, bg: "bg-sky" },
+  { t: T.v4, d: T.v4Desc, bg: "bg-lilac" },
+  { t: T.v5, d: T.v5Desc, bg: "bg-peach" },
+  { t: T.v6, d: T.v6Desc, bg: "bg-apricot" },
+];
 ---
 
-<BaseLayout fontAwesome title={T.title} description={locale === "en" ? "Learn about Alimran Medical Center — our mission, clinical values, and the consultant neurosurgeon leading the team in Basra, Iraq." : "تعرّف على مركز العمران الطبي — رسالتنا وقيمنا السريرية واستشاري جراحة الدماغ والأعصاب الذي يقود الفريق في البصرة، العراق."}>
-  <section class="hero">
+<BaseLayout title={T.title} description={T.description}>
+  <section class="about-hero bg-peach">
     <div class="container">
       <span class="eyebrow">{T.eyebrow}</span>
-      <h1>{T.h1}</h1>
-      <p class="lede">{T.lede}</p>
+      <h1 class="about-h1">{T.h1}</h1>
+      <p class="about-lede">{T.lede}</p>
     </div>
   </section>
 
-  {anyFallback && (
-    <div class="container banner-wrap">
-      <TranslationBanner fromLocale="en" toLocale="ar" />
-    </div>
-  )}
-
-  <section class="values container">
-    {rendered.map(({ entry, Content }) => {
-      const slug = topicOf(entry.id).split("/").pop() ?? "";
-      const iconClass = ICON[slug] ?? "fa-solid fa-circle-check";
-      return (
-        <article class="value-row" id={slug}>
-          <div class="value-icon" aria-hidden="true">
-            <i class={iconClass}></i>
-          </div>
-          <div class="value-body">
-            <h2>{entry.data.title.replace(/^OUR\s+/i, "")}</h2>
-            <div class="prose">
-              <Content />
-            </div>
-          </div>
-        </article>
-      );
-    })}
-  </section>
-
-  <section class="cta-strip">
+  <section class="about-story">
     <div class="container">
-      <h2>{T.ctaTitle}</h2>
-      <p>{T.ctaSub}</p>
-      <a class="btn btn-primary" href={localizedHref("/doctors/", locale)}>{T.ctaLabel}</a>
+      <div class="story-grid">
+        <h2>{T.storyHead}</h2>
+        <p>{T.storyBody}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-values bg-paper-2">
+    <div class="container">
+      <h2 class="values-h2">{T.valuesHead}</h2>
+      <div class="values-grid">
+        {values.map((v) => (
+          <div class={`sk ${v.bg} value-card`}>
+            <h3>{v.t}</h3>
+            <p>{v.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="about-cta bg-mint">
+    <div class="container">
+      <div class="cta-grid">
+        <div>
+          <h2>{T.ctaHead}</h2>
+          <p>{T.ctaLede}</p>
+        </div>
+        <a class="skb skb-butter" href={L("/contact/")}>{T.ctaLabel}</a>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding: 2rem 0 1.25rem;
-    background: linear-gradient(180deg, var(--brand-soft) 0%, var(--surface-alt) 100%);
+  .container {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
+  }
+
+  .about-hero {
+    padding: var(--k-space-10) 0 var(--k-space-11);
     text-align: center;
   }
-  @media (min-width: 640px) { .hero { padding: 4rem 0 2rem; } }
+
   .eyebrow {
     display: inline-block;
-    color: var(--brand);
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 0.6rem;
+    color: var(--k-ink-muted);
+    margin-bottom: var(--k-space-4);
   }
-  @media (min-width: 640px) { .eyebrow { font-size: 0.85rem; margin-bottom: 1rem; } }
-  .hero h1 { margin: 0 auto 0.75rem; max-width: 22ch; }
-  .lede {
-    color: var(--ink-soft);
-    max-width: 60ch;
+
+  .about-h1 {
+    margin: 0 auto var(--k-space-5);
+    max-width: 20ch;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .about-lede {
     margin: 0 auto;
-    font-size: clamp(0.95rem, 2.6vw, 1.1rem);
+    max-width: 56ch;
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--k-ink-muted);
   }
-  .banner-wrap { padding-top: 1.25rem; }
 
-  .values {
-    padding-block: 1.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+  .about-story {
+    padding: var(--k-space-10) 0;
   }
-  @media (min-width: 640px) { .values { padding-block: 3rem; gap: 1.75rem; } }
 
-  .value-row {
+  .story-grid {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
+    grid-template-columns: minmax(200px, 280px) 1fr;
+    gap: var(--k-space-9);
     align-items: start;
-    padding-inline-start: 0.75rem;
-    border-inline-start: 3px solid var(--brand);
   }
-  @media (min-width: 640px) { .value-row { gap: 1.25rem; padding-inline-start: 1.25rem; } }
 
-  .value-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--brand-soft);
-    color: var(--brand);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  .story-grid h2 {
+    margin: 0;
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--k-ink);
   }
-  .value-icon i { font-size: 1rem; line-height: 1; }
-  @media (min-width: 640px) { .value-icon { width: 48px; height: 48px; } .value-icon i { font-size: 1.15rem; } }
 
-  .value-body h2 {
-    color: var(--brand);
-    text-transform: capitalize;
-    font-size: 1.1rem;
-    margin: 0 0 0.5em;
+  .story-grid p {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.7;
+    max-width: 60ch;
+    color: var(--k-ink-muted);
   }
-  @media (min-width: 640px) { .value-body h2 { font-size: 1.25rem; } }
-  .value-body .prose { max-width: none; }
-  .value-body .prose p:last-child,
-  .value-body .prose ul:last-child { margin-bottom: 0; }
 
-  .cta-strip {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 2rem 0;
+  .about-values {
+    padding: var(--k-space-10) 0;
+    border-top: 2px solid var(--k-ink);
+    border-bottom: 2px solid var(--k-ink);
+  }
+
+  .values-h2 {
+    margin: 0 0 var(--k-space-8);
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--k-ink);
     text-align: center;
   }
-  @media (min-width: 640px) { .cta-strip { padding: 3rem 0; } }
-  .cta-strip p { color: var(--ink-soft); margin-bottom: 1.5rem; }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .value-card h3 {
+    margin: 0;
+    font-size: 22px;
+    color: var(--k-ink);
+  }
+
+  .value-card p {
+    margin: 0;
+    color: var(--k-ink);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .about-cta {
+    padding: var(--k-space-10) 0;
+  }
+
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--k-space-8);
+    align-items: center;
+  }
+
+  .cta-grid h2 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--k-ink);
+  }
+
+  .cta-grid p {
+    margin: 0;
+    color: var(--k-ink-muted);
+    font-size: 17px;
+  }
+
+  @media (max-width: 900px) {
+    .story-grid { grid-template-columns: 1fr; gap: var(--k-space-4); }
+    .cta-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 672px) {
+    .container { padding: 0 var(--k-gutter-mobile); }
+    .about-hero,
+    .about-story,
+    .about-values,
+    .about-cta { padding: var(--k-space-8) 0; }
+  }
 </style>

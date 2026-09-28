@@ -1,224 +1,250 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { CONTACT } from "../../consts";
-import { currentLocale } from "../../lib/i18n";
+import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export async function getStaticPaths() {
   return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
 }
 
 const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
+
+const T = isAr ? {
+  title:       "اتصل بنا — كليم",
+  description: "تواصل مع فريق كليم في البصرة. اتصل، راسل، أو احجز تدقيقاً مجانياً لأنظمتك.",
+  eyebrow:     "تواصل",
+  h1:          "أخبرنا ما مغلق.",
+  h1b:         "سنظهر لك الطريق للخروج.",
+  lede:        "نجيب خلال ساعات العمل. للحالات العاجلة، اتصل مباشرة.",
+  callLabel:   "اتصل",
+  emailLabel:  "البريد",
+  locHead:     "الموقع",
+  followHead:  "تابعنا",
+  bookAudit:   "احجز تدقيقاً مجانياً",
+  auditNote:   "أسئلة قليلة عن أنظمتك الحالية، ثم ملخص واحد يوضح ما هو مغلق وكيف نحرره.",
+} : {
+  title:       "Contact — Kaleem",
+  description: "Get in touch with the Kaleem team in Basra. Call, message, or book a free audit of your systems.",
+  eyebrow:     "Get in touch",
+  h1:          "Tell us what's locked.",
+  h1b:         "We'll show you the way out.",
+  lede:        "We answer during business hours. For urgent matters, please call directly.",
+  callLabel:   "Call",
+  emailLabel:  "Email",
+  locHead:     "Location",
+  followHead:  "Follow us",
+  bookAudit:   "Book a free audit",
+  auditNote:   "A few questions about your current systems, then one summary of what's locked and how we free it.",
+};
 
 const socials = [
-  { label: "Facebook",  href: CONTACT.social.facebook,  icon: "fa-brands fa-facebook-f" },
-  { label: "Instagram", href: CONTACT.social.instagram, icon: "fa-brands fa-instagram"  },
-  { label: "YouTube",   href: CONTACT.social.youtube,   icon: "fa-brands fa-youtube"    },
-  { label: "Telegram",  href: CONTACT.social.telegram,  icon: "fa-brands fa-telegram"   },
-  { label: "TikTok",    href: CONTACT.social.tiktok,    icon: "fa-brands fa-tiktok"     },
+  { label: "Facebook",  href: CONTACT.social.facebook,  icon: "F" },
+  { label: "Instagram", href: CONTACT.social.instagram, icon: "I" },
+  { label: "YouTube",   href: CONTACT.social.youtube,   icon: "Y" },
+  { label: "Telegram",  href: CONTACT.social.telegram,  icon: "T" },
+  { label: "TikTok",    href: CONTACT.social.tiktok,    icon: "K" },
 ];
-
-const T = locale === "ar" ? {
-  title:         "اتصل بنا — مركز العمران الطبي",
-  description:   "تواصل مع مركز العمران الطبي في البصرة، العراق: أرقام الهاتف والبريد الإلكتروني والعنوان وقنوات التواصل الاجتماعي.",
-  h1:            "اتصل بنا",
-  subhead:       "نجيب خلال ساعات العمل. للحالات العاجلة يرجى الاتصال المسبق.",
-  ariaActions:   "طرق الاتصال الرئيسية",
-  callLabel:     "اتصل",
-  emailLabel:    "البريد",
-  locationsHead: "مواقعنا",
-  address:       CONTACT.addresses.ar,
-  followHead:    "تابعنا",
-  mapHead:       "موقعنا على الخريطة",
-  ariaMap:       "خريطة الموقع",
-  mapTitle:      "موقع مركز العمران الطبي على خرائط جوجل",
-  mapLang:       "ar",
-} : {
-  title:         "Contact Us — Alimran Medical Center",
-  description:   "Get in touch with Alimran Medical Center in Basra, Iraq. Phone, email, addresses, and social channels.",
-  h1:            "Contact Us",
-  subhead:       "We answer during clinic hours. For urgent matters, please call ahead.",
-  ariaActions:   "Primary contact methods",
-  callLabel:     "Call",
-  emailLabel:    "Email",
-  locationsHead: "Locations",
-  address:       CONTACT.addresses.en,
-  followHead:    "Follow us",
-  mapHead:       "Find us on the map",
-  ariaMap:       "Location map",
-  mapTitle:      "Alimran Medical Center location in Basra, Iraq",
-  mapLang:       "en",
-};
 ---
 
-<BaseLayout fontAwesome title={T.title} description={T.description}>
-  <div class="container page">
-    <header class="page-head">
-      <h1>{T.h1}</h1>
-      <p>{T.subhead}</p>
-    </header>
+<BaseLayout title={T.title} description={T.description}>
+  <section class="contact-hero bg-lilac">
+    <div class="container">
+      <span class="eyebrow">{T.eyebrow}</span>
+      <h1 class="contact-h1">{T.h1}<br />{T.h1b}</h1>
+      <p class="contact-lede">{T.lede}</p>
+    </div>
+  </section>
 
-    <section class="actions" aria-label={T.ariaActions}>
-      {CONTACT.phones.map((p) => (
-        <a class="action" href={`tel:${p.replace(/\s/g, "")}`}>
-          <span class="action-icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
-          <span class="action-body">
+  <section class="contact-actions">
+    <div class="container">
+      <div class="actions-grid">
+        {CONTACT.phones.map((p) => (
+          <a class="sk action bg-mint" href={`tel:${p.replace(/\s/g, "")}`}>
             <span class="action-label">{T.callLabel}</span>
             <span class="action-value"><bdi>{p}</bdi></span>
-          </span>
-        </a>
-      ))}
-      <a class="action" href={`mailto:${CONTACT.email}`}>
-        <span class="action-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
-        <span class="action-body">
+          </a>
+        ))}
+        <a class="sk action bg-butter" href={`mailto:${CONTACT.email}`}>
           <span class="action-label">{T.emailLabel}</span>
           <span class="action-value">{CONTACT.email}</span>
-        </span>
-      </a>
-    </section>
+        </a>
+        <a class="sk action bg-peach" href={CONTACT.mapsUrl} target="_blank" rel="noopener">
+          <span class="action-label">{T.locHead}</span>
+          <span class="action-value">{isAr ? CONTACT.addresses.ar : CONTACT.addresses.en}</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <section class="info" aria-label={locale === "en" ? "Locations and social channels" : undefined}>
-      <div class="info-block">
-        <h2><i class="fa-solid fa-location-dot" aria-hidden="true"></i> {T.locationsHead}</h2>
-        <ul class="addresses">
-          <li>{T.address}</li>
-        </ul>
+  <section class="contact-cta">
+    <div class="container">
+      <div class="sk audit-card bg-paper">
+        <h2>{T.bookAudit}</h2>
+        <p>{T.auditNote}</p>
+        <a class="skb skb-mint" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent(isAr ? "طلب تدقيق مجاني" : "Free audit request")}`}>
+          {T.bookAudit}
+        </a>
       </div>
-      <div class="info-block">
-        <h2><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> {T.followHead}</h2>
-        <ul class="social">
-          {socials.map((s) => (
-            <li>
-              <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
-                <i class={s.icon} aria-hidden="true"></i>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="map-section" aria-label={T.ariaMap}>
-      <h2>{T.mapHead}</h2>
-      <div class="map-container">
-        <iframe
-          src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3437.29801709611!2d47.834783515126176!3d30.512611081714454!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xdf65ac49b64c2ccf!2zMzDCsDMwJzQ1LjQiTiA0N8KwNTAnMTMuMSJF!5e0!3m2!1s${T.mapLang}!2siq!4v1637681705351!5m2!1s${T.mapLang}!2siq`}
-          width="100%"
-          height="280"
-          style="border: 0; border-radius: var(--radius-lg);"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title={T.mapTitle}
-        ></iframe>
-      </div>
-    </section>
-  </div>
+  <section class="contact-social bg-paper-2">
+    <div class="container">
+      <h2>{T.followHead}</h2>
+      <ul class="social-list">
+        {socials.map((s) => (
+          <li>
+            <a class="sk social-btn bg-sky" href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+              {s.icon}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .page { padding-block: 1.5rem 2.5rem; }
-  @media (min-width: 640px) { .page { padding-block: 3rem 4rem; } }
-  .page-head { text-align: center; max-width: 60ch; margin: 0 auto 1.5rem; }
-  @media (min-width: 640px) { .page-head { margin-bottom: 2.5rem; } }
-  .page-head p { color: var(--ink-soft); }
-
-  .actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+  .container {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
   }
-  @media (min-width: 500px) { .actions { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 900px) { .actions { grid-template-columns: repeat(3, 1fr); } }
+
+  .contact-hero {
+    padding: var(--k-space-10) 0 var(--k-space-11);
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+    margin-bottom: var(--k-space-4);
+  }
+
+  .contact-h1 {
+    margin: 0 auto var(--k-space-5);
+    max-width: 20ch;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .contact-lede {
+    margin: 0 auto;
+    max-width: 52ch;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--k-ink-muted);
+  }
+
+  .contact-actions {
+    padding: var(--k-space-10) 0;
+  }
+
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--k-space-6);
+  }
 
   .action {
     display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    padding: 0.85rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    flex-direction: column;
+    gap: 8px;
     text-decoration: none;
-    color: inherit;
-    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+    color: var(--k-ink);
+    padding: var(--k-space-6);
   }
-  .action:hover, .action:focus-visible {
-    border-color: var(--brand);
-    background: var(--brand-soft);
-    text-decoration: none;
-    transform: translateY(-1px);
-  }
-  .action-icon {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--brand); color: #fff;
-    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .action-icon i { font-size: 1.05rem; line-height: 1; }
-  .action-body { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+
   .action-label {
-    color: var(--ink-muted);
-    font-size: 0.7rem;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-    margin-bottom: 0.15em;
+    color: var(--k-ink-muted);
   }
+
   .action-value {
-    color: var(--ink); font-weight: 600; font-size: 0.95rem;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--k-ink);
+    word-break: break-word;
   }
 
-  .info {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-  @media (min-width: 700px) { .info { grid-template-columns: 1.5fr 1fr; gap: 2rem; } }
-
-  .info-block h2 {
-    display: flex; align-items: center; gap: 0.5em;
-    color: var(--ink-muted); font-size: 0.8rem;
-    text-transform: uppercase; letter-spacing: 0.08em;
-    margin-bottom: 0.75rem;
-  }
-  .info-block h2 i { color: var(--brand); font-size: 0.9rem; }
-
-  .addresses {
-    list-style: none; padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 0.5rem;
-  }
-  .addresses li {
-    color: var(--ink-soft); font-size: 0.95rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--surface-alt); border-radius: var(--radius);
+  .contact-cta {
+    padding: 0 0 var(--k-space-11);
   }
 
-  .social {
-    list-style: none; padding: 0; margin: 0;
-    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  .audit-card {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
   }
-  .social a {
-    width: 44px; height: 44px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border); border-radius: 50%;
-    color: var(--ink-soft);
-    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+
+  .audit-card h2 {
+    margin: 0;
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--k-ink);
   }
-  .social a:hover {
-    color: var(--brand); border-color: var(--brand); background: var(--brand-soft);
+
+  .audit-card p {
+    color: var(--k-ink-muted);
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 44ch;
+    margin-inline: auto;
+  }
+
+  .contact-social {
+    padding: var(--k-space-10) 0;
+    border-top: 2px solid var(--k-ink);
+    border-bottom: 2px solid var(--k-ink);
+    text-align: center;
+  }
+
+  .contact-social h2 {
+    margin: 0 0 var(--k-space-7);
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--k-ink);
+  }
+
+  .social-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--k-space-4);
+  }
+
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
     text-decoration: none;
+    font-family: var(--k-font-mono);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--k-ink);
+    padding: 0;
   }
-  .social a i { font-size: 1rem; line-height: 1; }
 
-  .map-section {
-    margin-top: 2.5rem;
-    padding-top: 2.5rem;
-    border-top: 1px solid var(--border);
+  @media (max-width: 672px) {
+    .container { padding: 0 var(--k-gutter-mobile); }
+    .contact-hero { padding: var(--k-space-8) 0 var(--k-space-9); }
+    .contact-actions { padding: var(--k-space-8) 0; }
   }
-  @media (min-width: 640px) { .map-section { margin-top: 3rem; padding-top: 3rem; } }
-  .map-section h2 { text-align: center; margin-bottom: 1.5rem; }
-  .map-container { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
 </style>

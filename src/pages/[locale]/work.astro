@@ -1,0 +1,190 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { currentLocale, localizedHref } from "../../lib/i18n";
+
+export async function getStaticPaths() {
+  return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
+}
+
+const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
+
+const T = isAr ? {
+  title:       "أعمالنا — كليم",
+  description: "دراسات حالة من كليم — أنظمة حررناها ومواقع بنيناها في البصرة، العراق.",
+  eyebrow:     "الأعمال",
+  h1:          "كل مشروع يثبت نفس الطريقة.",
+  lede:        "لا نصور شاشات جميلة فقط. كل حالة تُظهر ما كان مغلقاً، وكيف حررناه، ومن يملك المفاتيح الآن.",
+  moreSoon:    "المزيد من دراسات الحالة قريباً.",
+  readCase:    "اقرأ دراسة الحالة →",
+} : {
+  title:       "Work — Kaleem",
+  description: "Case studies from Kaleem — systems we've unlocked and sites we've built in Basra, Iraq.",
+  eyebrow:     "Work",
+  h1:          "Every project proves the same method.",
+  lede:        "We don't just show pretty screenshots. Every case shows what was locked, how we freed it, and who holds the keys now.",
+  moreSoon:    "More case studies soon.",
+  readCase:    "Read the case study →",
+};
+
+const cases = isAr ? [
+  {
+    title: "عيادة العمران",
+    summary: "من موقع قديم لم يستطع أحد تسجيل الدخول إليه، إلى موقع ثنائي اللغة تتحكم فيه العيادة بالكامل.",
+    tags: ["التحرير", "ويب", "شبكات"],
+    tagBg: ["tag-butter", "tag-sky", "tag-apricot"],
+    href: "#alimran",
+    accent: "bg-mint",
+  },
+] : [
+  {
+    title: "Al Imran Clinic",
+    summary: "From an old site nobody could log into, to a bilingual site the clinic fully controls.",
+    tags: ["The Jailbreak", "Web", "Networks"],
+    tagBg: ["tag-butter", "tag-sky", "tag-apricot"],
+    href: "#alimran",
+    accent: "bg-mint",
+  },
+];
+---
+
+<BaseLayout title={T.title} description={T.description}>
+  <section class="work-hero bg-sky">
+    <div class="container">
+      <span class="eyebrow">{T.eyebrow}</span>
+      <h1 class="work-h1">{T.h1}</h1>
+      <p class="work-lede">{T.lede}</p>
+    </div>
+  </section>
+
+  <section class="work-list">
+    <div class="container">
+      <div class="cases-grid">
+        {cases.map((c) => (
+          <article class={`sk case-card ${c.accent}`}>
+            <div class="case-body">
+              <h2>{c.title}</h2>
+              <p>{c.summary}</p>
+              <div class="case-tags">
+                {c.tags.map((t, i) => (
+                  <span class={`k-tag ${c.tagBg[i]}`}>{t}</span>
+                ))}
+              </div>
+            </div>
+            <a class="skb skb-paper" href={c.href}>{T.readCase}</a>
+          </article>
+        ))}
+        <div class="soon">{T.moreSoon}</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
+  }
+
+  .work-hero {
+    padding: var(--k-space-10) 0 var(--k-space-11);
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+    margin-bottom: var(--k-space-4);
+  }
+
+  .work-h1 {
+    margin: 0 auto var(--k-space-5);
+    max-width: 20ch;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .work-lede {
+    margin: 0 auto;
+    max-width: 56ch;
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--k-ink-muted);
+  }
+
+  .work-list {
+    padding: var(--k-space-10) 0 var(--k-space-11);
+  }
+
+  .cases-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--k-space-7);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .case-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-6);
+  }
+
+  .case-body h2 {
+    margin: 0;
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--k-ink);
+  }
+
+  .case-body p {
+    color: var(--k-ink);
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  .case-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .k-tag {
+    background: var(--k-paper);
+  }
+
+  .tag-butter { background: var(--k-butter); }
+  .tag-sky    { background: var(--k-sky); }
+  .tag-apricot{ background: var(--k-apricot); }
+  .tag-mint   { background: var(--k-mint); }
+  .tag-lilac  { background: var(--k-lilac); }
+  .tag-peach  { background: var(--k-peach); }
+
+  .case-card .skb {
+    align-self: flex-start;
+  }
+
+  .soon {
+    text-align: center;
+    color: var(--k-ink-muted);
+    font-family: var(--k-font-mono);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    padding: var(--k-space-6) 0;
+  }
+
+  @media (max-width: 672px) {
+    .container { padding: 0 var(--k-gutter-mobile); }
+    .work-hero,
+    .work-list { padding: var(--k-space-8) 0; }
+  }
+</style>
