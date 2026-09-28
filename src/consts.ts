@@ -1,9 +1,9 @@
 export const SITE_TITLE = "Kaleem — Digital Solutions for Iraq";
 export const SITE_NAME  = "Kaleem";
 export const SITE_DESCRIPTION =
-  "Kaleem: we extract, clean, and modernize legacy systems. From data jailbreaking to web platform rebuilds, we give clients their digital freedom back.";
+  "Kaleem frees data from legacy systems, cleans it, and rebuilds it on modern, open platforms — so you own your systems again.";
 export const SITE_DESCRIPTION_AR =
-  "كليم: نُحرّر البيانات، نُنظّفها، ونُحدّثها. من استخراج قواعد البيانات المهجورة إلى إعادة بناء المنصات، نعيد حريتك الرقمية.";
+  "كليم تحرّر بياناتك من الأنظمة القديمة، وتنظّفها، وتعيد بناءها على منصات حديثة ومفتوحة — لتعود أنظمتك ملكاً لك.";
 
 export const CONTACT = {
   // Same number rings both offices; kept as a single entry so the site

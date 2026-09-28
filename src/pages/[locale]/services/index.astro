@@ -56,13 +56,13 @@ const categories = [...byCategory.entries()]
 ---
 
 <BaseLayout
-  title={locale === "ar" ? "الخدمات — مركز العمران الطبي" : "Services — Alimran Medical Center"}
-  description={locale === "en" ? "Chiropractic, brain stimulation, physiotherapy, radiofrequency, surgery and more — all procedures offered at Alimran Medical Center in Basra." : "تقويم العمود الفقري، تحفيز الدماغ، العلاج الطبيعي، الترددات الراديوية، الجراحة وغيرها — جميع الإجراءات المقدمة في مركز العمران الطبي بالبصرة."}
+  title={locale === "ar" ? "الخدمات — كليم" : "Services — Kaleem"}
+  description={locale === "en" ? "Data extraction, web platform modernization, database restructuring, legacy migration, and training — everything Kaleem offers." : "استخراج البيانات، وتحديث منصات الويب، وإعادة هيكلة قواعد البيانات، والانتقال من الأنظمة القديمة، والتدريب — كل ما تقدّمه كليم."}
 >
   <div class="container page">
     <header class="page-head">
       <h1>{locale === "ar" ? "الخدمات" : "Services"}</h1>
-      {locale === "en" && <p class="lede">Every therapy and intervention we offer, grouped by discipline.</p>}
+      <p class="lede">{locale === "ar" ? "كل ما نقدّمه، مصنّفاً حسب المجال." : "Everything we offer, grouped by area."}</p>
     </header>
 
     <div class="grid">

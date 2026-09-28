@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { SITE_TITLE, SITE_NAME, SITE_DESCRIPTION, SITE_DESCRIPTION_AR } from "../consts";
+import { SITE_TITLE, SITE_NAME, SITE_DESCRIPTION, SITE_DESCRIPTION_AR, CONTACT } from "../consts";
 import { currentLocale, alternateHref } from "../lib/i18n";
 import { excerpt } from "../lib/excerpt";
 
@@ -50,50 +50,19 @@ const robotsContent = !isProduction ? "noindex, nofollow" : noindex ? "noindex, 
 
 const businessSchema = {
   "@context": "https://schema.org",
-  "@type": ["MedicalClinic", "LocalBusiness"],
-  "@id": "https://alimran.clinic/#clinic",
-  name: "Alimran Medical Center",
-  description:
-    "Alimran Medical Center specializes in neurology and musculoskeletal disorders in Basra, Iraq — chiropractic, rehabilitation, brain stimulation (TMS/tDCS), pain management, physiotherapy, radiofrequency, and neurosurgery.",
+  "@type": "Organization",
+  "@id": new URL("/#organization", Astro.site).href,
+  name: SITE_NAME,
+  alternateName: "كليم",
+  description: SITE_DESCRIPTION,
   url: Astro.site,
-  telephone: ["+964 780 1926801", "+964 770 6774773"],
-  email: "info@alimranmed.com",
+  telephone: CONTACT.phones,
+  email: CONTACT.email,
   address: [
-    {
-      "@type": "PostalAddress",
-      addressLocality: "Basra",
-      addressCountry: "IQ",
-      streetAddress: "Breaha, Alnkba Medical Collection",
-    },
+    { "@type": "PostalAddress", addressLocality: "Basra", addressCountry: "IQ" },
+    { "@type": "PostalAddress", addressLocality: "Baghdad", addressCountry: "IQ" },
   ],
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 30.5156,
-    longitude: 47.7804,
-  },
-  medicalSpecialty: [
-    "Neurology",
-    "Neurosurgery",
-    "Chiropractic",
-    "PhysicalTherapy",
-    "PainMedicine",
-  ],
-  openingHoursSpecification: [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"],
-      opens: "09:00",
-      closes: "18:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: "Friday",
-      opens: "14:00",
-      closes: "18:00",
-    },
-  ],
-};
----
+};---
 
 <!-- Charset first (spec: within the first 1024 bytes of the response) so the
      browser can start decoding without re-scanning after a script/style. -->
@@ -166,7 +135,7 @@ const businessSchema = {
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
-<meta name="author" content="Alimran Clinic" />
+<meta name="author" content={SITE_NAME} />
 <meta name="robots" content={robotsContent} />
 {!noindex && (
   <>

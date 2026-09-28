@@ -12,35 +12,35 @@ const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
   title:       "أعمالنا — كليم",
-  description: "مشاريع تحرير وتحديث رقمي من كليم — استخراج البيانات وإعادة البناء الحديثة.",
+  description: "مشاريع كليم في تحرير البيانات والتحديث الرقمي: استخراج البيانات وإعادة بناء المنصات.",
   eyebrow:     "الأعمال",
-  h1:          "من موقع ورّاث إلى منصة حديثة متحررة.",
-  lede:        "كل مشروع نُنجزه يثبت أن الانتقال من النظام القديم إلى الحديث ممكن بدون فقدان البيانات أو الوقت. إليك قصة عيادة الإمران.",
-  moreSoon:    "مشاريع إضافية قادمة — مع موافقة العملاء على مشاركة قصصهم.",
-  readCase:    "اقرأ القصة الكاملة →",
+  h1:          "من مواقع قديمة إلى منصات حديثة ومتحرّرة.",
+  lede:        "كل مشروع ننجزه يثبت أن الانتقال من نظام قديم إلى نظام حديث ممكن دون فقدان البيانات أو توقّف العمل. إليك قصة مركز العمران الطبي.",
+  moreSoon:    "المزيد من دراسات الحالة قريباً — حين يوافق عملاؤنا على مشاركة قصصهم.",
+  readCase:    "اقرأ القصة كاملة ←",
 } : {
   title:       "Work — Kaleem",
   description: "Digital liberation and modernization projects from Kaleem — data extraction and platform rebuilds.",
   eyebrow:     "Work",
   h1:          "From legacy websites to liberated, modern platforms.",
-  lede:        "Every project we complete proves that migration from old systems to modern ones is possible without data loss or downtime. Here's the story of Alimran Clinic.",
+  lede:        "Every project we complete proves that migration from old systems to modern ones is possible without data loss or downtime. Here's the story of Alimran Medical Center.",
   moreSoon:    "More case studies coming — as clients approve sharing their stories.",
   readCase:    "Read the full story →",
 };
 
 const cases = isAr ? [
   {
-    title: "عيادة الإمام، البصرة",
-    summary: "استخراج 600 مقالة من موقع WordPress قديم، تنظيفها وإعادة تنسيقها، وإعادة البناء على Astro مع Cloudflare Workers. النتيجة: موقع بـ 97/100 PageSpeed، بيانات تحت سيطرة العيادة، وحرية حقيقية للتطوير والصيانة.",
-    tags: ["استخراج البيانات", "تحديث الويب", "البنية المفتوحة"],
+    title: "مركز العمران الطبي، البصرة",
+    summary: "استخرجنا 600 مقالة من موقع WordPress قديم، ونظّفناها وأعدنا تنسيقها، ثم أعدنا بناء الموقع على Astro وCloudflare Workers. النتيجة: موقع يحصل على 97/100 في PageSpeed، وبيانات بيد المركز بالكامل، وحرية حقيقية في التطوير والصيانة.",
+    tags: ["استخراج البيانات", "تحديث الويب", "بنية مفتوحة"],
     tagBg: ["tag-butter", "tag-sky", "tag-mint"],
     href: "/ar/al-imran/",
     accent: "bg-lilac",
   },
 ] : [
   {
-    title: "Alimran Clinic, Basra",
-    summary: "Extracted 600 articles from a legacy WordPress site, cleaned and reformatted the data, rebuilt on Astro with Cloudflare Workers. Result: a 97/100 PageSpeed site, data under clinic control, bilingual support, and true freedom to develop and maintain.",
+    title: "Alimran Medical Center, Basra",
+    summary: "We extracted 600 articles from a legacy WordPress site, cleaned and reformatted them, then rebuilt the site on Astro and Cloudflare Workers. The result: a site that scores 97/100 on PageSpeed, full Arabic and English support, data in the center's own hands, and real freedom to develop and maintain it.",
     tags: ["Data extraction", "Web modernization", "Open infrastructure"],
     tagBg: ["tag-butter", "tag-sky", "tag-mint"],
     href: "/en/al-imran/",

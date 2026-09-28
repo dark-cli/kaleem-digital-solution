@@ -21,12 +21,11 @@ const isAr = locale === "ar";
 const lCompany = isAr ? "الشركة" : "Company";
 const lServices = isAr ? "الخدمات" : "Services";
 const lWork = isAr ? "الأعمال" : "Work";
-const lContact = isAr ? "التواصل" : "Contact";
+const lContact = isAr ? "تواصل معنا" : "Contact";
 const lSocial = isAr ? "تابعنا" : "Follow";
 
 const companyLinks = [
-  { label: isAr ? "عنّا" : "About", href: "/about/" },
-  { label: isAr ? "المدونة" : "Blog", href: "/blog/" },
+  { label: isAr ? "من نحن" : "About", href: "/about/" },
 ];
 
 const servicesLinks = [
@@ -44,8 +43,11 @@ const copyright = isAr
   ? `© ${year} كليم. جميع الحقوق محفوظة.`
   : `© ${year} Kaleem. All rights reserved.`;
 const promise = isAr
-  ? "حلول رقمية سريعة وغير مكلفة."
-  : "Fast, affordable digital solutions.";
+  ? "نحرّر بياناتك ونحدّث أنظمتك — وتبقى المفاتيح بيدك."
+  : "We free your data and modernize your systems — and you keep the keys.";
+const contactPromise = isAr
+  ? "حدّثنا عن النظام الذي يقيّدك."
+  : "Tell us about the system that's holding you back.";
 ---
 
 <footer class="footer board" data-sky>
@@ -83,7 +85,7 @@ const promise = isAr
       <!-- Contact -->
       <div>
         <p class="f-label">{lContact}</p>
-        <p class="f-promise">{promise}</p>
+        <p class="f-promise">{contactPromise}</p>
         <a class="skb" href={L(contactLink.href)}>{contactLink.label}</a>
       </div>
     </div>

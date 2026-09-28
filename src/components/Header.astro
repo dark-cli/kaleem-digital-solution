@@ -23,8 +23,8 @@ const NAV: NavItem[] = [
   { label: "Home",                labelAr: "الرئيسية",       href: "/" },
   { label: "Services",            labelAr: "الخدمات",       href: "/services/" },
   { label: "Work",                labelAr: "الأعمال",       href: "/work/" },
-  { label: "About",               labelAr: "عنّا",          href: "/about/" },
-  { label: "Contact",             labelAr: "التواصل",       href: "/contact/" },
+  { label: "About",               labelAr: "من نحن",        href: "/about/" },
+  { label: "Contact",             labelAr: "تواصل معنا",    href: "/contact/" },
 ];
 
 const isActive = (href: string) => {
@@ -49,7 +49,7 @@ const menuLabel = locale === "ar" ? "القائمة" : "Menu";
 const closeMenuLabel = locale === "ar" ? "إغلاق" : "Close";
 
 // CTA button
-const ctaLabel = locale === "ar" ? "احجز استشارة" : "Book a consult";
+const ctaLabel = locale === "ar" ? "احجز تقييماً مجانياً" : "Book a free audit";
 ---
 
 <header class="site-header board" data-sky>

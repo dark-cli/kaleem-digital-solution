@@ -12,182 +12,183 @@ const isAr = locale === "ar";
 const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
-  title:        "مركز العمران الطبي — دراسة حالة كليم",
-  description:  "كيف حررنا بيانات مركز العمران الطبي من نظام قديم وبنينا منصة حديثة بـ 97/100 PageSpeed.",
+  title:        "مركز العمران الطبي — دراسة حالة من كليم",
+  description:  "كيف حرّرنا بيانات مركز العمران الطبي من موقع قديم، وبنينا منصة حديثة تحصل على 97/100 في PageSpeed.",
   eyebrow:      "دراسة حالة",
   h1:           "مركز العمران الطبي",
-  subtitle:     "من WordPress قديم إلى منصة حديثة مفتوحة",
-  lede:         "عندما جاءتنا مركز العمران الطبي، كانت تملك 600 مقالة وسنوات من البيانات محبوسة في موقع WordPress بطيء ومكسّر. في ستة أشهر، استخرجنا البيانات، نظّفناها، وأعدنا بناء الموقع بالكامل على تقنيات حديثة. النتيجة: موقع سريع، آمن، وتحت سيطرة المركز كاملاً.",
+  subtitle:     "من موقع WordPress قديم إلى منصة حديثة ومفتوحة",
+  lede:         "حين تواصل معنا مركز العمران الطبي، كان لديه 600 مقالة وسنوات من المحتوى محبوسة في موقع WordPress بطيء ومعطّل. خلال ستة أشهر استخرجنا البيانات ونظّفناها، وأعدنا بناء الموقع بالكامل على تقنيات حديثة. النتيجة: موقع سريع وآمن، تحت سيطرة المركز بالكامل.",
 
   challenge:    "التحدي",
-  challengeDesc: "الموقع القديم (alimranmed.com) كان يعاني من بطء وعدم استقرار. لا توثيق واضح، لا نسخ احتياطية، والبيانات مبعثرة عبر قاعدة بيانات مُسيئة الاستخدام. المركز لا يملك حتى الوصول الكامل إلى بيانات مرضاه في الموقع.",
+  challengeDesc: "كان الموقع القديم (alimranmed.com) بطيئاً وغير مستقر، بلا توثيق واضح ولا نسخ احتياطية موثوقة، وبياناته مبعثرة في قاعدة بيانات سيئة الإدارة. حتى المركز نفسه لم يكن يملك وصولاً كاملاً إلى بيانات موقعه.",
 
   solution:    "الحل",
-  solutionDesc: "بنينا عملية استخراج منهجية: فحصنا البنية القديمة، استخرجنا كل مقالة وتعليق، نظّفنا البيانات (توحيد التنسيقات، إزالة التكرار، إصلاح الروابط المكسورة)، ثم أعدنا البناء على Astro مع Cloudflare Workers.",
+  solutionDesc: "بنينا عملية استخراج منهجية: فحصنا بنية الموقع القديم، واستخرجنا كل مقالة وتعليق، ونظّفنا البيانات (توحيد الصيغ، وحذف المكرّر، وإصلاح الروابط المعطّلة)، ثم أعدنا البناء على Astro وCloudflare Workers.",
 
   results:     "النتائج",
   r1Title:     "الأداء",
-  r1:          "97/100 PageSpeed — أسرع 10× من الموقع القديم",
+  r1:          "97/100 في PageSpeed — أسرع بعشر مرات من الموقع القديم",
   r2Title:     "البيانات",
-  r2:          "600 مقالة + تعليقات منظّفة وموثّقة بالكامل",
+  r2:          "600 مقالة مع تعليقاتها، منظّفة وموثّقة بالكامل",
   r3Title:     "الملكية",
-  r3:          "المستودع وكل المفاتيح بيد المركز على GitHub",
+  r3:          "المستودع على GitHub وجميع المفاتيح بيد المركز",
   r4Title:     "الاستقلالية",
-  r4:          "خادم مفتوح (Cloudflare Workers)، بلا قفل بائع",
+  r4:          "موقع ثابت يعمل على أي استضافة — Cloudflare اليوم، وأي مزوّد آخر غداً",
   r5Title:     "اللغة",
-  r5:          "دعم كامل ثنائي اللغة EN/AR مع أداء متساوٍ",
+  r5:          "دعم كامل للعربية والإنجليزية بالأداء نفسه",
   r6Title:     "التكلفة",
-  r6:          "استضافة مجانية تماماً على Cloudflare (لا رسوم شهرية)",
+  r6:          "استضافة مجانية بالكامل على Cloudflare (بلا رسوم شهرية)",
 
   technicalHead: "البنية التقنية",
-  t1:          "Astro Static Site Generator — سرعة وموثوقية",
-  t2:          "Cloudflare Workers — معالجة بدون خادم",
-  t3:          "Open standards — لا قفل في التقنيات",
-  t4:          "Git workflow — كل التاريخ موثّق",
+  t1:          "Astro لتوليد المواقع الثابتة — سرعة وموثوقية",
+  t2:          "Cloudflare Workers — معالجة دون خوادم تديرها بنفسك",
+  t3:          "معايير مفتوحة — لا ارتهان لتقنية بعينها",
+  t4:          "Git — كل تغيير مسجّل ويمكن التراجع عنه",
 
   processHead:  "العملية — خمس خطوات",
   step1Title:  "1. التقييم",
-  step1:       "تحديد موقع الأنظمة والحسابات والبيانات: الأجهزة، مزودو الخدمات، قواعد البيانات القديمة.",
+  step1:       "نحدّد أين توجد أنظمتك وحساباتك وبياناتك فعلاً: الأجهزة، ومزوّدو الخدمات، وقواعد البيانات القديمة.",
   step2Title:  "2. الاستخراج والتنظيف",
-  step2:       "استخراج البيانات، إزالة النسخ المكررة، توحيد التنسيقات، إصلاح الصور والروابط.",
+  step2:       "نستخرج بياناتك، ونحذف المكرّر، ونوحّد الصيغ، ونصلح الصور والروابط.",
   step3Title:  "3. البناء على معايير مفتوحة",
-  step3:       "بناء Astro site، جميع المقالات كـ markdown، تصميم عصري متجاوب.",
+  step3:       "نبني الموقع بـ Astro، ونحفظ كل المقالات بصيغة Markdown، بتصميم حديث يتكيّف مع كل الشاشات.",
   step4Title:  "4. تسليم المفاتيح",
-  step4:       "الحسابات والنطاق باسمك، المستودع في حسابك، التوثيق الكامل، إزالة صلاحياتنا.",
+  step4:       "الحسابات والنطاق باسمك، والمستودع في حسابك، مع توثيق كامل — ثم نُزيل صلاحياتنا.",
   step5Title:  "5. الدعم، ثم الحرية",
-  step5:       "إصلاحات مجانية وأسئلة لفترة محددة، ثم الدفع حسب الاستخدام أو مزود آخر — اختيارك.",
+  step5:       "إصلاحات وإرشاد مجاني لفترة محددة، ثم الدفع حسب الحاجة، أو خطة شهرية، أو مزوّد آخر — والخيار لك.",
 
-  ownershipHead: "الملكية الحقيقية",
-  o1:          "كل شيء — الكود، البيانات، المستودع — ملك للمركز",
-  o2:          "لا اشتراكات شهرية ولا قفل بائع",
-  o3:          "يمكن نقل الموقع بسهولة إلى أي خادم في أي وقت",
-  o4:          "التطوير المستقبلي بدون الحاجة إلينا",
+  ownershipHead: "ملكية حقيقية",
+  o1:          "كل شيء — الكود والبيانات والمستودع — ملك للمركز",
+  o2:          "لا اشتراكات شهرية إلزامية ولا ارتهان لمزوّد",
+  o3:          "يمكن نقل الموقع إلى أي خادم في أي وقت دون خسارة أي شيء",
+  o4:          "التطوير مستقبلاً ممكن دون الاعتماد علينا",
 
-  problemsHead: "المشاكل في الموقع القديم",
-  p1:          "تصميم فوضوي وغير واضح",
+  problemsHead: "مشاكل الموقع القديم",
+  p1:          "تصميم مزدحم ومربك",
   p2:          "نصوص غير منظّمة وصعبة القراءة",
-  p3:          "صور عشوائية وعناصر CSS مكسورة",
-  p4:          "عناصر غير محاذاة وتخطيط سيء",
-  p5:          "موقع بطيء جداً مع نسبة توقف عالية",
-  p6:          "روابط مكسورة وقوائم لا تستجيب",
-  p7:          "لا يعمل على الهواتف الذكية",
-  p8:          "المقالات مجرد كومة من النصوص بلا تنسيق",
+  p3:          "صور عشوائية مولّدة بالذكاء الاصطناعي وعناصر CSS معطّلة",
+  p4:          "عناصر غير متناسقة وتخطيط رديء",
+  p5:          "بطء شديد وانقطاعات متكررة",
+  p6:          "روابط معطّلة وقوائم لا تستجيب",
+  p7:          "لا يعمل على الهواتف إطلاقاً",
+  p8:          "المقالات مجرد كتل نصية بلا أي تنسيق",
 
-  beforeAfterHead: "التصميم الحديث",
-  designShowcaseDesc: "تصميم حديث متوافق مع الهواتف بنسبة مئة بالمئة، مع ثيم فاتح وغامق وسهل الاستخدام.",
+  beforeAfterHead: "التصميم الجديد",
+  designShowcaseDesc: "تصميم يتكيّف بالكامل مع الهواتف، مع وضعين فاتح وداكن، ومبني للسرعة والوضوح في كل تفصيلة.",
   homeLabel:   "الصفحة الرئيسية",
   articleLabel: "صفحات المقالات",
-  libraryLabel: "المكتبة",
 
-  featuresHead: "ميزات الموقع الجديد",
-  f1:          "تخطيط نظيف وواضح مع رسالة مباشرة",
-  f2:          "صور عالية الجودة تظهر الأهمية",
-  f3:          "مقالات معاد كتابتها بمعلومات مستخرجة بعناية",
-  f4:          "تخطيط نظيف وقابل للقراءة",
-  f5:          "محرك بحث متقدم للعثور على المقالات بسهولة",
-  f6:          "مكتبة للتصفح والاستكشاف",
-  f7:          "دعم البحث بالذكاء الاصطناعي (LLM)",
-  f8:          "جاهز للتكامل مع أي تطبيق ذكاء اصطناعي",
-  f9:          "ثيم فاتح وغامق",
-  f10:         "سرعة فائقة وموثوقية 99.9%",
+  featuresHead: "مزايا الموقع الجديد",
+  f1:          "تخطيط نظيف ورسالة واضحة ومباشرة",
+  f2:          "صور عالية الجودة تُبرز ما يهم",
+  f3:          "مقالات أُعيدت كتابتها بمعلومات مستخرجة بعناية",
+  f4:          "خطوط مريحة للقراءة بالعربية والإنجليزية",
+  f5:          "بحث متقدّم للوصول إلى أي مقالة فوراً",
+  f6:          "مكتبة لتصفّح المحتوى واستكشافه",
+  f7:          "بحث مدعوم بالذكاء الاصطناعي (نماذج لغوية كبيرة)",
+  f8:          "جاهز للربط مع أي تطبيق ذكاء اصطناعي",
+  f9:          "وضعان فاتح وداكن",
+  f10:         "سرعة فائقة وتوفّر بنسبة 99.9%",
 
-  pageComparisonsHead: "تحويل كل صفحة",
+  pageComparisonsHead: "كل صفحة تغيّرت",
   homepageLabel: "الصفحة الرئيسية",
   articlesLabel: "صفحات المقالات",
-  libraryLabel:  "المكتبة والاستكشاف",
+  libraryLabel:  "المكتبة",
+  oldLabel:      "قبل",
+  newLabel:      "بعد",
 
-  ctaHead:      "جاهز لتحرير نظامك الرقمي؟",
-  ctaLabel:     "احجز تدقيق مجاني",
+  ctaHead:      "جاهز لتحرير منصتك الرقمية؟",
+  ctaLabel:     "احجز تقييماً مجانياً",
 
 } : {
-  title:        "Alimran Clinic — Kaleem case study",
-  description:  "How we liberated Alimran Clinic's data from a legacy system and built a modern 97/100 PageSpeed platform.",
+  title:        "Alimran Medical Center — Kaleem case study",
+  description:  "How we freed Alimran Medical Center's data from a legacy website and built a modern platform that scores 97/100 on PageSpeed.",
   eyebrow:      "Case study",
-  h1:           "Alimran Clinic",
+  h1:           "Alimran Medical Center",
   subtitle:     "From legacy WordPress to a modern, open platform",
-  lede:         "Alimran Clinic arrived with 600 articles and years of data trapped in a slow, broken WordPress site. Over six months, we extracted the data, cleaned it, and rebuilt the entire platform on modern technology. The result: a fast, secure site completely under the clinic's control.",
+  lede:         "When Alimran Medical Center came to us, it had 600 articles and years of content trapped in a slow, broken WordPress site. Over six months, we extracted the data, cleaned it, and rebuilt the entire site on modern technology. The result: a fast, secure site fully under the center's control.",
 
-  challenge:    "The Challenge",
-  challengeDesc: "The old site (alimranmed.com) was slow and unstable. No clear documentation, no reliable backups, and patient data scattered across a mismanaged database. The clinic didn't even have full access to its own data on the website.",
+  challenge:    "The challenge",
+  challengeDesc: "The old site (alimranmed.com) was slow and unstable, with no clear documentation, no reliable backups, and its data scattered across a poorly managed database. The center didn't even have full access to its own website's data.",
 
-  solution:    "The Solution",
-  solutionDesc: "We built a systematic extraction process: examined the legacy structure, extracted every article and comment, cleaned the data (standardized formats, removed duplicates, fixed broken links), then rebuilt on Astro with Cloudflare Workers.",
+  solution:    "The solution",
+  solutionDesc: "We built a systematic extraction process: examined the legacy structure, extracted every article and comment, cleaned the data (standardized formats, removed duplicates, fixed broken links), then rebuilt on Astro and Cloudflare Workers.",
 
-  results:     "The Results",
+  results:     "The results",
   r1Title:     "Performance",
-  r1:          "97/100 PageSpeed — 10× faster than the legacy site",
+  r1:          "97/100 on PageSpeed — 10× faster than the legacy site",
   r2Title:     "Data",
-  r2:          "600 articles + comments fully cleaned and documented",
+  r2:          "600 articles and their comments, fully cleaned and documented",
   r3Title:     "Ownership",
-  r3:          "Repository and all keys in the clinic's hands on GitHub",
+  r3:          "The GitHub repository and all keys are in the center's hands",
   r4Title:     "Independence",
-  r4:          "Open infrastructure (Cloudflare Workers), no vendor lock-in",
+  r4:          "A static site that runs on any host — Cloudflare today, anyone else tomorrow",
   r5Title:     "Language",
-  r5:          "Full bilingual EN/AR support with equal performance",
+  r5:          "Full Arabic and English support with equal performance",
   r6Title:     "Cost",
   r6:          "Completely free hosting on Cloudflare (no monthly fees)",
 
-  technicalHead: "Technical Architecture",
-  t1:          "Astro Static Site Generator — speed and reliability",
-  t2:          "Cloudflare Workers — serverless processing",
+  technicalHead: "Technical architecture",
+  t1:          "Astro static site generator — speed and reliability",
+  t2:          "Cloudflare Workers — serverless, no servers to manage",
   t3:          "Open standards — no technology lock-in",
   t4:          "Git workflow — every change tracked and reversible",
 
-  processHead:  "The Process — Five Steps",
+  processHead:  "The process — five steps",
   step1Title:  "1. Audit",
-  step1:       "Map where your systems, accounts and data really are: devices, providers, legacy databases.",
-  step2Title:  "2. Extract & Clean",
-  step2:       "Get your data out, remove duplicates, standardize formats, fix images and links.",
-  step3Title:  "3. Rebuild on Open Standards",
-  step3:       "Build Astro site, all articles as markdown, modern responsive design.",
-  step4Title:  "4. Hand Over the Keys",
-  step4:       "Accounts and domain in your name, code repository in your account, full documentation, our access removed.",
-  step5Title:  "5. Support, Then Freedom",
-  step5:       "Free fixes and guidance for a set period, then pay-as-you-go, monthly plan, or another provider — your choice.",
+  step1:       "Map where your systems, accounts, and data really are: devices, providers, legacy databases.",
+  step2Title:  "2. Extract & clean",
+  step2:       "Get your data out, remove duplicates, standardize formats, and fix images and links.",
+  step3Title:  "3. Rebuild on open standards",
+  step3:       "Build the site with Astro, store every article as Markdown, and give it a modern responsive design.",
+  step4Title:  "4. Hand over the keys",
+  step4:       "Accounts and domain in your name, the code repository in your account, full documentation — then we remove our access.",
+  step5Title:  "5. Support, then freedom",
+  step5:       "Free fixes and guidance for a set period, then pay-as-you-go, a monthly plan, or another provider — your choice.",
 
-  ownershipHead: "True Ownership",
-  o1:          "Everything — code, data, repository — belongs to the clinic",
-  o2:          "No monthly subscriptions, no vendor lock-in",
-  o3:          "Site can move to any server anytime without losing anything",
-  o4:          "Future development possible without depending on us",
+  ownershipHead: "True ownership",
+  o1:          "Everything — code, data, repository — belongs to the center",
+  o2:          "No mandatory subscriptions, no vendor lock-in",
+  o3:          "The site can move to any server anytime without losing anything",
+  o4:          "Future development is possible without depending on us",
 
-  problemsHead: "Problems with the Legacy Site",
+  problemsHead: "Problems with the legacy site",
   p1:          "Cluttered and confusing design",
   p2:          "Unreadable and disorganized text",
-  p3:          "Random AI-generated images and broken CSS elements",
-  p4:          "Misaligned elements and poor layout",
-  p5:          "Painfully slow with poor uptime",
+  p3:          "Random AI-generated images and broken CSS",
+  p4:          "Misaligned elements and a poor layout",
+  p5:          "Painfully slow with frequent downtime",
   p6:          "Broken links and unresponsive menus",
   p7:          "No mobile support whatsoever",
   p8:          "Articles were just walls of text with no visual structure",
 
-  beforeAfterHead: "The Modern Design",
-  designShowcaseDesc: "Fully responsive design with dark and light themes, built for speed and clarity with every interaction carefully considered.",
+  beforeAfterHead: "The new design",
+  designShowcaseDesc: "Fully responsive design with light and dark themes, built for speed and clarity in every detail.",
   homeLabel:   "Homepage",
   articleLabel: "Article pages",
-  libraryLabel: "Library",
 
-  featuresHead: "New Website Features",
+  featuresHead: "New website features",
   f1:          "Clean layout with direct messaging",
-  f2:          "High-quality images showing what matters",
+  f2:          "High-quality images that highlight what matters",
   f3:          "Articles rewritten with carefully extracted information",
-  f4:          "Clean, readable layout throughout",
-  f5:          "Advanced search to find articles instantly",
-  f6:          "Library to browse and discover content",
+  f4:          "Comfortable, readable typography in Arabic and English",
+  f5:          "Advanced search to find any article instantly",
+  f6:          "A library to browse and discover content",
   f7:          "AI-powered search (LLM integration)",
-  f8:          "Plug and play ready for any AI application",
-  f9:          "Dark and light themes",
+  f8:          "Ready to connect to any AI application",
+  f9:          "Light and dark themes",
   f10:         "Lightning-fast with 99.9% uptime",
 
   pageComparisonsHead: "Every page transformed",
   homepageLabel: "Homepage",
   articlesLabel: "Article pages",
-  libraryLabel:  "Library & Discovery",
+  libraryLabel:  "Library",
+  oldLabel:      "Before",
+  newLabel:      "After",
 
   ctaHead:      "Ready to liberate your digital platform?",
   ctaLabel:     "Book a free audit",
-};
----
+};---
 
 <BaseLayout title={T.title} description={T.description}>
   <!-- ─── HERO ─────────────────────────────────────────────── -->
@@ -248,19 +249,19 @@ const T = isAr ? {
       <p class="showcase-description">{T.designShowcaseDesc}</p>
       <div class="showcase-grid">
         <a href="https://alimran.clinic/en/" target="_blank" class="showcase-item">
-          <WindowWidget src="/assets/illustrations/new-home-dark.png" alt="Homepage" chromeColor="sky-shader" />
+          <WindowWidget src="/assets/illustrations/new-home-dark.png" alt={isAr ? "الصفحة الرئيسية" : "Homepage"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.homeLabel}</p>
         </a>
         <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="showcase-item">
-          <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt="Article page" chromeColor="sky-shader" />
+          <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt={isAr ? "صفحة مقالة" : "Article page"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.articleLabel}</p>
         </a>
         <a href="https://alimran.clinic/en/treatments/cancer-pain/#s-2" target="_blank" class="showcase-item">
-          <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt="Article details" chromeColor="sky-shader" />
+          <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt={isAr ? "تفاصيل مقالة" : "Article details"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.articleLabel}</p>
         </a>
         <a href="https://alimran.clinic/en/library/" target="_blank" class="showcase-item">
-          <WindowWidget src="/assets/illustrations/new-library-dark.png" alt="Library" chromeColor="sky-shader" />
+          <WindowWidget src="/assets/illustrations/new-library-dark.png" alt={isAr ? "المكتبة" : "Library"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.libraryLabel}</p>
         </a>
       </div>
@@ -343,13 +344,13 @@ const T = isAr ? {
           <div class="comparison-row">
             <div class="comparison-column">
               <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
-                <WindowWidget src="/assets/illustrations/old-homepage.png" alt="Old homepage" />
+                <WindowWidget src="/assets/illustrations/old-homepage.png" alt={isAr ? "الصفحة الرئيسية القديمة" : "Old homepage"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
               <a href="https://alimran.clinic/en/" target="_blank" class="comparison-link">
-                <WindowWidget src="/assets/illustrations/new-homepage.png" alt="New homepage" chromeColor="sky-shader" />
+                <WindowWidget src="/assets/illustrations/new-homepage.png" alt={isAr ? "الصفحة الرئيسية الجديدة" : "New homepage"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
@@ -362,13 +363,13 @@ const T = isAr ? {
           <div class="comparison-row">
             <div class="comparison-column">
               <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
-                <WindowWidget src="/assets/illustrations/old-articles-1.png" alt="Old article page" />
+                <WindowWidget src="/assets/illustrations/old-articles-1.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
               <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="comparison-link">
-                <WindowWidget src="/assets/illustrations/new-articles-1.png" alt="New article page" chromeColor="sky-shader" />
+                <WindowWidget src="/assets/illustrations/new-articles-1.png" alt={isAr ? "صفحة مقالة جديدة" : "New article page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
@@ -381,13 +382,13 @@ const T = isAr ? {
           <div class="comparison-row">
             <div class="comparison-column">
               <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
-                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt="Old library page" />
+                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة المكتبة القديمة" : "Old library page"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
               <a href="https://alimran.clinic/en/library/" target="_blank" class="comparison-link">
-                <WindowWidget src="/assets/illustrations/library-feature.png" alt="New library page" chromeColor="sky-shader" />
+                <WindowWidget src="/assets/illustrations/library-feature.png" alt={isAr ? "صفحة المكتبة الجديدة" : "New library page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
