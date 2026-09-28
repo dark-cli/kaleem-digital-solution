@@ -7,6 +7,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import ImageLayout from "../components/ImageLayout.astro";
 import CallFab from "../components/CallFab.astro";
+import StarfieldControls from "../components/StarfieldControls.astro";
 import { currentLocale } from "../lib/i18n";
 
 interface Props {
@@ -35,18 +36,23 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     <BaseHead title={title} description={description} image={image} noindex={noindex} fontAwesome={fontAwesome} heroPreload={heroPreload} />
     <ClientRouter />
   </head>
-  <body class="paper">
+  <body>
+    <!-- Site-wide animated starfield (Canvas 2D). Rendered by StarfieldControls
+         JS. Two more canvases are created dynamically for the sticky-header
+         window and any [data-star-window] element. -->
+    <canvas id="starfield-canvas" class="star-canvas" aria-hidden="true"></canvas>
     {!isProduction && (
       <div class="beta-ribbon" aria-label="Beta environment">
         {locale === "ar" ? "بيتا — بيئة اختبار" : "BETA — testing environment"}
       </div>
     )}
     <Header />
-    <main>
+    <main class="paper">
       <slot />
     </main>
     <Footer />
     <CallFab />
+    <StarfieldControls />
     <ImageLayout />
 
     <!-- Progressive HD-image swap. Any <img data-hires="…"> gets its source

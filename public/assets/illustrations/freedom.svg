@@ -30,5 +30,8 @@
 <circle cx="96" cy="470" r="22" fill="#f7e7b0"/>
 <circle cx="96" cy="470" r="7" fill="#f8c9b8"/>
 <path d="M118 470 H240 M216 470 V488 M232 470 V484" fill="none"/>
+<!-- sparkles -->
+<path d="M548 110 v18 M539 119 h18" stroke-width="3"/>
+<path d="M280 540 v14 M273 547 h14" stroke-width="3"/>
 </g>
 </svg>

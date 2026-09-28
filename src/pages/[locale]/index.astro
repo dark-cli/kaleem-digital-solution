@@ -150,12 +150,7 @@ const T = isAr ? {
             <a class="skb skb-paper" href="#method">How we work</a>
           </div>
         </div>
-        <div class="hero-illustration-wrapper">
-          <img src="/assets/illustrations/freedom.svg" alt="Locked box with tangled data being set free into an organized folder" class="hero-illustration" />
-          <div class="star star-1"></div>
-          <div class="star star-2"></div>
-          <div class="star star-3"></div>
-        </div>
+        <img src="/assets/illustrations/freedom.svg" alt="Locked box with tangled data being set free into an organized folder" class="hero-illustration" />
       </div>
     </div>
   </section>
@@ -260,7 +255,7 @@ const T = isAr ? {
           <a class="skb skb-lilac" href={L("/work/")}>{T.caseCTA}</a>
         </div>
         <div class="sk case-mockup">
-          <div class="mockup-header"></div>
+          <div class="mockup-header" data-star-window></div>
           <div class="mockup-content">[Clinic website screenshot]</div>
         </div>
       </div>
@@ -364,62 +359,9 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
-  .hero-illustration-wrapper {
-    position: relative;
-  }
-
   .hero-illustration {
     width: 100%;
     max-width: 500px;
-    display: block;
-  }
-
-  /* Animated stars */
-  @keyframes twinkle {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
-
-  @keyframes float-4oclock {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(80px, 100px); }
-  }
-
-  .star {
-    position: absolute;
-    border-radius: 50%;
-    animation: twinkle 3s ease-in-out infinite, float-4oclock 12s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  .star-1 {
-    width: 48px;
-    height: 48px;
-    top: 5%;
-    right: -5%;
-    background: radial-gradient(circle at 30% 30%, #fef5e7, #f7e7b0);
-    box-shadow: 0 0 24px rgba(247, 231, 176, 0.8), 0 0 48px rgba(247, 231, 176, 0.4);
-    animation-delay: 0s, 0s;
-  }
-
-  .star-2 {
-    width: 40px;
-    height: 40px;
-    bottom: 10%;
-    left: -3%;
-    background: radial-gradient(circle at 30% 30%, #fef5e7, #f9d2ae);
-    box-shadow: 0 0 20px rgba(249, 210, 174, 0.8), 0 0 40px rgba(249, 210, 174, 0.4);
-    animation-delay: 1s, 2s;
-  }
-
-  .star-3 {
-    width: 44px;
-    height: 44px;
-    top: 55%;
-    right: -8%;
-    background: radial-gradient(circle at 30% 30%, #fef5e7, #bfe6d6);
-    box-shadow: 0 0 22px rgba(191, 230, 214, 0.8), 0 0 44px rgba(191, 230, 214, 0.4);
-    animation-delay: 0.5s, 1s;
   }
 
   /* Sound Familiar Section */
@@ -764,7 +706,8 @@ const T = isAr ? {
     align-items: center;
     gap: 8px;
     padding: 0 16px;
-    background: var(--k-board);
+    /* The [data-star-window] utility (see global.css) turns this into a
+       transparent see-through window revealing the animated starfield. */
   }
 
   .mockup-header::before,

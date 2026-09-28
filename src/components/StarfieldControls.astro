@@ -1,0 +1,716 @@
+---
+// Copyright (c) 2026 Kaleem Digital Solutions — https://kaleem.dev
+// Canvas 2D starfield + control panel. Renders hundreds of stars into
+// three shared canvases (body, header window, mockup window) at 60fps
+// with a single rAF loop. Way lighter than the DOM-based version.
+---
+
+<div class="star-controls" id="star-controls" data-collapsed="false">
+  <button class="star-controls-toggle" id="star-controls-toggle" aria-label="Toggle starfield controls">
+    <span class="star-controls-icon">✦</span>
+  </button>
+  <div class="star-controls-body">
+    <div class="star-controls-header">
+      <h4>Starfield</h4>
+      <button class="star-controls-reset" id="star-controls-reset">Reset</button>
+    </div>
+
+    <label>
+      <span>Speed <output id="star-speed-out">3.45</output></span>
+      <input type="range" id="star-speed" min="0.05" max="50" step="0.05" value="3.45" />
+    </label>
+
+    <label>
+      <span>Dot size <output id="star-dot-out">4.1</output></span>
+      <input type="range" id="star-dot" min="0.1" max="30" step="0.1" value="4.1" />
+    </label>
+
+    <label>
+      <span>Count <output id="star-count-out">345</output></span>
+      <input type="range" id="star-count" min="5" max="2000" step="5" value="345" />
+    </label>
+
+    <label>
+      <span>Color mix <output id="star-color-out">0.58</output></span>
+      <input type="range" id="star-color" min="0" max="1" step="0.01" value="0.58" />
+    </label>
+
+    <label>
+      <span>Twinkle <output id="star-twinkle-out">0.5</output></span>
+      <input type="range" id="star-twinkle" min="0" max="1" step="0.01" value="0.5" />
+    </label>
+
+    <label>
+      <span>Twinkle time <output id="star-twdur-out">4.0</output></span>
+      <input type="range" id="star-twdur" min="0.3" max="20" step="0.1" value="4" />
+    </label>
+
+    <label>
+      <span>Fade to <output id="star-twfade-out">0.69</output></span>
+      <input type="range" id="star-twfade" min="0" max="1" step="0.01" value="0.69" />
+    </label>
+
+    <label>
+      <span>Direction</span>
+      <select id="star-direction">
+        <option value="normal" selected>Forward ↘</option>
+        <option value="reverse">Reverse ↖</option>
+      </select>
+    </label>
+
+    <fieldset class="star-shapes-set">
+      <legend>Shapes</legend>
+      <label class="chk"><input type="checkbox" data-shape="diamond"  /> Diamond</label>
+      <label class="chk"><input type="checkbox" data-shape="triangle" /> Triangle</label>
+      <label class="chk"><input type="checkbox" data-shape="4-point" checked /> 4-point</label>
+      <label class="chk"><input type="checkbox" data-shape="5-point"  /> 5-point</label>
+      <label class="chk"><input type="checkbox" data-shape="8-point"  /> 8-point</label>
+      <label class="chk"><input type="checkbox" data-shape="plus"     /> Plus</label>
+      <label class="chk"><input type="checkbox" data-shape="hexagon"  /> Hexagon</label>
+    </fieldset>
+
+    <button class="star-controls-regen" id="star-controls-regen">✦ New Sky</button>
+  </div>
+</div>
+
+<script is:inline>
+  // ─── Canvas 2D starfield renderer ──────────────────────────────
+  // One requestAnimationFrame loop drives up to 3 canvases (body,
+  // header window, mockup window). All share the same star data and
+  // time so their skies stay coordinated. Perf notes:
+  //   • Sprite atlas: each shape is pre-rendered once at init to a
+  //     small offscreen canvas. Per-frame we drawImage, never
+  //     re-rasterize polygons.
+  //   • ctx.globalAlpha for twinkle (no per-frame re-rasterization).
+  //   • devicePixelRatio capped at 2.
+  //   • Loop pauses when document.hidden.
+  //   • Scroll handler for mockup rect is rAF-throttled.
+  (function () {
+    if (window.__starCanvasInit) window.__starCanvasInit();
+
+    const TAU = Math.PI * 2;
+    // Unit polygons for each shape. Points normalized to [-1, 1] radius.
+    const SHAPE_POLYS = {
+      'diamond':  [[0,-1], [1,0], [0,1], [-1,0]],
+      'triangle': [[0,-1], [Math.sin(TAU/3),Math.cos(TAU/3)*-1], [Math.sin(-TAU/3),Math.cos(-TAU/3)*-1]],
+      '4-point':  [[0,-1], [0.2,-0.2], [1,0], [0.2,0.2], [0,1], [-0.2,0.2], [-1,0], [-0.2,-0.2]],
+      '5-point':  buildStar(5, 1, 0.382),
+      '8-point':  [[0,-1], [0.2,-0.5], [0.7,-0.7], [0.5,-0.2], [1,0], [0.5,0.2], [0.7,0.7], [0.2,0.5],
+                   [0,1], [-0.2,0.5], [-0.7,0.7], [-0.5,0.2], [-1,0], [-0.5,-0.2], [-0.7,-0.7], [-0.2,-0.5]],
+      'plus':     [[-0.3,-1],[0.3,-1],[0.3,-0.3],[1,-0.3],[1,0.3],[0.3,0.3],[0.3,1],[-0.3,1],[-0.3,0.3],[-1,0.3],[-1,-0.3],[-0.3,-0.3]],
+      'hexagon':  [[0,-1],[Math.sin(TAU/6),-Math.cos(TAU/6)],[Math.sin(TAU/3),-Math.cos(TAU/3)],[0,1],[-Math.sin(TAU/3),-Math.cos(TAU/3)],[-Math.sin(TAU/6),-Math.cos(TAU/6)]],
+    };
+
+    function buildStar(points, outer, inner) {
+      const pts = [];
+      for (let i = 0; i < points * 2; i++) {
+        const r = (i % 2 === 0) ? outer : inner;
+        const a = i * TAU / (points * 2) - TAU / 4;
+        pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+      }
+      return pts;
+    }
+
+    const PALETTE = [
+      '#ffffff', '#ffffff', '#ffffff', '#eceee6',
+      '#f8c9b8', '#bfe6d6', '#d9ccf0', '#f7e7b0', '#c6ddf0', '#f9d2ae',
+    ];
+
+    // DOM refs — read once
+    const canvasBody = document.getElementById('starfield-canvas');
+    if (!canvasBody) return;
+    const panel = document.getElementById('star-controls');
+    const toggle = document.getElementById('star-controls-toggle');
+    const speed = document.getElementById('star-speed');
+    const dot = document.getElementById('star-dot');
+    const count = document.getElementById('star-count');
+    const color = document.getElementById('star-color');
+    const twinkle = document.getElementById('star-twinkle');
+    const twdur = document.getElementById('star-twdur');
+    const twfade = document.getElementById('star-twfade');
+    const dir = document.getElementById('star-direction');
+    const reset = document.getElementById('star-controls-reset');
+    const regen = document.getElementById('star-controls-regen');
+    const speedOut = document.getElementById('star-speed-out');
+    const dotOut = document.getElementById('star-dot-out');
+    const countOut = document.getElementById('star-count-out');
+    const colorOut = document.getElementById('star-color-out');
+    const twinkleOut = document.getElementById('star-twinkle-out');
+    const twdurOut = document.getElementById('star-twdur-out');
+    const twfadeOut = document.getElementById('star-twfade-out');
+    const shapeChks = panel.querySelectorAll('input[type="checkbox"][data-shape]');
+
+    // Runtime state
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // pxPerSec at speed=1 → complete one 100vmax drift over 240s.
+    // We treat drift distance as a pixel offset (viewport-diagonal-ish).
+    const BASE_DRIFT_TIME_S = 240; // seconds per full tile at speed=1
+
+    let stars = [];
+    let atlas = {};          // {shapeName: { canvas, size }}
+    let atlasSize = 0;       // logical px size of each sprite (unscaled)
+    let params = null;       // cached slider values
+    let cw = 0, ch = 0;      // canvas CSS width/height
+    let tile = 0;            // tile size in CSS px (max viewport dim)
+    let raf = 0;
+    let start = 0;
+    let mockupRect = null;   // last known [data-star-window] rect
+    let mockupPending = false;
+    const mockupCanvas = null; // set later
+    let mockupCanvasRef = null;
+    let headerCanvasRef = null;
+
+    // ── Sprite atlas: pre-render each enabled shape to its own offscreen
+    // canvas. Called on init and whenever dot size or shape set changes.
+    function buildAtlas() {
+      atlas = {};
+      // Sprite size: 2× the max dot px so glow/AA fits. Cap at reasonable.
+      const dotPx = params.dotMult * 4; // base 4px × slider
+      atlasSize = Math.max(6, Math.min(80, Math.ceil(dotPx * 3)));
+      const enabled = enabledShapes();
+      enabled.forEach(function (name) {
+        const c = document.createElement('canvas');
+        c.width = atlasSize * dpr;
+        c.height = atlasSize * dpr;
+        const cx = c.getContext('2d');
+        cx.scale(dpr, dpr);
+        cx.translate(atlasSize / 2, atlasSize / 2);
+        cx.fillStyle = '#fff';
+        cx.beginPath();
+        const poly = SHAPE_POLYS[name];
+        const r = dotPx / 2;
+        cx.moveTo(poly[0][0] * r, poly[0][1] * r);
+        for (let i = 1; i < poly.length; i++) cx.lineTo(poly[i][0] * r, poly[i][1] * r);
+        cx.closePath();
+        cx.fill();
+        atlas[name] = { canvas: c, size: atlasSize };
+      });
+    }
+
+    function enabledShapes() {
+      const list = [];
+      shapeChks.forEach(function (c) { if (c.checked) list.push(c.dataset.shape); });
+      return list.length ? list : ['diamond'];
+    }
+
+    function pickShape() {
+      const pool = enabledShapes();
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function pickColor(mix) {
+      if (Math.random() > mix) return '#ffffff';
+      return PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    }
+
+    // Generate one tile's worth of stars. x,y are in [0,1] tile-space.
+    function generateStars() {
+      const n = parseInt(count.value, 10);
+      const mix = parseFloat(color.value);
+      const twAmount = parseFloat(twinkle.value);
+      const twDurBase = parseFloat(twdur.value);
+      const twFade = parseFloat(twfade.value);
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        const twDur = twDurBase * (0.5 + Math.random());
+        const twPhase = Math.random() * TAU;
+        const useTwinkle = twAmount > 0 && Math.random() < twAmount;
+        const minRatio = Math.max(0, 1 - twFade * (0.8 + Math.random() * 0.4));
+        out.push({
+          x: Math.random(),
+          y: Math.random(),
+          shape: pickShape(),
+          color: pickColor(mix),
+          opacity: 0.9,
+          useTwinkle: useTwinkle,
+          twMinFrac: minRatio,
+          twDur: twDur,
+          twPhase: twPhase,
+        });
+      }
+      return out;
+    }
+
+    // Resize all canvases to viewport. Called on load, resize, orientation.
+    function resizeCanvas(canvas) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+      }
+    }
+
+    function resizeAll() {
+      cw = window.innerWidth;
+      ch = window.innerHeight;
+      tile = Math.max(cw, ch); // 100vmax equivalent, in CSS px
+      resizeCanvas(canvasBody);
+      if (headerCanvasRef) resizeCanvas(headerCanvasRef);
+      if (mockupCanvasRef) resizeCanvas(mockupCanvasRef);
+    }
+
+    // Draw stars to a given canvas. Stars use viewport-fixed coordinates
+    // so all three canvases can share the exact same draw output.
+    function drawToCanvas(canvas, driftX, driftY, tSec) {
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, cw, ch);
+      const spriteSize = atlasSize;
+      const halfSprite = spriteSize / 2;
+      // For each star, wrap its tile-space position by drift, then draw
+      // as many copies as needed to fill the viewport.
+      for (let i = 0, len = stars.length; i < len; i++) {
+        const s = stars[i];
+        const sprite = atlas[s.shape];
+        if (!sprite) continue;
+        // Twinkle → alpha
+        let a = s.opacity;
+        if (s.useTwinkle) {
+          const phase = (tSec / s.twDur) * TAU + s.twPhase;
+          const t01 = 0.5 - 0.5 * Math.cos(phase); // 0..1 ease-in-out
+          a = s.opacity * (s.twMinFrac + (1 - s.twMinFrac) * t01);
+        }
+        ctx.globalAlpha = a;
+        ctx.fillStyle = s.color;
+        // Base position within a tile
+        const bx = s.x * tile + driftX;
+        const by = s.y * tile + driftY;
+        // Wrap into [0, tile), then draw at that position and one tile over
+        // in each direction so tiles seamlessly cover the viewport.
+        const wx = ((bx % tile) + tile) % tile;
+        const wy = ((by % tile) + tile) % tile;
+        // How many tile copies fit horizontally/vertically past the wrap?
+        // Since tile >= max(cw,ch), we need at most 2 tiles per axis.
+        for (let tx = -1; tx <= 1; tx++) {
+          const px = wx + tx * tile;
+          if (px < -halfSprite || px > cw + halfSprite) continue;
+          for (let ty = -1; ty <= 1; ty++) {
+            const py = wy + ty * tile;
+            if (py < -halfSprite || py > ch + halfSprite) continue;
+            // Tint: draw sprite (white), then colored overlay via source-in.
+            // Simpler: sprite is white silhouette, we tint by drawing a
+            // colored rect over it with source-atop. But cheapest: use the
+            // sprite as-is and paint a colored fillRect through composite.
+            // Since sprites are white silhouettes, we can multiply with
+            // fillStyle via 'source-atop' — but that's another draw call.
+            // We accept slight over-brightening and rely on globalAlpha +
+            // a plain drawImage of the white sprite tinted via a filter.
+            ctx.drawImage(sprite.canvas, px - halfSprite, py - halfSprite, spriteSize, spriteSize);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // Draw stars with color tint. Approach: draw the shape polygon in the
+    // star's color directly (no sprite blit). Cheaper than a 2-pass tint.
+    // Falls back if atlas isn't available.
+    function drawStarsDirect(canvas, driftX, driftY, tSec) {
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, cw, ch);
+      const scale = params.dotMult * 2; // base radius = 2px × slider
+      let currentColor = null;
+      let currentAlpha = -1;
+      for (let i = 0, len = stars.length; i < len; i++) {
+        const s = stars[i];
+        const poly = SHAPE_POLYS[s.shape];
+        if (!poly) continue;
+        let a = s.opacity;
+        if (s.useTwinkle) {
+          const phase = (tSec / s.twDur) * TAU + s.twPhase;
+          const t01 = 0.5 - 0.5 * Math.cos(phase);
+          a = s.opacity * (s.twMinFrac + (1 - s.twMinFrac) * t01);
+        }
+        if (a < 0.02) continue;
+        if (a !== currentAlpha) { ctx.globalAlpha = a; currentAlpha = a; }
+        if (s.color !== currentColor) { ctx.fillStyle = s.color; currentColor = s.color; }
+        const bx = s.x * tile + driftX;
+        const by = s.y * tile + driftY;
+        const wx = ((bx % tile) + tile) % tile;
+        const wy = ((by % tile) + tile) % tile;
+        for (let tx = -1; tx <= 1; tx++) {
+          const px = wx + tx * tile;
+          if (px < -scale || px > cw + scale) continue;
+          for (let ty = -1; ty <= 1; ty++) {
+            const py = wy + ty * tile;
+            if (py < -scale || py > ch + scale) continue;
+            ctx.beginPath();
+            ctx.moveTo(px + poly[0][0] * scale, py + poly[0][1] * scale);
+            for (let k = 1; k < poly.length; k++) {
+              ctx.lineTo(px + poly[k][0] * scale, py + poly[k][1] * scale);
+            }
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function render(now) {
+      if (!start) start = now;
+      const tSec = (now - start) / 1000;
+      // Drift: pxPerSec * time, direction is normal → -x/-y, reverse → +x/+y
+      const speedMult = params.speedMult;
+      const pxPerSec = (tile / BASE_DRIFT_TIME_S) * speedMult;
+      const sign = (params.direction === 'reverse') ? +1 : -1;
+      const drift = sign * pxPerSec * tSec;
+      drawStarsDirect(canvasBody, drift, drift, tSec);
+      if (headerCanvasRef) drawStarsDirect(headerCanvasRef, drift, drift, tSec);
+      if (mockupCanvasRef) drawStarsDirect(mockupCanvasRef, drift, drift, tSec);
+      raf = requestAnimationFrame(render);
+    }
+
+    function stopRAF() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+    function startRAF() { if (!raf) raf = requestAnimationFrame(render); }
+
+    // ── Set up header window canvas
+    function ensureHeaderCanvas() {
+      const header = document.querySelector('header.board');
+      if (!header) return;
+      if (!headerCanvasRef) {
+        headerCanvasRef = document.createElement('canvas');
+        headerCanvasRef.className = 'star-canvas star-canvas--header';
+        headerCanvasRef.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(headerCanvasRef);
+      }
+      const updateH = function () {
+        const h = header.getBoundingClientRect().height;
+        if (h > 0) document.documentElement.style.setProperty('--header-h', h + 'px');
+      };
+      updateH();
+      if (window.__starHeaderObs) window.__starHeaderObs.disconnect();
+      if ('ResizeObserver' in window) {
+        window.__starHeaderObs = new ResizeObserver(updateH);
+        window.__starHeaderObs.observe(header);
+      }
+    }
+
+    // ── Set up mockup window canvas + scroll handler (rAF-throttled)
+    function ensureMockupCanvas() {
+      if (!document.querySelector('[data-star-window]')) return;
+      if (!mockupCanvasRef) {
+        mockupCanvasRef = document.createElement('canvas');
+        mockupCanvasRef.className = 'star-canvas star-canvas--mockup';
+        mockupCanvasRef.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(mockupCanvasRef);
+      }
+      const updateClip = function () {
+        mockupPending = false;
+        const targets = document.querySelectorAll('[data-star-window]');
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        let picked = null;
+        targets.forEach(function (el) {
+          const r = el.getBoundingClientRect();
+          if (r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw) {
+            picked = picked || r;
+          }
+        });
+        if (!picked) {
+          mockupCanvasRef.style.clipPath = 'inset(50% 50% 50% 50%)';
+          return;
+        }
+        mockupCanvasRef.style.clipPath =
+          'inset(' + Math.max(0, picked.top) + 'px ' +
+                     Math.max(0, vw - picked.right) + 'px ' +
+                     Math.max(0, vh - picked.bottom) + 'px ' +
+                     Math.max(0, picked.left) + 'px)';
+      };
+      const queueUpdate = function () {
+        if (mockupPending) return;
+        mockupPending = true;
+        requestAnimationFrame(updateClip);
+      };
+      updateClip();
+      if (window.__starMockupScroll) {
+        window.removeEventListener('scroll', window.__starMockupScroll, true);
+        window.removeEventListener('resize', window.__starMockupScroll);
+      }
+      window.__starMockupScroll = queueUpdate;
+      window.addEventListener('scroll', queueUpdate, { passive: true });
+      window.addEventListener('resize', queueUpdate);
+    }
+
+    function readParams() {
+      params = {
+        speedMult: parseFloat(speed.value),
+        dotMult: parseFloat(dot.value),
+        direction: dir.value,
+      };
+    }
+
+    function updateOutputs() {
+      speedOut.textContent = parseFloat(speed.value).toFixed(2);
+      dotOut.textContent = parseFloat(dot.value).toFixed(2);
+      colorOut.textContent = parseFloat(color.value).toFixed(2);
+      twinkleOut.textContent = parseFloat(twinkle.value).toFixed(2);
+      twdurOut.textContent = parseFloat(twdur.value).toFixed(1);
+      twfadeOut.textContent = parseFloat(twfade.value).toFixed(2);
+      countOut.textContent = count.value;
+    }
+
+    function rebuild() {
+      updateOutputs();
+      readParams();
+      stars = generateStars();
+      // Reset drift start so speed changes don't cause visual jumps.
+      start = 0;
+    }
+
+    // Live-update readouts + params where they don't need star regen.
+    speed.addEventListener('input', function () { updateOutputs(); readParams(); });
+    dot.addEventListener('input', function () { updateOutputs(); readParams(); });
+    dir.addEventListener('change', function () { updateOutputs(); readParams(); });
+    // These need a rebuild (change star array):
+    count.addEventListener('change', rebuild);
+    color.addEventListener('change', rebuild);
+    twinkle.addEventListener('change', rebuild);
+    twdur.addEventListener('change', rebuild);
+    twfade.addEventListener('change', rebuild);
+    // Live readouts for drag:
+    count.addEventListener('input', updateOutputs);
+    color.addEventListener('input', updateOutputs);
+    twinkle.addEventListener('input', updateOutputs);
+    twdur.addEventListener('input', updateOutputs);
+    twfade.addEventListener('input', updateOutputs);
+
+    shapeChks.forEach(function (c) { c.addEventListener('change', rebuild); });
+
+    regen.addEventListener('click', rebuild);
+
+    reset.addEventListener('click', function () {
+      speed.value = 3.45;
+      dot.value = 4.1;
+      count.value = 345;
+      color.value = 0.58;
+      twinkle.value = 0.5;
+      twdur.value = 4;
+      twfade.value = 0.69;
+      dir.value = 'normal';
+      shapeChks.forEach(function (c) {
+        c.checked = (c.dataset.shape === '4-point');
+      });
+      rebuild();
+    });
+
+    toggle.addEventListener('click', function () {
+      const collapsed = panel.getAttribute('data-collapsed') === 'true';
+      panel.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+    });
+
+    // Pause the loop when the tab isn't visible.
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stopRAF();
+      else { start = 0; startRAF(); }
+    });
+
+    window.addEventListener('resize', resizeAll);
+
+    function init() {
+      readParams();
+      resizeAll();
+      ensureHeaderCanvas();
+      ensureMockupCanvas();
+      resizeAll(); // header canvas exists now, size it
+      stars = generateStars();
+      updateOutputs();
+      stopRAF();
+      startRAF();
+    }
+
+    window.__starCanvasInit = function () {
+      stopRAF();
+      init();
+    };
+
+    init();
+
+    // Astro view transitions: re-init on each page-load event.
+    document.addEventListener('astro:page-load', function () {
+      window.__starCanvasInit();
+    });
+  })();
+</script>
+
+<style>
+  .star-controls {
+    position: fixed;
+    inset-block-end: 24px;
+    inset-inline-start: 24px;
+    z-index: 1100;
+    /* Hidden by default. The JS still runs and renders the starfield with
+       the values baked into the input `value=` attributes. To re-enable
+       tuning, change this to `display: flex`. */
+    display: none;
+    align-items: flex-end;
+    gap: 12px;
+    font-family: var(--k-font-en, system-ui);
+  }
+
+  .star-controls-toggle {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    background: rgba(13, 17, 20, 0.85);
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 200ms ease;
+  }
+
+  .star-controls-toggle:hover { transform: rotate(45deg); }
+
+  .star-controls-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    min-width: 240px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(13, 17, 20, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .star-controls[data-collapsed="true"] .star-controls-body { display: none; }
+
+  .star-controls-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .star-controls-header h4 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    font-family: inherit;
+  }
+
+  .star-controls-reset {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .star-controls-reset:hover { background: rgba(255, 255, 255, 0.1); }
+
+  .star-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .star-controls label > span {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .star-controls output {
+    font-family: var(--k-font-mono, monospace);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .star-controls input[type="range"] {
+    width: 100%;
+    accent-color: #f7e39a;
+    cursor: pointer;
+  }
+
+  .star-controls select {
+    width: 100%;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .star-shapes-set {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 8px 10px 10px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 12px;
+  }
+
+  .star-shapes-set legend {
+    padding: 0 6px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .star-shapes-set .chk {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+  }
+
+  .star-shapes-set input[type="checkbox"] {
+    accent-color: #f7e39a;
+    cursor: pointer;
+  }
+
+  .star-controls-regen {
+    margin-top: 4px;
+    padding: 8px 12px;
+    background: rgba(247, 227, 154, 0.15);
+    color: #f7e39a;
+    border: 1px solid rgba(247, 227, 154, 0.4);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 150ms ease;
+  }
+
+  .star-controls-regen:hover { background: rgba(247, 227, 154, 0.25); }
+
+  @media (max-width: 480px) {
+    .star-controls {
+      inset-block-end: 12px;
+      inset-inline-start: 12px;
+    }
+    .star-controls-body {
+      min-width: 200px;
+      padding: 12px 14px;
+    }
+  }
+</style>

@@ -97,35 +97,73 @@
   background-size: var(--texture-size);
 }
 
-/* Starfield: night sky with slowly moving, twinkling stars. Fixed background. */
-html {
-  background-color: #0a0e27;
-  background-image:
-    radial-gradient(circle at 12% 34%, rgba(255,255,255,0.8) 0 0.5px, transparent 1px),
-    radial-gradient(circle at 78% 12%, rgba(255,255,255,0.6) 0 0.7px, transparent 1.4px),
-    radial-gradient(circle at 42% 67%, rgba(255,255,255,0.9) 0 0.4px, transparent 0.8px),
-    radial-gradient(circle at 89% 43%, rgba(255,255,255,0.5) 0 0.6px, transparent 1.2px),
-    radial-gradient(circle at 24% 88%, rgba(255,255,255,0.7) 0 0.5px, transparent 1px),
-    radial-gradient(circle at 65% 21%, rgba(255,255,255,0.8) 0 0.3px, transparent 0.6px),
-    radial-gradient(circle at 34% 43%, rgba(255,255,255,0.6) 0 0.6px, transparent 1.2px),
-    radial-gradient(circle at 91% 72%, rgba(255,255,255,0.7) 0 0.4px, transparent 0.8px),
-    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.9) 0 0.5px, transparent 1px),
-    radial-gradient(circle at 72% 89%, rgba(255,255,255,0.5) 0 0.7px, transparent 1.4px),
-    radial-gradient(circle at 47% 11%, rgba(255,255,255,0.8) 0 0.4px, transparent 0.8px),
-    radial-gradient(circle at 8% 62%, rgba(255,255,255,0.6) 0 0.6px, transparent 1.2px),
-    radial-gradient(circle at 81% 95%, rgba(255,255,255,0.7) 0 0.5px, transparent 1px),
-    radial-gradient(circle at 55% 56%, rgba(255,255,255,0.8) 0 0.3px, transparent 0.6px),
-    radial-gradient(circle at 28% 75%, rgba(255,255,255,0.9) 0 0.4px, transparent 0.8px);
-  background-size:
-    127px 181px, 139px 227px, 151px 199px, 163px 241px, 173px 163px,
-    181px 211px, 193px 281px, 199px 157px, 211px 293px, 223px 239px,
-    233px 167px, 241px 307px, 251px 181px, 263px 269px, 271px 193px;
-  background-position: 0 0;
-  background-attachment: fixed;
-  animation: drift-stars 180s linear infinite;
+/* Starfield tokens — adjustable via slider control (see StarfieldControls).
+   Tile size is fixed at 100vmax = the larger viewport dimension. This
+   guarantees every star fully exits the viewport before the wrapper loops
+   back, so the diagonal drift is always seamless regardless of aspect ratio. */
+:root {
+  --star-speed: 48s;         /* default: 5× the 240s base */
+  --star-direction: reverse;
 }
 
-/* Paper: pencil specks on cream background. Shows through header/footer windows. */
+/* Starfield: night sky background on <html>. Body must be transparent.
+   Uses the same --k-board dark tone that the original chalkboard nav &
+   footer used, so the sky visually matches Kaleem's design system. */
+html {
+  background-color: var(--k-board);
+}
+
+/* Canvas 2D starfield — see StarfieldControls.astro for the render loop.
+   Three canvases share the same star data and time source:
+   • #starfield-canvas     — body-level, z:-1, behind everything
+   • .star-canvas--header  — fixed viewport, z:45, clipped to top strip
+   • .star-canvas--mockup  — fixed viewport, z:40, clip-path follows a
+                             [data-star-window] element on scroll
+   Header is sticky so its canvas overlay always paints above scrolled
+   content. Overlay canvases have their own dark background so paper
+   texture never bleeds through where stars are sparse.
+
+   clip-path on a canvas element is GPU-composited (essentially free —
+   the browser clips the already-rasterized layer). will-change:transform
+   keeps each canvas on its own compositor layer. */
+.star-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  will-change: transform;
+}
+
+#starfield-canvas    { z-index: -1; }
+.star-canvas--header {
+  z-index: 45;
+  background-color: var(--k-board);
+  clip-path: inset(0 0 calc(100% - var(--header-h, 96px)) 0);
+}
+.star-canvas--mockup {
+  z-index: 40;
+  background-color: var(--k-board);
+  clip-path: inset(50% 50% 50% 50%); /* hidden until JS sets it */
+}
+
+header.board {
+  position: sticky;
+  top: 0;
+  isolation: isolate;
+}
+
+/* ─── Reusable "star window" utility ─────────────────────────────
+   Any element with data-star-window="" becomes a see-through window
+   revealing the animated starfield. StarfieldControls JS auto-detects
+   these and keeps the mockup-canvas clip-path aligned to their rect. */
+[data-star-window] {
+  background: transparent !important;
+  position: relative;
+  z-index: 41;
+}
+
+/* Paper: cream background with pencil speck texture. */
 .paper {
   background-color: var(--k-paper);
   background-image: radial-gradient(circle at 78% 72%, rgba(31,31,31,0.28) 0 0.6px, transparent 1.2px),radial-gradient(circle at 63% 83%, rgba(31,31,31,0.18) 0 1.0px, transparent 2.0px),radial-gradient(circle at 4% 63%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px),radial-gradient(circle at 94% 63%, rgba(31,31,31,0.32) 0 1.0px, transparent 2.0px),radial-gradient(circle at 84% 22%, rgba(31,31,31,0.22) 0 0.6px, transparent 1.2px),radial-gradient(circle at 52% 97%, rgba(31,31,31,0.18) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 8%, rgba(31,31,31,0.18) 0 0.7px, transparent 1.4px),radial-gradient(circle at 63% 79%, rgba(31,31,31,0.32) 0 0.8px, transparent 1.6px),radial-gradient(circle at 96% 76%, rgba(31,31,31,0.22) 0 0.8px, transparent 1.6px),radial-gradient(circle at 15% 7%, rgba(31,31,31,0.32) 0 0.6px, transparent 1.2px),radial-gradient(circle at 36% 89%, rgba(31,31,31,0.28) 0 0.8px, transparent 1.6px),radial-gradient(circle at 67% 52%, rgba(31,31,31,0.28) 0 1.0px, transparent 2.0px),radial-gradient(circle at 77% 55%, rgba(31,31,31,0.22) 0 1.0px, transparent 2.0px),radial-gradient(circle at 90% 6%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px);
@@ -138,17 +176,6 @@ html {
   background-image: radial-gradient(circle at 81% 50%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 89% 3%, rgba(247,227,154,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 80% 13%, rgba(198,221,240,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 92% 8%, rgba(246,193,208,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 60% 95%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 33% 9%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 11%, rgba(198,221,240,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 40% 29%, rgba(246,193,208,0.55) 0 0.6px, transparent 1.2px),radial-gradient(circle at 56% 14%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 38% 46%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 3% 55%, rgba(198,221,240,0.45) 0 0.5px, transparent 1.0px),radial-gradient(circle at 20% 6%, rgba(246,193,208,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 17% 79%, rgba(236,238,230,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 77% 28%, rgba(247,227,154,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 13% 20%, rgba(198,221,240,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 13% 76%, rgba(246,193,208,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 56% 11%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 14% 92%, rgba(247,227,154,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 80% 95%, rgba(198,221,240,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 74% 90%, rgba(246,193,208,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 37% 97%, rgba(236,238,230,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 93% 54%, rgba(247,227,154,0.35) 0 0.6px, transparent 1.2px);
   background-size: 127px 271px,139px 181px,151px 271px,163px 331px,173px 373px,181px 181px,193px 293px,199px 163px,211px 419px,223px 251px,233px 373px,241px 283px,251px 389px,263px 401px,271px 127px,283px 293px,293px 193px,307px 347px,317px 181px,331px 211px,347px 389px,359px 163px;
   color: var(--k-chalk);
-}
-
-/* Star animations: drift + twinkle. */
-@keyframes drift-stars {
-  0% { background-position: 0 0; }
-  100% { background-position: 200px 200px; }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
 }
 
 /* ─── Kaleem Component Classes ────────────────────────────────────── */
@@ -193,15 +220,11 @@ a.sk:hover, a.skb:hover, button.skb:hover { transform: translate(-1px, -1px); }
 .bg-paper { background-color: var(--k-paper); }
 .bg-paper-2 { background-color: var(--k-paper-2); }
 
-/* Header: transparent to show starfield through it. */
-header.board {
-  background-color: transparent;
-  background-image: none;
-}
-
-/* Footer: semi-transparent dark overlay shows starfield through it. */
+/* Header & Footer with .board: transparent so starfield shows through.
+   Overrides the .board fill from earlier in the file. */
+header.board,
 footer.board {
-  background-color: rgba(10, 14, 39, 0.85);
+  background-color: transparent;
   background-image: none;
 }
 
@@ -292,7 +315,6 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: var(--white);
   color: var(--body);
   font-family: var(--font-body);
   font-size: 17px;
@@ -300,6 +322,12 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Body must be transparent so the html starfield shows through. */
+body {
+  background: transparent;
+  position: relative;
 }
 html[dir="rtl"] body { line-height: 1.95; }
 
