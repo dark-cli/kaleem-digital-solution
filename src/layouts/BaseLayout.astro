@@ -36,17 +36,18 @@ const isProduction = !NON_PROD_BRANCHES.has(cfBranch);
     <BaseHead title={title} description={description} image={image} noindex={noindex} fontAwesome={fontAwesome} heroPreload={heroPreload} />
     <ClientRouter />
   </head>
-  <body>
-    <!-- Starfield canvas + controls now live inside <StarfieldControls />,
-         wrapped in transition:persist so they survive Astro navigations. -->
-
+  <body class="paper">
+    <!-- StarfieldEngine (see the component) owns a single WebGL context
+         and paints sky pixels into every element that carries [data-sky].
+         Wrapped in transition:persist so the shader keeps running across
+         Astro navigations. -->
     {!isProduction && (
       <div class="beta-ribbon" aria-label="Beta environment">
         {locale === "ar" ? "بيتا — بيئة اختبار" : "BETA — testing environment"}
       </div>
     )}
     <Header />
-    <main class="paper">
+    <main>
       <slot />
     </main>
     <Footer />

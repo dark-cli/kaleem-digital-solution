@@ -1,612 +1,416 @@
 ---
 // Copyright (c) 2026 Kaleem Digital Solutions — https://kaleem.dev
-// Canvas 2D starfield + control panel. Renders hundreds of stars into
-// three shared canvases (body, header window, mockup window) at 60fps
-// with a single rAF loop.
+// WebGL starfield renderer + hidden controls panel.
 //
-// The entire block is wrapped in `transition:persist` so it survives
-// Astro view transitions — the canvas isn't destroyed, the script runs
-// once, no cleanup dance needed. The persist name must be identical on
-// every page (it is — BaseLayout is used everywhere).
+// Architecture: the sky is a MATERIAL, not a page background.
+// - Any element with data-sky="" gets its own dedicated canvas.
+// - One shared requestAnimationFrame loop iterates all sky canvases.
+// - Each canvas has its own WebGL context but shares the same shader
+//   source and the same time source.
+// - The fragment shader computes stars in world coordinates (viewport-
+//   space, adjusted for scroll and drift). Because every canvas uploads
+//   its OWN element rect as `uWorldOffset`, independent canvases render
+//   pixel-aligned slices of a single imaginary infinite sky.
+//
+// Consequence: the body/main/footer keep their normal paper/board
+// backgrounds — no hidden fullscreen sky beneath them. The sky exists
+// only where an element opts in with data-sky.
+//
+// The block is wrapped in transition:persist so the WebGL context and
+// rAF loop survive Astro navigations. On astro:page-load we re-scan
+// for data-sky elements (they change per page).
 ---
 
 <div id="starfield-persist" transition:persist="starfield">
-  <canvas id="starfield-canvas" class="star-canvas" aria-hidden="true"></canvas>
+  <div class="star-controls" id="star-controls" data-collapsed="false">
+    <button class="star-controls-toggle" id="star-controls-toggle" aria-label="Toggle starfield controls">
+      <span class="star-controls-icon">✦</span>
+    </button>
+    <div class="star-controls-body">
+      <div class="star-controls-header">
+        <h4>Starfield</h4>
+        <button class="star-controls-reset" id="star-controls-reset">Reset</button>
+      </div>
 
-<div class="star-controls" id="star-controls" data-collapsed="false">
-  <button class="star-controls-toggle" id="star-controls-toggle" aria-label="Toggle starfield controls">
-    <span class="star-controls-icon">✦</span>
-  </button>
-  <div class="star-controls-body">
-    <div class="star-controls-header">
-      <h4>Starfield</h4>
-      <button class="star-controls-reset" id="star-controls-reset">Reset</button>
+      <label>
+        <span>Speed <output id="star-speed-out">3.45</output></span>
+        <input type="range" id="star-speed" min="0.05" max="50" step="0.05" value="3.45" />
+      </label>
+
+      <label>
+        <span>Dot size <output id="star-dot-out">8</output></span>
+        <input type="range" id="star-dot" min="0.5" max="30" step="0.1" value="8" />
+      </label>
+
+      <label>
+        <span>Tile <output id="star-tile-out">70</output></span>
+        <input type="range" id="star-tile" min="20" max="400" step="5" value="70" />
+      </label>
+
+      <label>
+        <span>Color mix <output id="star-color-out">0.58</output></span>
+        <input type="range" id="star-color" min="0" max="1" step="0.01" value="0.58" />
+      </label>
+
+      <label>
+        <span>Twinkle <output id="star-twinkle-out">0.5</output></span>
+        <input type="range" id="star-twinkle" min="0" max="1" step="0.01" value="0.5" />
+      </label>
+
+      <label>
+        <span>Twinkle time <output id="star-twdur-out">4.0</output></span>
+        <input type="range" id="star-twdur" min="0.3" max="20" step="0.1" value="4" />
+      </label>
+
+      <label>
+        <span>Fade to <output id="star-twfade-out">0.69</output></span>
+        <input type="range" id="star-twfade" min="0" max="1" step="0.01" value="0.69" />
+      </label>
+
+      <label>
+        <span>Direction</span>
+        <select id="star-direction">
+          <option value="normal" selected>Forward ↘</option>
+          <option value="reverse">Reverse ↖</option>
+        </select>
+      </label>
     </div>
-
-    <label>
-      <span>Speed <output id="star-speed-out">3.45</output></span>
-      <input type="range" id="star-speed" min="0.05" max="50" step="0.05" value="3.45" />
-    </label>
-
-    <label>
-      <span>Dot size <output id="star-dot-out">4.1</output></span>
-      <input type="range" id="star-dot" min="0.1" max="30" step="0.1" value="4.1" />
-    </label>
-
-    <label>
-      <span>Count <output id="star-count-out">345</output></span>
-      <input type="range" id="star-count" min="5" max="2000" step="5" value="345" />
-    </label>
-
-    <label>
-      <span>Color mix <output id="star-color-out">0.58</output></span>
-      <input type="range" id="star-color" min="0" max="1" step="0.01" value="0.58" />
-    </label>
-
-    <label>
-      <span>Twinkle <output id="star-twinkle-out">0.5</output></span>
-      <input type="range" id="star-twinkle" min="0" max="1" step="0.01" value="0.5" />
-    </label>
-
-    <label>
-      <span>Twinkle time <output id="star-twdur-out">4.0</output></span>
-      <input type="range" id="star-twdur" min="0.3" max="20" step="0.1" value="4" />
-    </label>
-
-    <label>
-      <span>Fade to <output id="star-twfade-out">0.69</output></span>
-      <input type="range" id="star-twfade" min="0" max="1" step="0.01" value="0.69" />
-    </label>
-
-    <label>
-      <span>Direction</span>
-      <select id="star-direction">
-        <option value="normal" selected>Forward ↘</option>
-        <option value="reverse">Reverse ↖</option>
-      </select>
-    </label>
-
-    <fieldset class="star-shapes-set">
-      <legend>Shapes</legend>
-      <label class="chk"><input type="checkbox" data-shape="diamond"  /> Diamond</label>
-      <label class="chk"><input type="checkbox" data-shape="triangle" /> Triangle</label>
-      <label class="chk"><input type="checkbox" data-shape="4-point" checked /> 4-point</label>
-      <label class="chk"><input type="checkbox" data-shape="5-point"  /> 5-point</label>
-      <label class="chk"><input type="checkbox" data-shape="8-point"  /> 8-point</label>
-      <label class="chk"><input type="checkbox" data-shape="plus"     /> Plus</label>
-      <label class="chk"><input type="checkbox" data-shape="hexagon"  /> Hexagon</label>
-    </fieldset>
-
-    <button class="star-controls-regen" id="star-controls-regen">✦ New Sky</button>
   </div>
 </div>
 
 <script is:inline>
-  // ─── Canvas 2D starfield renderer ──────────────────────────────
-  // One requestAnimationFrame loop drives up to 3 canvases (body,
-  // header window, mockup window). All share the same star data and
-  // time so their skies stay coordinated. Perf notes:
-  //   • Sprite atlas: each shape is pre-rendered once at init to a
-  //     small offscreen canvas. Per-frame we drawImage, never
-  //     re-rasterize polygons.
-  //   • ctx.globalAlpha for twinkle (no per-frame re-rasterization).
-  //   • devicePixelRatio capped at 2.
-  //   • Loop pauses when document.hidden.
-  //   • Scroll handler for mockup rect is rAF-throttled.
   (function () {
-    // Re-entrancy: view transitions swap the DOM (canvas is destroyed and
-    // rebuilt) but the previous script instance still holds stale closures
-    // — its RAF loop, event listeners, and ResizeObserver keep pointing at
-    // detached elements. Before doing anything, tear down the previous
-    // instance so we start clean.
+    // Tear down any previous instance (defensive — persist should prevent
+    // double-instantiation but if the wrapper is missing on some page we
+    // reset cleanly).
     if (window.__starfieldCleanup) {
       try { window.__starfieldCleanup(); } catch (e) {}
       window.__starfieldCleanup = null;
     }
 
-    const TAU = Math.PI * 2;
-    // Unit polygons for each shape. Points normalized to [-1, 1] radius.
-    const SHAPE_POLYS = {
-      'diamond':  [[0,-1], [1,0], [0,1], [-1,0]],
-      'triangle': [[0,-1], [Math.sin(TAU/3),Math.cos(TAU/3)*-1], [Math.sin(-TAU/3),Math.cos(-TAU/3)*-1]],
-      '4-point':  [[0,-1], [0.2,-0.2], [1,0], [0.2,0.2], [0,1], [-0.2,0.2], [-1,0], [-0.2,-0.2]],
-      '5-point':  buildStar(5, 1, 0.382),
-      '8-point':  [[0,-1], [0.2,-0.5], [0.7,-0.7], [0.5,-0.2], [1,0], [0.5,0.2], [0.7,0.7], [0.2,0.5],
-                   [0,1], [-0.2,0.5], [-0.7,0.7], [-0.5,0.2], [-1,0], [-0.5,-0.2], [-0.7,-0.7], [-0.2,-0.5]],
-      'plus':     [[-0.3,-1],[0.3,-1],[0.3,-0.3],[1,-0.3],[1,0.3],[0.3,0.3],[0.3,1],[-0.3,1],[-0.3,0.3],[-1,0.3],[-1,-0.3],[-0.3,-0.3]],
-      'hexagon':  [[0,-1],[Math.sin(TAU/6),-Math.cos(TAU/6)],[Math.sin(TAU/3),-Math.cos(TAU/3)],[0,1],[-Math.sin(TAU/3),-Math.cos(TAU/3)],[-Math.sin(TAU/6),-Math.cos(TAU/6)]],
+    // ── Shader source ────────────────────────────────────────
+    // Vertex: fullscreen quad. Fragment: for each pixel, compute its
+    // WORLD coordinate (viewport pos + element offset - time*drift),
+    // then look up the tile that contains it. Each tile has one star
+    // whose position within the tile, size, color, and twinkle phase
+    // are derived from a hash of the tile coordinate. Since the hash is
+    // deterministic and every canvas uses the same world coordinates,
+    // the same tile always renders the same star — so independent
+    // canvases show identical slices of one continuous sky.
+    const VERT_SRC = [
+      'attribute vec2 aPos;',
+      'void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }'
+    ].join('\n');
+
+    const FRAG_SRC = [
+      'precision highp float;',
+      'uniform vec2 uWorldOffset;',    // element's viewport top-left
+      'uniform vec2 uResolution;',     // element pixel size
+      'uniform float uTime;',
+      'uniform float uTile;',
+      'uniform float uDot;',
+      'uniform float uSpeed;',
+      'uniform vec2 uDir;',
+      'uniform float uColorMix;',
+      'uniform float uTwinkle;',
+      'uniform float uTwDur;',
+      'uniform float uTwFade;',
+      'uniform vec3 uSkyColor;',
+
+      // Cheap hash → [0,1)
+      'float h11(float p){ return fract(sin(p*127.1)*43758.5453); }',
+      'float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7)))*43758.5453); }',
+      'vec2 h22(vec2 p){ return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))))*43758.5453); }',
+
+      // SDF: 4-point sparkle. Effective radius varies with angle:
+      //   1 + k*cos(4θ) → large at cardinals (points), small at diagonals
+      //   (concave dips). k=0.55 gives fuller star with visible body.
+      'float sdSparkle(vec2 p, float r){',
+      '  float ang = atan(p.y, p.x);',
+      '  float shape = 1.0 + 0.55 * cos(4.0 * ang);',
+      '  return length(p) - r * shape;',
+      '}',
+
+      'vec3 pickColor(float seed){',
+      '  if (h11(seed) > uColorMix) return vec3(1.0);', // white majority
+      '  float p = h11(seed + 7.0);',
+      '  if (p < 0.14) return vec3(0.972, 0.906, 0.690);',  // butter
+      '  if (p < 0.28) return vec3(0.776, 0.867, 0.941);',  // sky
+      '  if (p < 0.42) return vec3(0.851, 0.800, 0.941);',  // lilac
+      '  if (p < 0.56) return vec3(0.749, 0.902, 0.839);',  // mint
+      '  if (p < 0.70) return vec3(0.973, 0.788, 0.722);',  // peach
+      '  if (p < 0.84) return vec3(0.976, 0.824, 0.682);',  // apricot
+      '  return vec3(0.925, 0.933, 0.902);',                // chalk
+      '}',
+
+      'void main(){',
+      // World coordinate for this pixel (invert Y so scroll feels natural)
+      '  vec2 world = gl_FragCoord.xy + uWorldOffset - uTime * uSpeed * uDir;',
+      '  vec3 col = uSkyColor;',
+      '  float alpha = 0.0;',
+      // Check current tile + immediate neighbours so stars near edges bleed.
+      '  vec2 tc0 = floor(world / uTile);',
+      '  for (int dx = -1; dx <= 1; dx++) {',
+      '    for (int dy = -1; dy <= 1; dy++) {',
+      '      vec2 tc = tc0 + vec2(float(dx), float(dy));',
+      // Star position within tile (padded so shape can extend outside)
+      '      vec2 sp = (tc + h22(tc)) * uTile;',
+      '      vec2 rel = world - sp;',
+      // Size varies per star.
+      '      float sr = uDot * mix(0.55, 1.4, h21(tc + 1.7));',
+      '      float d = sdSparkle(rel, sr);',
+      // ~1.2px feathering for anti-aliasing.
+      '      float a = 1.0 - smoothstep(-0.6, 0.6, d);',
+      '      if (a > 0.001) {',
+      '        vec3 c = pickColor(h11(dot(tc, vec2(23.1, 47.7))));',
+      // Twinkle: only some stars twinkle; each has its own phase and depth.
+      '        float doTw = step(h21(tc + 3.3), uTwinkle);',
+      '        float tw = 0.5 + 0.5 * sin(uTime / max(uTwDur * mix(0.5, 1.5, h21(tc + 5.5)), 0.05) + h21(tc + 8.9) * 6.2831);',
+      '        float scale = mix(1.0, mix(1.0 - uTwFade, 1.0, tw), doTw);',
+      '        a *= scale;',
+      '        col = mix(col, c, a);',
+      '        alpha = max(alpha, a);',
+      '      }',
+      '    }',
+      '  }',
+      '  gl_FragColor = vec4(col, 1.0);',
+      '}'
+    ].join('\n');
+
+    // ── WebGL program cache ──
+    // We create one context per data-sky element. Small element counts
+    // (~5-10) sit well below the ~16 concurrent-context browser cap.
+    // If we need more, refactor to one shared offscreen context + blit.
+    function makeProgram(gl) {
+      function shader(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+          console.error('shader', gl.getShaderInfoLog(s));
+        }
+        return s;
+      }
+      const vs = shader(gl.VERTEX_SHADER, VERT_SRC);
+      const fs = shader(gl.FRAGMENT_SHADER, FRAG_SRC);
+      const p = gl.createProgram();
+      gl.attachShader(p, vs); gl.attachShader(p, fs); gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+        console.error('link', gl.getProgramInfoLog(p));
+      }
+      // Fullscreen triangle strip.
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1, -1,  1, -1,  -1, 1,  1, 1
+      ]), gl.STATIC_DRAW);
+      const aPos = gl.getAttribLocation(p, 'aPos');
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+      return {
+        prog: p,
+        u: {
+          uWorldOffset: gl.getUniformLocation(p, 'uWorldOffset'),
+          uResolution:  gl.getUniformLocation(p, 'uResolution'),
+          uTime:        gl.getUniformLocation(p, 'uTime'),
+          uTile:        gl.getUniformLocation(p, 'uTile'),
+          uDot:         gl.getUniformLocation(p, 'uDot'),
+          uSpeed:       gl.getUniformLocation(p, 'uSpeed'),
+          uDir:         gl.getUniformLocation(p, 'uDir'),
+          uColorMix:    gl.getUniformLocation(p, 'uColorMix'),
+          uTwinkle:     gl.getUniformLocation(p, 'uTwinkle'),
+          uTwDur:       gl.getUniformLocation(p, 'uTwDur'),
+          uTwFade:      gl.getUniformLocation(p, 'uTwFade'),
+          uSkyColor:    gl.getUniformLocation(p, 'uSkyColor'),
+        }
+      };
+    }
+
+    // ── Sky element registry ──
+    // Map<Element, { canvas, gl, program }>
+    const skies = new Map();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    // Kaleem --k-board = #1d2320 → linear-ish sRGB approx for the shader.
+    const SKY_COLOR = [0.114, 0.137, 0.125];
+
+    function attachSky(el) {
+      if (skies.has(el)) return;
+      const canvas = document.createElement('canvas');
+      canvas.className = 'sky-canvas';
+      canvas.setAttribute('aria-hidden', 'true');
+      // Insert as first child so element-authored content stays above.
+      el.insertBefore(canvas, el.firstChild);
+      const gl = canvas.getContext('webgl', {
+        antialias: false, premultipliedAlpha: false, alpha: false
+      });
+      if (!gl) { console.warn('sky: no WebGL'); return; }
+      const program = makeProgram(gl);
+      gl.useProgram(program.prog);
+      skies.set(el, { canvas: canvas, gl: gl, program: program });
+    }
+
+    function detachSky(el) {
+      const s = skies.get(el);
+      if (!s) return;
+      const ext = s.gl.getExtension('WEBGL_lose_context');
+      if (ext) ext.loseContext();
+      if (s.canvas.parentNode) s.canvas.parentNode.removeChild(s.canvas);
+      skies.delete(el);
+    }
+
+    function scanForSkies() {
+      const wanted = new Set(document.querySelectorAll('[data-sky]'));
+      // Add new
+      wanted.forEach(function (el) { attachSky(el); });
+      // Remove stale
+      skies.forEach(function (_, el) { if (!wanted.has(el)) detachSky(el); });
+    }
+
+    // ── Params (read from CSS vars + slider inputs) ──
+    const P = {
+      speed: 3.45, dot: 8, tile: 70,
+      colorMix: 0.58, twinkle: 0.5, twdur: 4, twfade: 0.69,
+      dirX: -1, dirY: -1
+    };
+    // Base drift speed: 60 world-px per second at speed=1. Multiplier
+    // applied per frame from the speed slider.
+    const BASE_SPEED_PX = 60;
+
+    // ── Controls wiring ──
+    const root = document.documentElement;
+    const panel = document.getElementById('star-controls');
+    const $ = function (id) { return document.getElementById(id); };
+    const speed = $('star-speed'), dot = $('star-dot'), tile = $('star-tile');
+    const color = $('star-color'), twinkle = $('star-twinkle');
+    const twdur = $('star-twdur'), twfade = $('star-twfade');
+    const dir = $('star-direction'), reset = $('star-controls-reset');
+    const toggle = $('star-controls-toggle');
+    const outs = {
+      speed: $('star-speed-out'), dot: $('star-dot-out'), tile: $('star-tile-out'),
+      color: $('star-color-out'), twinkle: $('star-twinkle-out'),
+      twdur: $('star-twdur-out'), twfade: $('star-twfade-out'),
     };
 
-    function buildStar(points, outer, inner) {
-      const pts = [];
-      for (let i = 0; i < points * 2; i++) {
-        const r = (i % 2 === 0) ? outer : inner;
-        const a = i * TAU / (points * 2) - TAU / 4;
-        pts.push([Math.cos(a) * r, Math.sin(a) * r]);
-      }
-      return pts;
-    }
-
-    const PALETTE = [
-      '#ffffff', '#ffffff', '#ffffff', '#eceee6',
-      '#f8c9b8', '#bfe6d6', '#d9ccf0', '#f7e7b0', '#c6ddf0', '#f9d2ae',
-    ];
-
-    // DOM refs — read once
-    const canvasBody = document.getElementById('starfield-canvas');
-    if (!canvasBody) return;
-    const panel = document.getElementById('star-controls');
-    const toggle = document.getElementById('star-controls-toggle');
-    const speed = document.getElementById('star-speed');
-    const dot = document.getElementById('star-dot');
-    const count = document.getElementById('star-count');
-    const color = document.getElementById('star-color');
-    const twinkle = document.getElementById('star-twinkle');
-    const twdur = document.getElementById('star-twdur');
-    const twfade = document.getElementById('star-twfade');
-    const dir = document.getElementById('star-direction');
-    const reset = document.getElementById('star-controls-reset');
-    const regen = document.getElementById('star-controls-regen');
-    const speedOut = document.getElementById('star-speed-out');
-    const dotOut = document.getElementById('star-dot-out');
-    const countOut = document.getElementById('star-count-out');
-    const colorOut = document.getElementById('star-color-out');
-    const twinkleOut = document.getElementById('star-twinkle-out');
-    const twdurOut = document.getElementById('star-twdur-out');
-    const twfadeOut = document.getElementById('star-twfade-out');
-    const shapeChks = panel.querySelectorAll('input[type="checkbox"][data-shape]');
-
-    // Runtime state
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    // pxPerSec at speed=1 → complete one 100vmax drift over 240s.
-    // We treat drift distance as a pixel offset (viewport-diagonal-ish).
-    const BASE_DRIFT_TIME_S = 240; // seconds per full tile at speed=1
-
-    let stars = [];
-    let atlas = {};          // {shapeName: { canvas, size }}
-    let atlasSize = 0;       // logical px size of each sprite (unscaled)
-    let params = null;       // cached slider values
-    let cw = 0, ch = 0;      // canvas CSS width/height
-    let tile = 0;            // tile size in CSS px (max viewport dim)
-    let raf = 0;
-    let start = 0;
-    let mockupRect = null;   // last known [data-star-window] rect
-    let mockupPending = false;
-    const mockupCanvas = null; // set later
-    let mockupCanvasRef = null;
-    let headerCanvasRef = null;
-
-    // ── Sprite atlas: pre-render each enabled shape to its own offscreen
-    // canvas. Called on init and whenever dot size or shape set changes.
-    function buildAtlas() {
-      atlas = {};
-      // Sprite size: 2× the max dot px so glow/AA fits. Cap at reasonable.
-      const dotPx = params.dotMult * 4; // base 4px × slider
-      atlasSize = Math.max(6, Math.min(80, Math.ceil(dotPx * 3)));
-      const enabled = enabledShapes();
-      enabled.forEach(function (name) {
-        const c = document.createElement('canvas');
-        c.width = atlasSize * dpr;
-        c.height = atlasSize * dpr;
-        const cx = c.getContext('2d');
-        cx.scale(dpr, dpr);
-        cx.translate(atlasSize / 2, atlasSize / 2);
-        cx.fillStyle = '#fff';
-        cx.beginPath();
-        const poly = SHAPE_POLYS[name];
-        const r = dotPx / 2;
-        cx.moveTo(poly[0][0] * r, poly[0][1] * r);
-        for (let i = 1; i < poly.length; i++) cx.lineTo(poly[i][0] * r, poly[i][1] * r);
-        cx.closePath();
-        cx.fill();
-        atlas[name] = { canvas: c, size: atlasSize };
-      });
-    }
-
-    function enabledShapes() {
-      const list = [];
-      shapeChks.forEach(function (c) { if (c.checked) list.push(c.dataset.shape); });
-      return list.length ? list : ['diamond'];
-    }
-
-    function pickShape() {
-      const pool = enabledShapes();
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
-
-    function pickColor(mix) {
-      if (Math.random() > mix) return '#ffffff';
-      return PALETTE[Math.floor(Math.random() * PALETTE.length)];
-    }
-
-    // Generate one tile's worth of stars. x,y are in [0,1] tile-space.
-    function generateStars() {
-      const n = parseInt(count.value, 10);
-      const mix = parseFloat(color.value);
-      const twAmount = parseFloat(twinkle.value);
-      const twDurBase = parseFloat(twdur.value);
-      const twFade = parseFloat(twfade.value);
-      const out = [];
-      for (let i = 0; i < n; i++) {
-        const twDur = twDurBase * (0.5 + Math.random());
-        const twPhase = Math.random() * TAU;
-        const useTwinkle = twAmount > 0 && Math.random() < twAmount;
-        const minRatio = Math.max(0, 1 - twFade * (0.8 + Math.random() * 0.4));
-        out.push({
-          x: Math.random(),
-          y: Math.random(),
-          shape: pickShape(),
-          color: pickColor(mix),
-          opacity: 0.9,
-          useTwinkle: useTwinkle,
-          twMinFrac: minRatio,
-          twDur: twDur,
-          twPhase: twPhase,
-        });
-      }
-      return out;
-    }
-
-    // Resize all canvases to viewport. Called on load, resize, orientation.
-    function resizeCanvas(canvas) {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
-      }
-    }
-
-    function resizeAll() {
-      cw = window.innerWidth;
-      ch = window.innerHeight;
-      tile = Math.max(cw, ch); // 100vmax equivalent, in CSS px
-      resizeCanvas(canvasBody);
-      if (headerCanvasRef) resizeCanvas(headerCanvasRef);
-      if (mockupCanvasRef) resizeCanvas(mockupCanvasRef);
-    }
-
-    // Draw stars to a given canvas. Stars use viewport-fixed coordinates
-    // so all three canvases can share the exact same draw output.
-    function drawToCanvas(canvas, driftX, driftY, tSec) {
-      const ctx = canvas.getContext('2d');
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, cw, ch);
-      const spriteSize = atlasSize;
-      const halfSprite = spriteSize / 2;
-      // For each star, wrap its tile-space position by drift, then draw
-      // as many copies as needed to fill the viewport.
-      for (let i = 0, len = stars.length; i < len; i++) {
-        const s = stars[i];
-        const sprite = atlas[s.shape];
-        if (!sprite) continue;
-        // Twinkle → alpha
-        let a = s.opacity;
-        if (s.useTwinkle) {
-          const phase = (tSec / s.twDur) * TAU + s.twPhase;
-          const t01 = 0.5 - 0.5 * Math.cos(phase); // 0..1 ease-in-out
-          a = s.opacity * (s.twMinFrac + (1 - s.twMinFrac) * t01);
-        }
-        ctx.globalAlpha = a;
-        ctx.fillStyle = s.color;
-        // Base position within a tile
-        const bx = s.x * tile + driftX;
-        const by = s.y * tile + driftY;
-        // Wrap into [0, tile), then draw at that position and one tile over
-        // in each direction so tiles seamlessly cover the viewport.
-        const wx = ((bx % tile) + tile) % tile;
-        const wy = ((by % tile) + tile) % tile;
-        // How many tile copies fit horizontally/vertically past the wrap?
-        // Since tile >= max(cw,ch), we need at most 2 tiles per axis.
-        for (let tx = -1; tx <= 1; tx++) {
-          const px = wx + tx * tile;
-          if (px < -halfSprite || px > cw + halfSprite) continue;
-          for (let ty = -1; ty <= 1; ty++) {
-            const py = wy + ty * tile;
-            if (py < -halfSprite || py > ch + halfSprite) continue;
-            // Tint: draw sprite (white), then colored overlay via source-in.
-            // Simpler: sprite is white silhouette, we tint by drawing a
-            // colored rect over it with source-atop. But cheapest: use the
-            // sprite as-is and paint a colored fillRect through composite.
-            // Since sprites are white silhouettes, we can multiply with
-            // fillStyle via 'source-atop' — but that's another draw call.
-            // We accept slight over-brightening and rely on globalAlpha +
-            // a plain drawImage of the white sprite tinted via a filter.
-            ctx.drawImage(sprite.canvas, px - halfSprite, py - halfSprite, spriteSize, spriteSize);
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    // Draw stars with color tint. Approach: draw the shape polygon in the
-    // star's color directly (no sprite blit). Cheaper than a 2-pass tint.
-    // Falls back if atlas isn't available.
-    function drawStarsDirect(canvas, driftX, driftY, tSec) {
-      const ctx = canvas.getContext('2d');
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, cw, ch);
-      const scale = params.dotMult * 2; // base radius = 2px × slider
-      let currentColor = null;
-      let currentAlpha = -1;
-      for (let i = 0, len = stars.length; i < len; i++) {
-        const s = stars[i];
-        const poly = SHAPE_POLYS[s.shape];
-        if (!poly) continue;
-        let a = s.opacity;
-        if (s.useTwinkle) {
-          const phase = (tSec / s.twDur) * TAU + s.twPhase;
-          const t01 = 0.5 - 0.5 * Math.cos(phase);
-          a = s.opacity * (s.twMinFrac + (1 - s.twMinFrac) * t01);
-        }
-        if (a < 0.02) continue;
-        if (a !== currentAlpha) { ctx.globalAlpha = a; currentAlpha = a; }
-        if (s.color !== currentColor) { ctx.fillStyle = s.color; currentColor = s.color; }
-        const bx = s.x * tile + driftX;
-        const by = s.y * tile + driftY;
-        const wx = ((bx % tile) + tile) % tile;
-        const wy = ((by % tile) + tile) % tile;
-        for (let tx = -1; tx <= 1; tx++) {
-          const px = wx + tx * tile;
-          if (px < -scale || px > cw + scale) continue;
-          for (let ty = -1; ty <= 1; ty++) {
-            const py = wy + ty * tile;
-            if (py < -scale || py > ch + scale) continue;
-            ctx.beginPath();
-            ctx.moveTo(px + poly[0][0] * scale, py + poly[0][1] * scale);
-            for (let k = 1; k < poly.length; k++) {
-              ctx.lineTo(px + poly[k][0] * scale, py + poly[k][1] * scale);
-            }
-            ctx.closePath();
-            ctx.fill();
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    function render(now) {
-      if (!start) start = now;
-      const tSec = (now - start) / 1000;
-      // Drift: pxPerSec * time, direction is normal → -x/-y, reverse → +x/+y
-      const speedMult = params.speedMult;
-      const pxPerSec = (tile / BASE_DRIFT_TIME_S) * speedMult;
-      const sign = (params.direction === 'reverse') ? +1 : -1;
-      const drift = sign * pxPerSec * tSec;
-      drawStarsDirect(canvasBody, drift, drift, tSec);
-      if (headerCanvasRef) drawStarsDirect(headerCanvasRef, drift, drift, tSec);
-      if (mockupCanvasRef) drawStarsDirect(mockupCanvasRef, drift, drift, tSec);
-      raf = requestAnimationFrame(render);
-    }
-
-    function stopRAF() { if (raf) cancelAnimationFrame(raf); raf = 0; }
-    function startRAF() { if (!raf) raf = requestAnimationFrame(render); }
-
-    // ── Set up header window canvas
-    // Injected canvases go INSIDE the persistent wrapper so they survive
-    // Astro view transitions along with the main starfield canvas.
-    const persistHost = document.getElementById('starfield-persist') || document.body;
-    function ensureHeaderCanvas() {
-      const header = document.querySelector('header.board');
-      if (!header) return;
-      if (!headerCanvasRef || !headerCanvasRef.isConnected) {
-        headerCanvasRef = document.createElement('canvas');
-        headerCanvasRef.className = 'star-canvas star-canvas--header';
-        headerCanvasRef.setAttribute('aria-hidden', 'true');
-        persistHost.appendChild(headerCanvasRef);
-      }
-      const updateH = function () {
-        const h = header.getBoundingClientRect().height;
-        if (h > 0) document.documentElement.style.setProperty('--header-h', h + 'px');
-      };
-      updateH();
-      if (window.__starHeaderObs) window.__starHeaderObs.disconnect();
-      if ('ResizeObserver' in window) {
-        window.__starHeaderObs = new ResizeObserver(updateH);
-        window.__starHeaderObs.observe(header);
-      }
-    }
-
-    // ── Set up mockup window canvas + scroll handler (rAF-throttled)
-    function ensureMockupCanvas() {
-      if (!document.querySelector('[data-star-window]')) return;
-      if (!mockupCanvasRef || !mockupCanvasRef.isConnected) {
-        mockupCanvasRef = document.createElement('canvas');
-        mockupCanvasRef.className = 'star-canvas star-canvas--mockup';
-        mockupCanvasRef.setAttribute('aria-hidden', 'true');
-        persistHost.appendChild(mockupCanvasRef);
-      }
-      const updateClip = function () {
-        mockupPending = false;
-        const targets = document.querySelectorAll('[data-star-window]');
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        let picked = null;
-        let pickedEl = null;
-        targets.forEach(function (el) {
-          const r = el.getBoundingClientRect();
-          if (r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw) {
-            if (!picked) { picked = r; pickedEl = el; }
-          }
-        });
-        if (!picked) {
-          mockupCanvasRef.style.clipPath = 'inset(50% 50% 50% 50%)';
-          return;
-        }
-        // Read per-corner border-radius so sketchy / rounded windows are
-        // clipped to their real shape instead of a plain rectangle. Values
-        // come back like "10px 5px" for elliptical corners.
-        const cs = window.getComputedStyle(pickedEl);
-        const tl = cs.borderTopLeftRadius || '0';
-        const tr = cs.borderTopRightRadius || '0';
-        const br = cs.borderBottomRightRadius || '0';
-        const bl = cs.borderBottomLeftRadius || '0';
-        // clip-path inset() supports elliptical corners via
-        //   `round tl-h tr-h br-h bl-h / tl-v tr-v br-v bl-v`
-        // getComputedStyle already returns either one or two space-separated
-        // values per corner (e.g. "10px" or "10px 5px") which is a valid
-        // <length-percentage>{1,2} for each corner. Rejoin into one round
-        // clause by splitting into horizontal/vertical pairs.
-        function parts(v) {
-          const p = v.trim().split(/\s+/);
-          return { h: p[0] || '0', v: p[1] || p[0] || '0' };
-        }
-        const P = { tl: parts(tl), tr: parts(tr), br: parts(br), bl: parts(bl) };
-        const roundClause =
-          ' round ' + P.tl.h + ' ' + P.tr.h + ' ' + P.br.h + ' ' + P.bl.h +
-          ' / '     + P.tl.v + ' ' + P.tr.v + ' ' + P.br.v + ' ' + P.bl.v;
-        mockupCanvasRef.style.clipPath =
-          'inset(' + Math.max(0, picked.top) + 'px ' +
-                     Math.max(0, vw - picked.right) + 'px ' +
-                     Math.max(0, vh - picked.bottom) + 'px ' +
-                     Math.max(0, picked.left) + 'px' + roundClause + ')';
-      };
-      const queueUpdate = function () {
-        if (mockupPending) return;
-        mockupPending = true;
-        requestAnimationFrame(updateClip);
-      };
-      updateClip();
-      if (window.__starMockupScroll) {
-        window.removeEventListener('scroll', window.__starMockupScroll, true);
-        window.removeEventListener('resize', window.__starMockupScroll);
-      }
-      window.__starMockupScroll = queueUpdate;
-      window.addEventListener('scroll', queueUpdate, { passive: true });
-      window.addEventListener('resize', queueUpdate);
-    }
-
     function readParams() {
-      params = {
-        speedMult: parseFloat(speed.value),
-        dotMult: parseFloat(dot.value),
-        direction: dir.value,
-      };
+      P.speed = parseFloat(speed.value);
+      P.dot = parseFloat(dot.value);
+      P.tile = parseFloat(tile.value);
+      P.colorMix = parseFloat(color.value);
+      P.twinkle = parseFloat(twinkle.value);
+      P.twdur = parseFloat(twdur.value);
+      P.twfade = parseFloat(twfade.value);
+      if (dir.value === 'reverse') { P.dirX = 1; P.dirY = 1; }
+      else                         { P.dirX = -1; P.dirY = -1; }
+      outs.speed.textContent = P.speed.toFixed(2);
+      outs.dot.textContent = P.dot.toFixed(2);
+      outs.tile.textContent = P.tile.toFixed(0);
+      outs.color.textContent = P.colorMix.toFixed(2);
+      outs.twinkle.textContent = P.twinkle.toFixed(2);
+      outs.twdur.textContent = P.twdur.toFixed(1);
+      outs.twfade.textContent = P.twfade.toFixed(2);
     }
 
-    function updateOutputs() {
-      speedOut.textContent = parseFloat(speed.value).toFixed(2);
-      dotOut.textContent = parseFloat(dot.value).toFixed(2);
-      colorOut.textContent = parseFloat(color.value).toFixed(2);
-      twinkleOut.textContent = parseFloat(twinkle.value).toFixed(2);
-      twdurOut.textContent = parseFloat(twdur.value).toFixed(1);
-      twfadeOut.textContent = parseFloat(twfade.value).toFixed(2);
-      countOut.textContent = count.value;
-    }
-
-    function rebuild() {
-      updateOutputs();
-      readParams();
-      stars = generateStars();
-      // Reset drift start so speed changes don't cause visual jumps.
-      start = 0;
-    }
-
-    // Live-update readouts + params where they don't need star regen.
-    speed.addEventListener('input', function () { updateOutputs(); readParams(); });
-    dot.addEventListener('input', function () { updateOutputs(); readParams(); });
-    dir.addEventListener('change', function () { updateOutputs(); readParams(); });
-    // These need a rebuild (change star array):
-    count.addEventListener('change', rebuild);
-    color.addEventListener('change', rebuild);
-    twinkle.addEventListener('change', rebuild);
-    twdur.addEventListener('change', rebuild);
-    twfade.addEventListener('change', rebuild);
-    // Live readouts for drag:
-    count.addEventListener('input', updateOutputs);
-    color.addEventListener('input', updateOutputs);
-    twinkle.addEventListener('input', updateOutputs);
-    twdur.addEventListener('input', updateOutputs);
-    twfade.addEventListener('input', updateOutputs);
-
-    shapeChks.forEach(function (c) { c.addEventListener('change', rebuild); });
-
-    regen.addEventListener('click', rebuild);
-
-    reset.addEventListener('click', function () {
-      speed.value = 3.45;
-      dot.value = 4.1;
-      count.value = 345;
-      color.value = 0.58;
-      twinkle.value = 0.5;
-      twdur.value = 4;
-      twfade.value = 0.69;
-      dir.value = 'normal';
-      shapeChks.forEach(function (c) {
-        c.checked = (c.dataset.shape === '4-point');
+    ['input', 'change'].forEach(function (ev) {
+      [speed, dot, tile, color, twinkle, twdur, twfade, dir].forEach(function (el) {
+        el.addEventListener(ev, readParams);
       });
-      rebuild();
     });
-
+    reset.addEventListener('click', function () {
+      speed.value = 3.45; dot.value = 8; tile.value = 70;
+      color.value = 0.58; twinkle.value = 0.5; twdur.value = 4;
+      twfade.value = 0.69; dir.value = 'normal';
+      readParams();
+    });
     toggle.addEventListener('click', function () {
       const collapsed = panel.getAttribute('data-collapsed') === 'true';
       panel.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
     });
 
-    // Named handlers so we can remove them precisely in cleanup.
+    // ── Render loop ──
+    let raf = 0, startT = 0;
+
+    function renderOne(el, s, tSec) {
+      const rect = el.getBoundingClientRect();
+      // Skip off-screen elements.
+      if (rect.width <= 0 || rect.height <= 0) return;
+      if (rect.bottom < -100 || rect.top > window.innerHeight + 100 ||
+          rect.right  < -100 || rect.left > window.innerWidth  + 100) return;
+
+      // Resize canvas if needed.
+      const cssW = Math.max(1, Math.floor(rect.width));
+      const cssH = Math.max(1, Math.floor(rect.height));
+      const pxW = Math.max(1, Math.floor(cssW * dpr));
+      const pxH = Math.max(1, Math.floor(cssH * dpr));
+      if (s.canvas.width !== pxW || s.canvas.height !== pxH) {
+        s.canvas.width = pxW;
+        s.canvas.height = pxH;
+      }
+      const gl = s.gl, u = s.program.u;
+      gl.viewport(0, 0, pxW, pxH);
+      gl.useProgram(s.program.prog);
+      // World offset = element's viewport top-left, in device pixels.
+      // (Flip Y so world coords count downward — gl_FragCoord.y is
+      // bottom-up; we want positive world Y = downward, so use
+      // (top + height - fragCoord.y). We handle this by subtracting
+      // fragCoord.y from height in the shader — but simpler: send the
+      // element's BOTTOM as the offset with sign flip.)
+      // Actually, since we're combining fragCoord.xy + worldOffset, and
+      // world coordinate need only be CONSISTENT across canvases (not
+      // literally "y-down"), we can pick any convention. We use
+      //   worldPos = fragCoord + (rect.left*dpr, (vh - rect.bottom)*dpr)
+      // which makes worldPos = (rect.left+px_from_left, vh - rect.bottom + fragCoord.y).
+      // This keeps the same star at the same viewport pixel regardless
+      // of which element renders it.
+      const vhPx = window.innerHeight * dpr;
+      gl.uniform2f(u.uWorldOffset, rect.left * dpr, vhPx - rect.bottom * dpr);
+      gl.uniform2f(u.uResolution, pxW, pxH);
+      gl.uniform1f(u.uTime, tSec);
+      gl.uniform1f(u.uTile, P.tile * dpr);
+      gl.uniform1f(u.uDot,  P.dot  * dpr);
+      gl.uniform1f(u.uSpeed, BASE_SPEED_PX * P.speed * dpr);
+      gl.uniform2f(u.uDir, P.dirX, P.dirY);
+      gl.uniform1f(u.uColorMix, P.colorMix);
+      gl.uniform1f(u.uTwinkle, P.twinkle);
+      gl.uniform1f(u.uTwDur, P.twdur);
+      gl.uniform1f(u.uTwFade, P.twfade);
+      gl.uniform3f(u.uSkyColor, SKY_COLOR[0], SKY_COLOR[1], SKY_COLOR[2]);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    function frame(now) {
+      if (!startT) startT = now;
+      const tSec = (now - startT) / 1000;
+      skies.forEach(function (s, el) { renderOne(el, s, tSec); });
+      raf = requestAnimationFrame(frame);
+    }
+    function stopRAF() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+    function startRAF() { if (!raf) raf = requestAnimationFrame(frame); }
+
     function visHandler() {
       if (document.hidden) stopRAF();
-      else { start = 0; startRAF(); }
+      else { startT = 0; startRAF(); }
     }
-
     document.addEventListener('visibilitychange', visHandler);
-    window.addEventListener('resize', resizeAll);
 
-    function init() {
-      readParams();
-      resizeAll();
-      ensureHeaderCanvas();
-      ensureMockupCanvas();
-      resizeAll(); // header canvas exists now, size it
-      stars = generateStars();
-      updateOutputs();
-      stopRAF();
-      startRAF();
-    }
+    // Rescan for data-sky elements after each Astro page transition
+    // — new pages bring new sky targets; also drop canvases for removed
+    // ones so we don't leak WebGL contexts.
+    document.addEventListener('astro:page-load', scanForSkies);
 
-    init();
+    // Boot
+    readParams();
+    scanForSkies();
+    startRAF();
 
-    // Register cleanup for future script instances (only relevant if the
-    // persist wrapper is somehow missing — normally the script only runs
-    // once and this teardown is never called).
+    // Cleanup handle for defensive re-instantiation.
     window.__starfieldCleanup = function () {
       stopRAF();
-      window.removeEventListener('resize', resizeAll);
       document.removeEventListener('visibilitychange', visHandler);
-      if (window.__starMockupScroll) {
-        window.removeEventListener('scroll', window.__starMockupScroll);
-        window.removeEventListener('resize', window.__starMockupScroll);
-        window.__starMockupScroll = null;
-      }
-      if (window.__starHeaderObs) {
-        window.__starHeaderObs.disconnect();
-        window.__starHeaderObs = null;
-      }
+      document.removeEventListener('astro:page-load', scanForSkies);
+      skies.forEach(function (_, el) { detachSky(el); });
     };
-
-    // View-transition rebinding. The starfield canvases persist across
-    // navigations (transition:persist), but header.board and any
-    // [data-star-window] elements are DIFFERENT DOM nodes on each new
-    // page. Rebind the ResizeObserver + scroll clip-path to the new
-    // targets after each swap. RAF and star data keep running unaffected.
-    function rebindTargets() {
-      if (window.__starHeaderObs) {
-        window.__starHeaderObs.disconnect();
-        window.__starHeaderObs = null;
-      }
-      if (window.__starMockupScroll) {
-        window.removeEventListener('scroll', window.__starMockupScroll);
-        window.removeEventListener('resize', window.__starMockupScroll);
-        window.__starMockupScroll = null;
-      }
-      ensureHeaderCanvas();
-      ensureMockupCanvas();
-      resizeAll();
-    }
-    document.addEventListener('astro:page-load', rebindTargets);
   })();
 </script>
-</div>
 
 <style>
   .star-controls {
@@ -614,9 +418,7 @@
     inset-block-end: 24px;
     inset-inline-start: 24px;
     z-index: 1100;
-    /* Hidden by default. The JS still runs and renders the starfield with
-       the values baked into the input `value=` attributes. To re-enable
-       tuning, change this to `display: flex`. */
+    /* Hidden by default — flip to `display: flex` to expose the tuner. */
     display: none;
     align-items: flex-end;
     gap: 12px;
@@ -624,166 +426,67 @@
   }
 
   .star-controls-toggle {
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
+    width: 44px; height: 44px; border-radius: 999px;
     border: 2px solid #fff;
     background: rgba(13, 17, 20, 0.85);
-    color: #fff;
-    font-size: 20px;
-    line-height: 1;
+    color: #fff; font-size: 20px; line-height: 1;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     transition: transform 200ms ease;
   }
-
   .star-controls-toggle:hover { transform: rotate(45deg); }
 
   .star-controls-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 16px 18px;
-    min-width: 240px;
-    max-height: 80vh;
-    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 16px 18px; min-width: 240px; max-height: 80vh; overflow-y: auto;
     background: rgba(13, 17, 20, 0.9);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    color: #fff;
+    border-radius: 12px; color: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
-
   .star-controls[data-collapsed="true"] .star-controls-body { display: none; }
 
   .star-controls-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 4px;
   }
-
   .star-controls-header h4 {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #fff;
-    font-family: inherit;
+    margin: 0; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #fff; font-family: inherit;
   }
 
   .star-controls-reset {
-    background: none;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    cursor: pointer;
-    font-family: inherit;
+    background: none; border: 1px solid rgba(255, 255, 255, 0.3); color: #fff;
+    padding: 2px 8px; border-radius: 4px; font-size: 11px;
+    cursor: pointer; font-family: inherit;
   }
-
   .star-controls-reset:hover { background: rgba(255, 255, 255, 0.1); }
 
   .star-controls label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 12px;
+    display: flex; flex-direction: column; gap: 4px; font-size: 12px;
   }
-
   .star-controls label > span {
-    display: flex;
-    justify-content: space-between;
+    display: flex; justify-content: space-between;
     color: rgba(255, 255, 255, 0.85);
   }
-
   .star-controls output {
-    font-family: var(--k-font-mono, monospace);
-    color: #fff;
-    font-weight: 600;
+    font-family: var(--k-font-mono, monospace); color: #fff; font-weight: 600;
   }
-
   .star-controls input[type="range"] {
-    width: 100%;
-    accent-color: #f7e39a;
-    cursor: pointer;
+    width: 100%; accent-color: #f7e39a; cursor: pointer;
   }
-
   .star-controls select {
-    width: 100%;
-    padding: 4px 8px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    font-size: 12px;
-    font-family: inherit;
-    cursor: pointer;
+    width: 100%; padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.08); color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px;
+    font-size: 12px; font-family: inherit; cursor: pointer;
   }
-
-  .star-shapes-set {
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    padding: 8px 10px 10px;
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px 12px;
-  }
-
-  .star-shapes-set legend {
-    padding: 0 6px;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.75);
-  }
-
-  .star-shapes-set .chk {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.9);
-    cursor: pointer;
-  }
-
-  .star-shapes-set input[type="checkbox"] {
-    accent-color: #f7e39a;
-    cursor: pointer;
-  }
-
-  .star-controls-regen {
-    margin-top: 4px;
-    padding: 8px 12px;
-    background: rgba(247, 227, 154, 0.15);
-    color: #f7e39a;
-    border: 1px solid rgba(247, 227, 154, 0.4);
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 150ms ease;
-  }
-
-  .star-controls-regen:hover { background: rgba(247, 227, 154, 0.25); }
 
   @media (max-width: 480px) {
-    .star-controls {
-      inset-block-end: 12px;
-      inset-inline-start: 12px;
-    }
-    .star-controls-body {
-      min-width: 200px;
-      padding: 12px 14px;
-    }
+    .star-controls { inset-block-end: 12px; inset-inline-start: 12px; }
+    .star-controls-body { min-width: 200px; padding: 12px 14px; }
   }
 </style>
