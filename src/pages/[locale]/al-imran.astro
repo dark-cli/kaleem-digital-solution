@@ -11,15 +11,15 @@ const isAr = locale === "ar";
 const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
-  title:        "عيادة الإمام — دراسة حالة كليم",
-  description:  "كيف حررنا بيانات عيادة الإمام من نظام قديم وبنينا منصة حديثة بـ 97/100 PageSpeed.",
+  title:        "مركز العمران الطبي — دراسة حالة كليم",
+  description:  "كيف حررنا بيانات مركز العمران الطبي من نظام قديم وبنينا منصة حديثة بـ 97/100 PageSpeed.",
   eyebrow:      "دراسة حالة",
-  h1:           "عيادة الإمام",
+  h1:           "مركز العمران الطبي",
   subtitle:     "من WordPress قديم إلى منصة حديثة مفتوحة",
-  lede:         "عندما جاءتنا عيادة الإمام، كانت تملك 600 مقالة وسنوات من البيانات محبوسة في موقع WordPress بطيء ومكسّر. في ستة أشهر، استخرجنا البيانات، نظّفناها، وأعدنا بناء الموقع بالكامل على تقنيات حديثة. النتيجة: موقع سريع، آمن، وتحت سيطرة العيادة كاملاً.",
+  lede:         "عندما جاءتنا مركز العمران الطبي، كانت تملك 600 مقالة وسنوات من البيانات محبوسة في موقع WordPress بطيء ومكسّر. في ستة أشهر، استخرجنا البيانات، نظّفناها، وأعدنا بناء الموقع بالكامل على تقنيات حديثة. النتيجة: موقع سريع، آمن، وتحت سيطرة المركز كاملاً.",
 
   challenge:    "التحدي",
-  challengeDesc: "الموقع القديم (alimranmed.com) كان ينز بطء وعدم استقرار. لا توثيق واضح، لا نسخ احتياطية، والبيانات مبعثرة عبر قاعدة بيانات مُسيئة الاستخدام. العيادة لا تملك حتى الوصول الكامل إلى بيانات مرضاها في الموقع.",
+  challengeDesc: "الموقع القديم (alimranmed.com) كان يعاني من بطء وعدم استقرار. لا توثيق واضح، لا نسخ احتياطية، والبيانات مبعثرة عبر قاعدة بيانات مُسيئة الاستخدام. المركز لا يملك حتى الوصول الكامل إلى بيانات مرضاه في الموقع.",
 
   solution:    "الحل",
   solutionDesc: "بنينا عملية استخراج منهجية: فحصنا البنية القديمة، استخرجنا كل مقالة وتعليق، نظّفنا البيانات (توحيد التنسيقات، إزالة التكرار، إصلاح الروابط المكسورة)، ثم أعدنا البناء على Astro مع Cloudflare Workers.",
@@ -30,7 +30,7 @@ const T = isAr ? {
   r2Title:     "البيانات",
   r2:          "600 مقالة + تعليقات منظّفة وموثّقة بالكامل",
   r3Title:     "الملكية",
-  r3:          "المستودع وكل المفاتيح بيد العيادة على GitHub",
+  r3:          "المستودع وكل المفاتيح بيد المركز على GitHub",
   r4Title:     "الاستقلالية",
   r4:          "خادم مفتوح (Cloudflare Workers)، بلا قفل بائع",
   r5Title:     "اللغة",
@@ -55,7 +55,7 @@ const T = isAr ? {
   p4:          "نشر على Cloudflare، إعادة توجيه النطاق القديم، تدريب الفريق.",
 
   ownershipHead: "الملكية الحقيقية",
-  o1:          "كل شيء — الكود، البيانات، المستودع — ملك للعيادة",
+  o1:          "كل شيء — الكود، البيانات، المستودع — ملك للمركز",
   o2:          "لا اشتراكات شهرية ولا قفل بائع",
   o3:          "يمكن نقل الموقع بسهولة إلى أي خادم في أي وقت",
   o4:          "التطوير المستقبلي بدون الحاجة إلينا",
@@ -64,12 +64,12 @@ const T = isAr ? {
   ctaLabel:     "احجز تدقيق مجاني",
 
 } : {
-  title:        "Al Imran Clinic — Kaleem case study",
-  description:  "How we liberated Al Imran Clinic's data from a legacy system and built a modern 97/100 PageSpeed platform.",
+  title:        "Alimran Clinic — Kaleem case study",
+  description:  "How we liberated Alimran Clinic's data from a legacy system and built a modern 97/100 PageSpeed platform.",
   eyebrow:      "Case study",
-  h1:           "Al Imran Clinic",
+  h1:           "Alimran Clinic",
   subtitle:     "From legacy WordPress to a modern, open platform",
-  lede:         "Al Imran Clinic arrived with 600 articles and years of data trapped in a slow, broken WordPress site. Over six months, we extracted the data, cleaned it, and rebuilt the entire platform on modern technology. The result: a fast, secure site completely under the clinic's control.",
+  lede:         "Alimran Clinic arrived with 600 articles and years of data trapped in a slow, broken WordPress site. Over six months, we extracted the data, cleaned it, and rebuilt the entire platform on modern technology. The result: a fast, secure site completely under the clinic's control.",
 
   challenge:    "The Challenge",
   challengeDesc: "The old site (alimranmed.com) was slow and unstable. No clear documentation, no reliable backups, and patient data scattered across a mismanaged database. The clinic didn't even have full access to its own data on the website.",
