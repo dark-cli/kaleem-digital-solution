@@ -2,7 +2,7 @@
 interface Props {
   src: string;
   alt: string;
-  chromeColor?: 'sky' | 'mint' | 'lilac' | 'butter' | 'peach' | 'apricot' | 'sky-shader';
+  chromeColor?: 'sky' | 'mint' | 'lilac' | 'butter' | 'peach' | 'apricot' | 'ink' | 'sky-shader';
 }
 
 const { src, alt, chromeColor = 'sky-shader' } = Astro.props;
@@ -65,6 +65,10 @@ const hasShader = chromeColor === 'sky-shader';
 
   .chrome-apricot {
     background: var(--k-apricot);
+  }
+
+  .chrome-ink {
+    background: var(--k-ink);
   }
 
   .chrome-sky-shader {
