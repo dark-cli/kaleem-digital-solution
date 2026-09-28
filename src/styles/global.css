@@ -298,11 +298,16 @@
 .skb {
   box-shadow: 3px 3px 0 -1px var(--k-paper), 3px 3px 0 1px var(--k-ink);
 }
-.skb:hover, .skb:focus-visible { transform: translate(-1px, -1px); }
 
-/* Flat: no shadow. Hover mirrors .skb's subtle nudge — keeps the widget
-   pair feeling consistent, and avoids color-shift on hover which read
-   as "activated" when we only want feedback. */
+/* Both widgets: subtle nudge on hover/focus. Pin color to --k-ink and
+   suppress underline on ALL states, because the global `a:hover` rule
+   otherwise turns any anchor blue and underlined. */
+.skb, .skb:hover, .skb:focus, .skb:focus-visible, .skb:active, .skb:visited,
+.fbtn, .fbtn:hover, .fbtn:focus, .fbtn:focus-visible, .fbtn:active, .fbtn:visited {
+  color: var(--k-ink);
+  text-decoration: none;
+}
+.skb:hover, .skb:focus-visible,
 .fbtn:hover, .fbtn:focus-visible {
   transform: translate(-1px, -1px);
 }
