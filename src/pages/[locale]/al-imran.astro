@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import WindowWidget from "../../components/WindowWidget.astro";
 import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -247,39 +248,19 @@ const T = isAr ? {
       <p class="showcase-description">{T.designShowcaseDesc}</p>
       <div class="showcase-grid">
         <div class="showcase-item">
-          <div class="sk window showcase-window">
-            <div class="window-chrome" data-sky></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/new-home-dark.png" alt="Homepage" class="screenshot-img" />
-            </div>
-          </div>
+          <WindowWidget src="/assets/illustrations/new-home-dark.png" alt="Homepage" chromeColor="sky" />
           <p class="showcase-label">{T.homeLabel}</p>
         </div>
         <div class="showcase-item">
-          <div class="sk window showcase-window">
-            <div class="window-chrome" data-sky></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/new-article-1-dark.png" alt="Article page" class="screenshot-img" />
-            </div>
-          </div>
+          <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt="Article page" chromeColor="sky" />
           <p class="showcase-label">{T.articleLabel}</p>
         </div>
         <div class="showcase-item">
-          <div class="sk window showcase-window">
-            <div class="window-chrome" data-sky></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/new-article-2-dark.png" alt="Article details" class="screenshot-img" />
-            </div>
-          </div>
+          <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt="Article details" chromeColor="sky" />
           <p class="showcase-label">{T.articleLabel}</p>
         </div>
         <div class="showcase-item">
-          <div class="sk window showcase-window">
-            <div class="window-chrome" data-sky></div>
-            <div class="window-body mockup-screenshot">
-              <img src="/assets/illustrations/new-library-dark.png" alt="Library" class="screenshot-img" />
-            </div>
-          </div>
+          <WindowWidget src="/assets/illustrations/new-library-dark.png" alt="Library" chromeColor="sky" />
           <p class="showcase-label">{T.libraryLabel}</p>
         </div>
       </div>
@@ -361,21 +342,11 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.homepageLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <div class="sk window comparison-window">
-                <div class="window-chrome" data-peach></div>
-                <div class="window-body mockup-screenshot">
-                  <img src="/assets/illustrations/old-homepage.png" alt="Old homepage" class="screenshot-img" />
-                </div>
-              </div>
+              <WindowWidget src="/assets/illustrations/old-homepage.png" alt="Old homepage" chromeColor="peach" />
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <div class="sk window comparison-window">
-                <div class="window-chrome" data-sky></div>
-                <div class="window-body mockup-screenshot">
-                  <img src="/assets/illustrations/new-homepage.png" alt="New homepage" class="screenshot-img" />
-                </div>
-              </div>
+              <WindowWidget src="/assets/illustrations/new-homepage.png" alt="New homepage" chromeColor="sky" />
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
@@ -386,21 +357,11 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.articlesLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <div class="sk window comparison-window">
-                <div class="window-chrome" data-peach></div>
-                <div class="window-body mockup-screenshot">
-                  <img src="/assets/illustrations/old-articles-1.png" alt="Old article page" class="screenshot-img" />
-                </div>
-              </div>
+              <WindowWidget src="/assets/illustrations/old-articles-1.png" alt="Old article page" chromeColor="peach" />
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <div class="sk window comparison-window">
-                <div class="window-chrome" data-sky></div>
-                <div class="window-body mockup-screenshot">
-                  <img src="/assets/illustrations/new-articles-1.png" alt="New article page" class="screenshot-img" />
-                </div>
-              </div>
+              <WindowWidget src="/assets/illustrations/new-articles-1.png" alt="New article page" chromeColor="sky" />
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
@@ -411,21 +372,11 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.libraryLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <div class="sk window comparison-window">
-                <div class="window-chrome" data-peach></div>
-                <div class="window-body mockup-screenshot">
-                  <img src="/assets/illustrations/old-articles-2.png" alt="Old library page" class="screenshot-img" />
-                </div>
-              </div>
+              <WindowWidget src="/assets/illustrations/old-articles-2.png" alt="Old library page" chromeColor="peach" />
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <div class="sk window comparison-window">
-                <div class="window-chrome" data-sky></div>
-                <div class="window-body mockup-screenshot">
-                  <img src="/assets/illustrations/library-feature.png" alt="New library page" class="screenshot-img" />
-                </div>
-              </div>
+              <WindowWidget src="/assets/illustrations/library-feature.png" alt="New library page" chromeColor="sky" />
               <p class="comparison-label-small">{T.newLabel}</p>
             </div>
           </div>
@@ -694,9 +645,6 @@ const T = isAr ? {
     gap: var(--k-space-4);
   }
 
-  .showcase-window {
-    /* Window sizes to image aspect ratio */
-  }
 
   .showcase-label {
     margin: 0;
@@ -744,9 +692,6 @@ const T = isAr ? {
     gap: var(--k-space-4);
   }
 
-  .comparison-window {
-    /* Window sizes to image aspect ratio */
-  }
 
   .comparison-label-small {
     margin: 0;
@@ -758,17 +703,6 @@ const T = isAr ? {
     letter-spacing: 0.05em;
   }
 
-  .mockup-screenshot {
-    padding: 0;
-    overflow: hidden;
-    background: #f5f5f5;
-  }
-
-  .screenshot-img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
 
   /* Features Grid */
   .features-section {

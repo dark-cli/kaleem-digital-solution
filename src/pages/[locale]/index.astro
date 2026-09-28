@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import WindowWidget from "../../components/WindowWidget.astro";
 import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export function getStaticPaths() {
@@ -320,12 +321,7 @@ const T = isAr ? {
           <a class="skb skb-lilac" href={L("/al-imran/")}>{T.caseCTA}</a>
         </div>
         <a href={L("/al-imran/")} class="case-mockup-link">
-          <div class="sk window case-mockup">
-            <div class="window-chrome" data-sky></div>
-            <div class="window-body mockup-content">
-              <img src="/assets/illustrations/alimran-clinic-homepage.png" alt="Alimran Clinic modern website" class="mockup-image" />
-            </div>
-          </div>
+          <WindowWidget src="/assets/illustrations/alimran-clinic-homepage.png" alt="Alimran Clinic modern website" chromeColor="sky" />
         </a>
       </div>
     </div>
@@ -752,17 +748,8 @@ const T = isAr ? {
     transform: translateY(-4px);
   }
 
-  .case-mockup { height: 380px; }
-  .mockup-content {
-    padding: 0;
-    overflow: hidden;
-    background: #f5f5f5;
-  }
-
-  .mockup-image {
-    width: 100%;
-    height: auto;
-    display: block;
+  .case-mockup-link .widget {
+    height: 380px;
   }
 
   /* Final CTA Section */
