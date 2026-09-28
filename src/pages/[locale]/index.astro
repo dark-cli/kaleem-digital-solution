@@ -323,11 +323,7 @@ const T = isAr ? {
           <div class="sk window case-mockup">
             <div class="window-chrome" data-sky></div>
             <div class="window-body mockup-content">
-              <svg class="mockup-icon" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
-                <rect x="8" y="12" width="48" height="40" rx="2" fill="none" stroke="#1f1f1f" stroke-width="2"/>
-                <path d="M8 20h48M16 28h10M16 36h20" stroke="#1f1f1f" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <span class="mockup-label">{isAr ? "الموقع الجديد" : "Modern website"}</span>
+              <img src="/assets/illustrations/alimran-clinic-homepage.png" alt="Alimran Clinic modern website" class="mockup-image" />
             </div>
           </div>
         </a>
@@ -786,6 +782,13 @@ const T = isAr ? {
 
   .case-mockup-link:hover .mockup-label {
     color: var(--k-ink);
+  }
+
+  .mockup-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   /* Final CTA Section */
