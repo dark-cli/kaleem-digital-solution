@@ -192,17 +192,25 @@ header.board {
        </div>
      </div>
 */
-.window {
+/* Use .sk.window (or fall back to .window on its own) so these rules
+   beat the plain .sk defaults regardless of source order in this file.
+   .sk sets padding and per-child rhythm — we need to zero both. */
+.window,
+.sk.window {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 0;               /* override .sk's default padding */
+  padding: 0;
 }
 
 /* Kill the sk child rhythm at the window level — the chrome bar
    should sit flush against the body, and .window-body handles its
    own child spacing. */
-.window > * + * { margin-block-start: 0; }
+.window > *,
+.sk.window > * {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
 
 .window-chrome {
   height: 40px;
