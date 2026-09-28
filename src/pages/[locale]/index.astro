@@ -208,11 +208,36 @@ const T = isAr ? {
         <svg width="180" height="70" viewBox="0 0 180 70" aria-hidden="true" style="transform: scaleX(-1)"><path d="M170 20c-40 -20 -90 -10 -120 30M50 50l-2 -16M50 50l15 -6" fill="none" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"></path></svg>
       </div>
       <ol class="method-grid">
-        <li class="sk card-sky"><span class="method-num">01</span><h3>{T.m01}</h3><p>{T.m01Desc}</p></li>
-        <li class="sk card-mint"><span class="method-num">02</span><h3>{T.m02}</h3><p>{T.m02Desc}</p></li>
-        <li class="sk card-lilac"><span class="method-num">03</span><h3>{T.m03}</h3><p>{T.m03Desc}</p></li>
-        <li class="sk card-butter"><span class="method-num">04</span><h3>{T.m04}</h3><p>{T.m04Desc}</p></li>
-        <li class="sk card-peach"><span class="method-num">05</span><h3>{T.m05}</h3><p>{T.m05Desc}</p></li>
+        <li class="method-card-wrapper">
+          <div class="method-card-flipper">
+            <div class="sk card-sky method-card-front"><span class="method-num">01</span><h3>{T.m01}</h3><p>{T.m01Desc}</p></div>
+            <div class="sk card-sky method-card-back"><p class="quote">{T.m01Quote}</p></div>
+          </div>
+        </li>
+        <li class="method-card-wrapper">
+          <div class="method-card-flipper">
+            <div class="sk card-mint method-card-front"><span class="method-num">02</span><h3>{T.m02}</h3><p>{T.m02Desc}</p></div>
+            <div class="sk card-mint method-card-back"><p class="quote">{T.m02Quote}</p></div>
+          </div>
+        </li>
+        <li class="method-card-wrapper">
+          <div class="method-card-flipper">
+            <div class="sk card-lilac method-card-front"><span class="method-num">03</span><h3>{T.m03}</h3><p>{T.m03Desc}</p></div>
+            <div class="sk card-lilac method-card-back"><p class="quote">{T.m03Quote}</p></div>
+          </div>
+        </li>
+        <li class="method-card-wrapper">
+          <div class="method-card-flipper">
+            <div class="sk card-butter method-card-front"><span class="method-num">04</span><h3>{T.m04}</h3><p>{T.m04Desc}</p></div>
+            <div class="sk card-butter method-card-back"><p class="quote">{T.m04Quote}</p></div>
+          </div>
+        </li>
+        <li class="method-card-wrapper">
+          <div class="method-card-flipper">
+            <div class="sk card-peach method-card-front"><span class="method-num">05</span><h3>{T.m05}</h3><p>{T.m05Desc}</p></div>
+            <div class="sk card-peach method-card-back"><p class="quote">{T.m05Quote}</p></div>
+          </div>
+        </li>
       </ol>
     </div>
   </section>
@@ -225,12 +250,42 @@ const T = isAr ? {
         <a href={L("/services/")}>{T.allServicesLink}</a>
       </div>
       <div class="services-grid">
-        <a href={L("/services/")} class="sk card-butter service-card"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 6H6V26H26V14"></path><rect x="20" y="3" width="9" height="9" fill="#faf6ee"></rect></svg><h3>{T.s1}</h3><p>{T.s1Desc}</p><span class="learn-more">{T.learnMore}</span></a>
-        <a href={L("/services/")} class="sk card-sky service-card"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M4 11h24"></path><path d="M8 8.5h1M11 8.5h1"></path></svg><h3>{T.s2}</h3><p>{T.s2Desc}</p><span class="learn-more">{T.learnMore}</span></a>
-        <a href={L("/services/")} class="sk card-peach service-card"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="3" width="12" height="26" rx="3"></rect><path d="M14 25h4"></path></svg><h3>{T.s3}</h3><p>{T.s3Desc}</p><span class="learn-more">{T.learnMore}</span></a>
-        <a href={L("/services/")} class="sk card-mint service-card"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v16c0 2.2 4.5 4 10 4s10-1.8 10-4V8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path></svg><h3>{T.s4}</h3><p>{T.s4Desc}</p><span class="learn-more">{T.learnMore}</span></a>
-        <a href={L("/services/")} class="sk card-apricot service-card"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 9l18-4l2 9l-18 4z"></path><path d="M14 16v8H6"></path><circle cx="20" cy="10" r="1.5"></circle></svg><h3>{T.s5}</h3><p>{T.s5Desc}</p><span class="learn-more">{T.learnMore}</span></a>
-        <a href={L("/services/")} class="sk card-lilac service-card"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h22v14H14l-6 5v-5H5z"></path><path d="M10 11h12M10 15h8"></path></svg><h3>{T.s6}</h3><p>{T.s6Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+        <div class="service-card-wrapper">
+          <div class="service-card-flipper">
+            <a href={L("/services/")} class="sk card-butter service-card-front"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 6H6V26H26V14"></path><rect x="20" y="3" width="9" height="9" fill="#faf6ee"></rect></svg><h3>{T.s1}</h3><p>{T.s1Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+            <div class="sk card-butter service-card-back"><p class="stat">{T.s1Stat}</p></div>
+          </div>
+        </div>
+        <div class="service-card-wrapper">
+          <div class="service-card-flipper">
+            <a href={L("/services/")} class="sk card-sky service-card-front"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M4 11h24"></path><path d="M8 8.5h1M11 8.5h1"></path></svg><h3>{T.s2}</h3><p>{T.s2Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+            <div class="sk card-sky service-card-back"><p class="stat">{T.s2Stat}</p></div>
+          </div>
+        </div>
+        <div class="service-card-wrapper">
+          <div class="service-card-flipper">
+            <a href={L("/services/")} class="sk card-peach service-card-front"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="3" width="12" height="26" rx="3"></rect><path d="M14 25h4"></path></svg><h3>{T.s3}</h3><p>{T.s3Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+            <div class="sk card-peach service-card-back"><p class="stat">{T.s3Stat}</p></div>
+          </div>
+        </div>
+        <div class="service-card-wrapper">
+          <div class="service-card-flipper">
+            <a href={L("/services/")} class="sk card-mint service-card-front"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v16c0 2.2 4.5 4 10 4s10-1.8 10-4V8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path></svg><h3>{T.s4}</h3><p>{T.s4Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+            <div class="sk card-mint service-card-back"><p class="stat">{T.s4Stat}</p></div>
+          </div>
+        </div>
+        <div class="service-card-wrapper">
+          <div class="service-card-flipper">
+            <a href={L("/services/")} class="sk card-apricot service-card-front"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 9l18-4l2 9l-18 4z"></path><path d="M14 16v8H6"></path><circle cx="20" cy="10" r="1.5"></circle></svg><h3>{T.s5}</h3><p>{T.s5Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+            <div class="sk card-apricot service-card-back"><p class="stat">{T.s5Stat}</p></div>
+          </div>
+        </div>
+        <div class="service-card-wrapper">
+          <div class="service-card-flipper">
+            <a href={L("/services/")} class="sk card-lilac service-card-front"><svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h22v14H14l-6 5v-5H5z"></path><path d="M10 11h12M10 15h8"></path></svg><h3>{T.s6}</h3><p>{T.s6Desc}</p><span class="learn-more">{T.learnMore}</span></a>
+            <div class="sk card-lilac service-card-back"><p class="stat">{T.s6Stat}</p></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -452,10 +507,58 @@ const T = isAr ? {
   }
 
   .method-grid li {
-    padding: 24px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .method-card-wrapper {
+    perspective: 1000px;
+    height: 100%;
+  }
+
+  .method-card-flipper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .method-card-wrapper:hover .method-card-flipper {
+    transform: rotateY(180deg);
+  }
+
+  .method-card-front,
+  .method-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 24px;
+  }
+
+  .method-card-front {
+    transform: rotateY(0deg);
+  }
+
+  .method-card-back {
+    transform: rotateY(180deg);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .method-card-back .quote {
+    margin: 0;
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 600;
+    color: var(--k-ink);
+    font-style: italic;
   }
 
   .method-num {
@@ -530,8 +633,35 @@ const T = isAr ? {
     gap: 36px;
   }
 
-  .service-card {
+  .service-card-wrapper {
+    perspective: 1000px;
+    height: 100%;
+  }
+
+  .service-card-flipper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .service-card-wrapper:hover .service-card-flipper {
+    transform: rotateY(180deg);
+  }
+
+  .service-card-front,
+  .service-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
     padding: 28px;
+  }
+
+  .service-card-front {
+    transform: rotateY(0deg);
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -561,6 +691,22 @@ const T = isAr ? {
     text-decoration: underline;
     text-underline-offset: 5px;
     color: var(--k-ink);
+  }
+
+  .service-card-back {
+    transform: rotateY(180deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .service-card-back .stat {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--k-ink);
+    line-height: 36px;
   }
 
   /* About / Values Section */
