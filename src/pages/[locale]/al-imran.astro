@@ -1,0 +1,509 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { currentLocale, localizedHref } from "../../lib/i18n";
+
+export async function getStaticPaths() {
+  return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
+}
+
+const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
+
+const T = isAr ? {
+  title:        "عيادة الإمام — دراسة حالة كليم",
+  description:  "كيف حررنا بيانات عيادة الإمام من نظام قديم وبنينا منصة حديثة بـ 97/100 PageSpeed.",
+  eyebrow:      "دراسة حالة",
+  h1:           "عيادة الإمام",
+  subtitle:     "من WordPress قديم إلى منصة حديثة مفتوحة",
+  lede:         "عندما جاءتنا عيادة الإمام، كانت تملك 600 مقالة وسنوات من البيانات محبوسة في موقع WordPress بطيء ومكسّر. في ستة أشهر، استخرجنا البيانات، نظّفناها، وأعدنا بناء الموقع بالكامل على تقنيات حديثة. النتيجة: موقع سريع، آمن، وتحت سيطرة العيادة كاملاً.",
+
+  challenge:    "التحدي",
+  challengeDesc: "الموقع القديم (alimranmed.com) كان ينز بطء وعدم استقرار. لا توثيق واضح، لا نسخ احتياطية، والبيانات مبعثرة عبر قاعدة بيانات مُسيئة الاستخدام. العيادة لا تملك حتى الوصول الكامل إلى بيانات مرضاها في الموقع.",
+
+  solution:    "الحل",
+  solutionDesc: "بنينا عملية استخراج منهجية: فحصنا البنية القديمة، استخرجنا كل مقالة وتعليق، نظّفنا البيانات (توحيد التنسيقات، إزالة التكرار، إصلاح الروابط المكسورة)، ثم أعدنا البناء على Astro مع Cloudflare Workers.",
+
+  results:     "النتائج",
+  r1Title:     "الأداء",
+  r1:          "97/100 PageSpeed — أسرع 10× من الموقع القديم",
+  r2Title:     "البيانات",
+  r2:          "600 مقالة + تعليقات منظّفة وموثّقة بالكامل",
+  r3Title:     "الملكية",
+  r3:          "المستودع وكل المفاتيح بيد العيادة على GitHub",
+  r4Title:     "الاستقلالية",
+  r4:          "خادم مفتوح (Cloudflare Workers)، بلا قفل بائع",
+  r5Title:     "اللغة",
+  r5:          "دعم كامل ثنائي اللغة EN/AR مع أداء متساوٍ",
+  r6Title:     "التكلفة",
+  r6:          "استضافة مجانية تماماً على Cloudflare (لا رسوم شهرية)",
+
+  technicalHead: "البنية التقنية",
+  t1:          "Astro Static Site Generator — سرعة وموثوقية",
+  t2:          "Cloudflare Workers — معالجة بدون خادم",
+  t3:          "Open standards — لا قفل في التقنيات",
+  t4:          "Git workflow — كل التاريخ موثّق",
+
+  processHead:  "العملية",
+  p1Title:     "1. الاستخراج",
+  p1:          "فحص قاعدة البيانات القديمة، نسخ احتياطية كاملة، استخراج كل محتوى.",
+  p2Title:     "2. التنظيف",
+  p2:          "إزالة النسخ المكررة، توحيد التنسيقات، إصلاح الصور والروابط.",
+  p3Title:     "3. إعادة البناء",
+  p3:          "بناء Astro site، جميع المقالات كـ markdown، تصميم عصري متجاوب.",
+  p4Title:     "4. الترحيل",
+  p4:          "نشر على Cloudflare، إعادة توجيه النطاق القديم، تدريب الفريق.",
+
+  ownershipHead: "الملكية الحقيقية",
+  o1:          "كل شيء — الكود، البيانات، المستودع — ملك للعيادة",
+  o2:          "لا اشتراكات شهرية ولا قفل بائع",
+  o3:          "يمكن نقل الموقع بسهولة إلى أي خادم في أي وقت",
+  o4:          "التطوير المستقبلي بدون الحاجة إلينا",
+
+  ctaHead:      "جاهز لتحرير نظامك الرقمي؟",
+  ctaLabel:     "احجز تدقيق مجاني",
+
+} : {
+  title:        "Al Imran Clinic — Kaleem case study",
+  description:  "How we liberated Al Imran Clinic's data from a legacy system and built a modern 97/100 PageSpeed platform.",
+  eyebrow:      "Case study",
+  h1:           "Al Imran Clinic",
+  subtitle:     "From legacy WordPress to a modern, open platform",
+  lede:         "Al Imran Clinic arrived with 600 articles and years of data trapped in a slow, broken WordPress site. Over six months, we extracted the data, cleaned it, and rebuilt the entire platform on modern technology. The result: a fast, secure site completely under the clinic's control.",
+
+  challenge:    "The Challenge",
+  challengeDesc: "The old site (alimranmed.com) was slow and unstable. No clear documentation, no reliable backups, and patient data scattered across a mismanaged database. The clinic didn't even have full access to its own data on the website.",
+
+  solution:    "The Solution",
+  solutionDesc: "We built a systematic extraction process: examined the legacy structure, extracted every article and comment, cleaned the data (standardized formats, removed duplicates, fixed broken links), then rebuilt on Astro with Cloudflare Workers.",
+
+  results:     "The Results",
+  r1Title:     "Performance",
+  r1:          "97/100 PageSpeed — 10× faster than the legacy site",
+  r2Title:     "Data",
+  r2:          "600 articles + comments fully cleaned and documented",
+  r3Title:     "Ownership",
+  r3:          "Repository and all keys in the clinic's hands on GitHub",
+  r4Title:     "Independence",
+  r4:          "Open infrastructure (Cloudflare Workers), no vendor lock-in",
+  r5Title:     "Language",
+  r5:          "Full bilingual EN/AR support with equal performance",
+  r6Title:     "Cost",
+  r6:          "Completely free hosting on Cloudflare (no monthly fees)",
+
+  technicalHead: "Technical Architecture",
+  t1:          "Astro Static Site Generator — speed and reliability",
+  t2:          "Cloudflare Workers — serverless processing",
+  t3:          "Open standards — no technology lock-in",
+  t4:          "Git workflow — every change tracked and reversible",
+
+  processHead:  "The Process",
+  p1Title:     "1. Extraction",
+  p1:          "Audit legacy database, complete backups, extract all content.",
+  p2Title:     "2. Cleaning",
+  p2:          "Remove duplicates, standardize formats, fix images and links.",
+  p3Title:     "3. Rebuild",
+  p3:          "Build Astro site, all articles as markdown, modern responsive design.",
+  p4Title:     "4. Migration",
+  p4:          "Deploy to Cloudflare, redirect old domain, train team.",
+
+  ownershipHead: "True Ownership",
+  o1:          "Everything — code, data, repository — belongs to the clinic",
+  o2:          "No monthly subscriptions, no vendor lock-in",
+  o3:          "Site can move to any server anytime without losing anything",
+  o4:          "Future development possible without depending on us",
+
+  ctaHead:      "Ready to liberate your digital platform?",
+  ctaLabel:     "Book a free audit",
+};
+---
+
+<BaseLayout title={T.title} description={T.description}>
+  <!-- ─── HERO ─────────────────────────────────────────────── -->
+  <section class="hero-section bg-sky">
+    <div class="container">
+      <span class="eyebrow">{T.eyebrow}</span>
+      <h1 class="hero-h1">{T.h1}</h1>
+      <p class="hero-subtitle">{T.subtitle}</p>
+      <p class="hero-lede">{T.lede}</p>
+    </div>
+  </section>
+
+  <!-- ─── CHALLENGE & SOLUTION ───────────────────────────── -->
+  <section class="section-pair">
+    <div class="container">
+      <div class="pair-grid">
+        <div class="sk card-butter">
+          <h2>{T.challenge}</h2>
+          <p>{T.challengeDesc}</p>
+        </div>
+        <div class="sk card-mint">
+          <h2>{T.solution}</h2>
+          <p>{T.solutionDesc}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── RESULTS GRID ────────────────────────────────────── -->
+  <section class="results-section bg-paper-2">
+    <div class="container">
+      <h2 class="section-heading">{T.results}</h2>
+      <div class="results-grid">
+        <div class="sk result-card bg-lilac">
+          <span class="result-label">{T.r1Title}</span>
+          <span class="result-value">{T.r1}</span>
+        </div>
+        <div class="sk result-card bg-peach">
+          <span class="result-label">{T.r2Title}</span>
+          <span class="result-value">{T.r2}</span>
+        </div>
+        <div class="sk result-card bg-butter">
+          <span class="result-label">{T.r3Title}</span>
+          <span class="result-value">{T.r3}</span>
+        </div>
+        <div class="sk result-card bg-sky">
+          <span class="result-label">{T.r4Title}</span>
+          <span class="result-value">{T.r4}</span>
+        </div>
+        <div class="sk result-card bg-apricot">
+          <span class="result-label">{T.r5Title}</span>
+          <span class="result-value">{T.r5}</span>
+        </div>
+        <div class="sk result-card bg-lilac">
+          <span class="result-label">{T.r6Title}</span>
+          <span class="result-value">{T.r6}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TECHNICAL ARCHITECTURE ──────────────────────────── -->
+  <section class="tech-section">
+    <div class="container">
+      <h2 class="section-heading">{T.technicalHead}</h2>
+      <div class="tech-grid">
+        <div class="sk tech-item bg-butter">
+          <p>{T.t1}</p>
+        </div>
+        <div class="sk tech-item bg-sky">
+          <p>{T.t2}</p>
+        </div>
+        <div class="sk tech-item bg-mint">
+          <p>{T.t3}</p>
+        </div>
+        <div class="sk tech-item bg-apricot">
+          <p>{T.t4}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── THE PROCESS ──────────────────────────────────────── -->
+  <section class="process-section bg-paper-2">
+    <div class="container">
+      <h2 class="section-heading">{T.processHead}</h2>
+      <div class="process-grid">
+        <div class="sk process-step bg-lilac">
+          <h3>{T.p1Title}</h3>
+          <p>{T.p1}</p>
+        </div>
+        <div class="sk process-step bg-butter">
+          <h3>{T.p2Title}</h3>
+          <p>{T.p2}</p>
+        </div>
+        <div class="sk process-step bg-sky">
+          <h3>{T.p3Title}</h3>
+          <p>{T.p3}</p>
+        </div>
+        <div class="sk process-step bg-mint">
+          <h3>{T.p4Title}</h3>
+          <p>{T.p4}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── OWNERSHIP ───────────────────────────────────────── -->
+  <section class="ownership-section bg-lilac">
+    <div class="container">
+      <h2 class="section-heading">{T.ownershipHead}</h2>
+      <div class="ownership-list">
+        <div class="sk ownership-item">
+          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>{T.o1}</p>
+        </div>
+        <div class="sk ownership-item">
+          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>{T.o2}</p>
+        </div>
+        <div class="sk ownership-item">
+          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>{T.o3}</p>
+        </div>
+        <div class="sk ownership-item">
+          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>{T.o4}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FINAL CTA ───────────────────────────────────────── -->
+  <section class="cta-section bg-peach">
+    <div class="container">
+      <h2>{T.ctaHead}</h2>
+      <a class="skb skb-sky" href={L("/contact/")}>{T.ctaLabel}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
+  }
+
+  /* Hero */
+  .hero-section {
+    padding: var(--k-space-10) 0 var(--k-space-11);
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+    margin-bottom: var(--k-space-4);
+  }
+
+  .hero-h1 {
+    margin: 0 auto var(--k-space-3);
+    max-width: 20ch;
+    font-size: clamp(48px, 7vw, 72px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .hero-subtitle {
+    margin: 0 auto var(--k-space-5);
+    max-width: 50ch;
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--k-ink-muted);
+  }
+
+  .hero-lede {
+    margin: 0 auto;
+    max-width: 60ch;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--k-ink);
+  }
+
+  /* Pair Grid */
+  .section-pair {
+    padding: var(--k-space-10) 0;
+  }
+
+  .pair-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--k-space-7);
+  }
+
+  .pair-grid > div {
+    padding: var(--k-space-7);
+  }
+
+  .pair-grid h2 {
+    margin: 0 0 var(--k-space-4);
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .pair-grid p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--k-ink);
+  }
+
+  /* Results */
+  .results-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .section-heading {
+    margin: 0 0 var(--k-space-8);
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--k-ink);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .result-card {
+    padding: var(--k-space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--k-space-3);
+  }
+
+  .result-label {
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+  }
+
+  .result-value {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--k-ink);
+  }
+
+  /* Tech Section */
+  .tech-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .tech-item {
+    padding: var(--k-space-6);
+  }
+
+  .tech-item p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--k-ink);
+    font-weight: 500;
+  }
+
+  /* Process */
+  .process-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .process-step {
+    padding: var(--k-space-6);
+  }
+
+  .process-step h3 {
+    margin: 0 0 var(--k-space-3);
+    font-size: 18px;
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  .process-step p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--k-ink);
+  }
+
+  /* Ownership */
+  .ownership-section {
+    padding: var(--k-space-10) 0;
+  }
+
+  .ownership-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--k-space-6);
+  }
+
+  .ownership-item {
+    display: flex;
+    gap: var(--k-space-4);
+    padding: var(--k-space-5);
+    background: var(--k-paper);
+  }
+
+  .check {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .ownership-item p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--k-ink);
+  }
+
+  /* CTA */
+  .cta-section {
+    padding: var(--k-space-10) 0;
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    margin: 0 0 var(--k-space-6);
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--k-ink);
+    font-weight: 700;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .pair-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 672px) {
+    .container {
+      padding: 0 var(--k-gutter-mobile);
+    }
+
+    .hero-section,
+    .section-pair,
+    .results-section,
+    .tech-section,
+    .process-section,
+    .ownership-section,
+    .cta-section {
+      padding: var(--k-space-8) 0;
+    }
+
+    .hero-h1 {
+      font-size: clamp(32px, 6vw, 48px);
+    }
+  }
+</style>
