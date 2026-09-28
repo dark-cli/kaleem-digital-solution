@@ -2,14 +2,26 @@
 interface Props {
   src: string;
   alt: string;
-  chromeColor?: 'sky' | 'mint' | 'lilac' | 'butter' | 'peach' | 'apricot';
+  chromeColor?: 'sky' | 'mint' | 'lilac' | 'butter' | 'peach' | 'apricot' | 'sky-shader';
 }
 
-const { src, alt, chromeColor = 'sky' } = Astro.props;
+const { src, alt, chromeColor = 'sky-shader' } = Astro.props;
+
+const chromeAttrs = {
+  'sky': { 'data-sky': true },
+  'mint': { 'data-mint': true },
+  'lilac': { 'data-lilac': true },
+  'butter': { 'data-butter': true },
+  'peach': { 'data-peach': true },
+  'apricot': { 'data-apricot': true },
+  'sky-shader': { 'data-sky': true },
+};
+
+const currentChrome = chromeAttrs[chromeColor] || chromeAttrs['sky-shader'];
 ---
 
 <div class="sk window widget">
-  <div class="window-chrome" data-{chromeColor}></div>
+  <div class="window-chrome" {...currentChrome}></div>
   <div class="window-body widget-content">
     <img {src} {alt} class="widget-image" />
   </div>
