@@ -252,12 +252,20 @@ const T = isAr ? {
             <span class="k-tag tag-sky">Web</span>
             <span class="k-tag tag-apricot">Networks</span>
           </div>
-          <a class="skb skb-lilac" href={L("/work/")}>{T.caseCTA}</a>
+          <a class="skb skb-lilac" href={L("/al-imran/")}>{T.caseCTA}</a>
         </div>
-        <div class="sk window case-mockup">
-          <div class="window-chrome" data-sky></div>
-          <div class="window-body mockup-content">[Clinic website screenshot]</div>
-        </div>
+        <a href={L("/al-imran/")} class="case-mockup-link">
+          <div class="sk window case-mockup">
+            <div class="window-chrome" data-sky></div>
+            <div class="window-body mockup-content">
+              <svg class="mockup-icon" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="8" y="12" width="48" height="40" rx="2" fill="none" stroke="#1f1f1f" stroke-width="2"/>
+                <path d="M8 20h48M16 28h10M16 36h20" stroke="#1f1f1f" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span class="mockup-label">{isAr ? "الموقع الجديد" : "Modern website"}</span>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -667,13 +675,46 @@ const T = isAr ? {
   }
 
   /* Just page-specific tweaks on top of the .window widget. */
+  .case-mockup-link {
+    text-decoration: none;
+    display: block;
+    transition: transform 100ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  }
+
+  .case-mockup-link:hover {
+    transform: translateY(-4px);
+  }
+
   .case-mockup { height: 380px; }
   .mockup-content {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    gap: 16px;
     color: var(--k-ink-muted);
+  }
+
+  .mockup-icon {
+    opacity: 0.6;
+    transition: opacity 100ms ease;
+  }
+
+  .case-mockup-link:hover .mockup-icon {
+    opacity: 1;
+  }
+
+  .mockup-label {
+    font-family: var(--k-font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+    transition: color 100ms ease;
+  }
+
+  .case-mockup-link:hover .mockup-label {
+    color: var(--k-ink);
   }
 
   /* Final CTA Section */
