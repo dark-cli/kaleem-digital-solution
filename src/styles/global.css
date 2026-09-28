@@ -166,6 +166,16 @@ header.board {
   z-index: 41;
 }
 
+/* When a .sk sketch card is also a star window, the built-in offset shadow
+   uses --k-paper for its "cutout" layer — which prints a cream stripe
+   against the dark starfield. Swap the cutout to the board color so the
+   sketchy offset reads correctly on the night sky. */
+.sk[data-star-window] {
+  box-shadow: var(--k-sketch-offset) var(--k-sketch-offset) 0 -2px var(--k-board),
+              var(--k-sketch-offset) var(--k-sketch-offset) 0 0 var(--k-chalk);
+  border-color: var(--k-chalk);
+}
+
 /* Paper: cream background with pencil speck texture. */
 .paper {
   background-color: var(--k-paper);
@@ -214,6 +224,15 @@ header.board {
 
 a.sk, a.skb, button.skb { transition: transform 120ms ease; }
 a.sk:hover, a.skb:hover, button.skb:hover { transform: translate(-1px, -1px); }
+
+/* Sketch-button color variants. Available site-wide. */
+.skb-mint   { background: var(--k-mint);   color: var(--k-ink); }
+.skb-butter { background: var(--k-butter); color: var(--k-ink); }
+.skb-lilac  { background: var(--k-lilac);  color: var(--k-ink); }
+.skb-peach  { background: var(--k-peach);  color: var(--k-ink); }
+.skb-sky    { background: var(--k-sky);    color: var(--k-ink); }
+.skb-apricot{ background: var(--k-apricot);color: var(--k-ink); }
+.skb-paper  { background: var(--k-paper);  color: var(--k-ink); }
 
 /* Buttons that follow block content in a normal flow get consistent
    breathing room. Uses adjacent-sibling selectors so button-to-button

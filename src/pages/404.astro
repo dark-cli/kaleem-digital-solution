@@ -10,7 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 <BaseLayout title="Page not found — Kaleem" description="The page you're looking for doesn't exist." noindex>
   <section class="nf">
-    <div class="sk nf-card bg-butter">
+    <div class="sk nf-card" data-star-window>
       <span class="nf-code" aria-hidden="true">404</span>
 
       <!-- English (default) -->
@@ -93,10 +93,14 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     padding: var(--k-space-8) var(--k-gutter-desktop);
   }
 
+  /* The card is a see-through window to the starfield (data-star-window),
+     so its own background is transparent. Text colors switch to chalk
+     tones so the copy stays readable over the dark sky. */
   .nf-card {
     max-width: 640px;
     width: 100%;
     text-align: center;
+    color: var(--k-chalk);
   }
 
   .nf-code {
@@ -104,19 +108,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-family: var(--k-font-mono);
     font-size: clamp(88px, 16vw, 160px);
     line-height: 1;
-    color: var(--k-ink);
+    color: var(--k-butter);
     letter-spacing: -0.04em;
     font-weight: 700;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
   }
 
   .nf-body h1 {
     margin: 0;
     font-size: clamp(28px, 4vw, 40px);
-    color: var(--k-ink);
+    color: var(--k-chalk);
   }
 
   .nf-lede {
-    color: var(--k-ink-muted);
+    color: var(--k-chalk-muted);
     font-size: 17px;
     line-height: 1.65;
     max-width: 42ch;
