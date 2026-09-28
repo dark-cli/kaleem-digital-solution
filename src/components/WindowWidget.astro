@@ -7,21 +7,13 @@ interface Props {
 
 const { src, alt, chromeColor = 'sky-shader' } = Astro.props;
 
-const chromeAttrs = {
-  'sky': { 'data-sky': true },
-  'mint': { 'data-mint': true },
-  'lilac': { 'data-lilac': true },
-  'butter': { 'data-butter': true },
-  'peach': { 'data-peach': true },
-  'apricot': { 'data-apricot': true },
-  'sky-shader': { 'data-sky': true },
-};
-
-const currentChrome = chromeAttrs[chromeColor] || chromeAttrs['sky-shader'];
+const chromeClass = `chrome-${chromeColor}`;
+const hasShader = chromeColor === 'sky-shader';
 ---
 
 <div class="sk window widget">
-  <div class="window-chrome" {...currentChrome}></div>
+  <div class={`window-chrome ${chromeClass}${hasShader ? ' has-shader' : ''}`} {...(hasShader ? { 'data-sky': true } : {})}>
+  </div>
   <div class="window-body widget-content">
     <img {src} {alt} class="widget-image" />
   </div>
@@ -48,5 +40,34 @@ const currentChrome = chromeAttrs[chromeColor] || chromeAttrs['sky-shader'];
     height: 100%;
     object-fit: contain;
     display: block;
+  }
+
+  /* Chrome color variants */
+  .chrome-sky {
+    background: var(--k-sky);
+  }
+
+  .chrome-mint {
+    background: var(--k-mint);
+  }
+
+  .chrome-lilac {
+    background: var(--k-lilac);
+  }
+
+  .chrome-butter {
+    background: var(--k-butter);
+  }
+
+  .chrome-peach {
+    background: var(--k-peach);
+  }
+
+  .chrome-apricot {
+    background: var(--k-apricot);
+  }
+
+  .chrome-sky-shader {
+    /* Sky shader effect handles background via data-sky attribute */
   }
 </style>
