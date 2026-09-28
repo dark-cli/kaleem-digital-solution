@@ -317,12 +317,10 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
-  html[lang="en"] .hero-h1 {
-    font-family: var(--k-font-en);
-  }
-
-  html[lang="ar"] .hero-h1 {
-    font-family: var(--k-font-ar);
+  .hero-h1 {
+    /* Serif display face for both locales: Newsreader (EN) / Amiri (AR).
+       --k-font-serif swaps automatically via html[dir="rtl"]. */
+    font-family: var(--k-font-serif);
   }
 
   .hero-p {
@@ -357,12 +355,9 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
-  html[lang="en"] .section-heading {
-    font-family: var(--k-font-en);
-  }
-
-  html[lang="ar"] .section-heading {
-    font-family: var(--k-font-ar);
+  .section-heading {
+    /* Serif display face for both locales — Newsreader / Amiri. */
+    font-family: var(--k-font-serif);
   }
 
   .problems-grid {
@@ -842,16 +837,12 @@ const T = isAr ? {
   }
 
   .hero-title {
-    font-family: var(--k-font-ar);
+    font-family: var(--k-font-serif);
     font-size: clamp(36px, 5vw, 72px);
-    font-weight: 700;
-    line-height: 1.2;
+    font-weight: 500;
+    line-height: 1.15;
     color: var(--k-ink);
     margin: 0;
-  }
-
-  html[lang="en"] .hero-title {
-    font-family: var(--k-font-en);
   }
 
   .hero-description {
@@ -879,17 +870,13 @@ const T = isAr ? {
   }
 
   .section-title {
-    font-family: var(--k-font-ar);
+    font-family: var(--k-font-serif);
     font-size: clamp(32px, 4vw, 48px);
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.2;
     color: var(--k-ink);
     margin: 0 0 var(--k-space-5) 0;
     text-align: center;
-  }
-
-  html[lang="en"] .section-title {
-    font-family: var(--k-font-en);
   }
 
   .section-description {

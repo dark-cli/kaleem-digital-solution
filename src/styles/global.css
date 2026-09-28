@@ -45,10 +45,25 @@
   --k-logo-block: #f7e39a;
   --k-focus: #3b6fa0;
 
-  /* Typography Stacks */
+  /* ─── Typography — SINGLE SOURCE OF TRUTH ─────────────────────
+     Fonts are self-hosted from /public/fonts/ (see fonts.css).
+       • --k-font-serif — Newsreader (EN) / Amiri (AR)  → display / headings
+       • --k-font-sans  — IBM Plex Sans (EN) / IBM Plex Sans Arabic (AR)
+                          → body
+       • --k-font-mono  — IBM Plex Mono → code / metadata / eyebrows
+     The Arabic swap happens once in the html[dir="rtl"] block below.
+     ALL other font-family rules in the codebase resolve through these
+     variables (or their aliases --font-display / --font-body / --font-mono
+     / --font-sans defined further down for legacy template code). Do NOT
+     hardcode font-family: "IBM Plex Sans"... anywhere else. */
+  --k-font-serif: "Newsreader", "Times New Roman", Georgia, serif;
+  --k-font-sans:  "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --k-font-mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Locale-specific aliases (kept for the few call sites that need to
+     force a specific script's font regardless of dir attribute). */
+  --k-font-en: var(--k-font-sans);
   --k-font-ar: "IBM Plex Sans Arabic", "IBM Plex Sans", Tahoma, sans-serif;
-  --k-font-en: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
-  --k-font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 
   /* Sketch Component Tokens */
   --k-line: 2px;
@@ -306,13 +321,10 @@ footer.board {
 /* Focus ring on the dark board uses sky (11:1) instead of the default blue. */
 .board a:focus-visible, .board button:focus-visible { outline-color: var(--k-sky); }
 
+/* Legacy layout tokens (referenced by older page CSS from the template).
+   Font stacks are DEFINED ONCE in the top :root block as --k-font-serif /
+   --k-font-sans / --k-font-mono; the aliases below just point at them. */
 :root {
-  /* Type stacks — HANDOFF §2.2 / §2.3 */
-  --font-display:   "Newsreader", "Times New Roman", serif;
-  --font-body:      "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono:      "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Menlo", monospace;
-
-  /* Layout — HANDOFF §2.4 */
   --page-max:       1180px;
   --gutter:         24px;
   --header-h:       72px;
@@ -321,13 +333,23 @@ footer.board {
   --hero-y:         clamp(44px, 5.5vw, 72px);
   --card-pad:       clamp(24px, 3vw, 32px);
   --col-gap:        clamp(32px, 4vw, 64px);
+
+  /* Font-stack aliases so existing template rules resolve without a
+     second definition site. Change fonts in the top :root only. */
+  --font-display: var(--k-font-serif);
+  --font-body:    var(--k-font-sans);
+  --font-mono:    var(--k-font-mono);
+  --font-sans:    var(--k-font-sans);
 }
 
-/* Arabic — HANDOFF §2.3 */
+/* Arabic: swap the two script-aware stacks. --k-font-serif / --k-font-sans
+   now resolve to Amiri / IBM Plex Sans Arabic, and because --font-display,
+   --font-body, --font-sans reference them, EVERY font-family: var(--…)
+   rule in the codebase picks up the RTL font automatically. */
 html[dir="rtl"] {
-  --font-display:   "Amiri", "Times New Roman", serif;
-  --font-body:      "IBM Plex Sans Arabic", system-ui, "Segoe UI", sans-serif;
-  --font-mono:      "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --k-font-serif: "Amiri", "Times New Roman", serif;
+  --k-font-sans:  "IBM Plex Sans Arabic", "IBM Plex Sans", Tahoma, sans-serif;
+  --k-font-mono:  "IBM Plex Sans Arabic", "IBM Plex Sans", ui-monospace, sans-serif;
 }
 
 /* ─── Legacy token aliases ───────────────────────────────────
@@ -348,7 +370,6 @@ html[dir="rtl"] {
   --radius-lg:   2px;
   --shadow-sm:   none;
   --shadow-md:   none;
-  --font-sans:   var(--font-body);
 }
 
 /* ─── Dark mode ──────────────────────────────────────────────
