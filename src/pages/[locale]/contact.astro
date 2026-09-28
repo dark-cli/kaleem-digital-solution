@@ -13,30 +13,38 @@ const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
   title:       "اتصل بنا — كليم",
-  description: "تواصل مع فريق كليم في البصرة. اتصل، راسل، أو احجز تدقيقاً مجانياً لأنظمتك.",
+  description: "تواصل مع فريق كليم في البصرة أو بغداد. اتصل، راسل واتساب، أو احجز استشارة مجانية.",
   eyebrow:     "تواصل",
-  h1:          "أخبرنا ما مغلق.",
-  h1b:         "سنظهر لك الطريق للخروج.",
-  lede:        "نجيب خلال ساعات العمل. للحالات العاجلة، اتصل مباشرة.",
+  h1:          "لنجعل منزلك",
+  h1b:         "يتحدث لهجتك.",
+  lede:        `نجيب خلال ساعات العمل: ${CONTACT.hours.ar}. للاستفسارات العاجلة، اتصل مباشرة أو راسلنا على واتساب.`,
   callLabel:   "اتصل",
+  whatsappLabel: "واتساب",
   emailLabel:  "البريد",
-  locHead:     "الموقع",
+  salesLabel:  "المبيعات والمشاريع",
+  supportLabel:"الدعم الفني",
+  partnersLabel:"الشراكات",
+  locHead:     "المكاتب",
   followHead:  "تابعنا",
-  bookAudit:   "احجز تدقيقاً مجانياً",
-  auditNote:   "أسئلة قليلة عن أنظمتك الحالية، ثم ملخص واحد يوضح ما هو مغلق وكيف نحرره.",
+  bookAudit:   "احجز استشارة مجانية",
+  auditNote:   "زيارة قصيرة لموقعك، أسئلة عن حياتك اليومية، ثم خطة واضحة لما يمكن أن يفعله منزل ذكي لك.",
 } : {
   title:       "Contact — Kaleem",
-  description: "Get in touch with the Kaleem team in Basra. Call, message, or book a free audit of your systems.",
+  description: "Get in touch with the Kaleem team in Basra or Baghdad. Call, WhatsApp, or book a free consultation.",
   eyebrow:     "Get in touch",
-  h1:          "Tell us what's locked.",
-  h1b:         "We'll show you the way out.",
-  lede:        "We answer during business hours. For urgent matters, please call directly.",
+  h1:          "Let's make your home",
+  h1b:         "speak your language.",
+  lede:        `We answer during business hours: ${CONTACT.hours.en}. For urgent matters, please call or WhatsApp us directly.`,
   callLabel:   "Call",
+  whatsappLabel: "WhatsApp",
   emailLabel:  "Email",
-  locHead:     "Location",
+  salesLabel:  "Sales & projects",
+  supportLabel:"Technical support",
+  partnersLabel:"Partnerships",
+  locHead:     "Offices",
   followHead:  "Follow us",
-  bookAudit:   "Book a free audit",
-  auditNote:   "A few questions about your current systems, then one summary of what's locked and how we free it.",
+  bookAudit:   "Book a free consultation",
+  auditNote:   "A short visit to your space, a few questions about how you live in it, and a clear plan for what a smart home could do for you.",
 };
 
 const socials = [
@@ -60,19 +68,31 @@ const socials = [
   <section class="contact-actions">
     <div class="container">
       <div class="actions-grid">
-        {CONTACT.phones.map((p) => (
-          <a class="sk action bg-mint" href={`tel:${p.replace(/\s/g, "")}`}>
-            <span class="action-label">{T.callLabel}</span>
-            <span class="action-value"><bdi>{p}</bdi></span>
-          </a>
-        ))}
-        <a class="sk action bg-butter" href={`mailto:${CONTACT.email}`}>
-          <span class="action-label">{T.emailLabel}</span>
-          <span class="action-value">{CONTACT.email}</span>
+        <a class="sk action bg-mint" href={`tel:${CONTACT.phones[0].replace(/\s/g, "")}`}>
+          <span class="action-label">{T.callLabel}</span>
+          <span class="action-value"><bdi>{CONTACT.phones[0]}</bdi></span>
+        </a>
+        <a class="sk action bg-butter" href={CONTACT.whatsapp} target="_blank" rel="noopener">
+          <span class="action-label">{T.whatsappLabel}</span>
+          <span class="action-value"><bdi>{CONTACT.phones[0]}</bdi></span>
         </a>
         <a class="sk action bg-peach" href={CONTACT.mapsUrl} target="_blank" rel="noopener">
           <span class="action-label">{T.locHead}</span>
-          <span class="action-value">{isAr ? CONTACT.addresses.ar : CONTACT.addresses.en}</span>
+          <span class="action-value">{(isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(" · ")}</span>
+        </a>
+      </div>
+      <div class="actions-grid emails-grid">
+        <a class="sk action bg-sky" href={`mailto:${CONTACT.emails.sales}`}>
+          <span class="action-label">{T.salesLabel}</span>
+          <span class="action-value">{CONTACT.emails.sales}</span>
+        </a>
+        <a class="sk action bg-lilac" href={`mailto:${CONTACT.emails.support}`}>
+          <span class="action-label">{T.supportLabel}</span>
+          <span class="action-value">{CONTACT.emails.support}</span>
+        </a>
+        <a class="sk action bg-apricot" href={`mailto:${CONTACT.emails.partners}`}>
+          <span class="action-label">{T.partnersLabel}</span>
+          <span class="action-value">{CONTACT.emails.partners}</span>
         </a>
       </div>
     </div>
@@ -155,6 +175,7 @@ const socials = [
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: var(--k-space-6);
   }
+  .emails-grid { margin-top: var(--k-space-6); }
 
   .action {
     display: flex;
