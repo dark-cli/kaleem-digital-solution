@@ -47,10 +47,10 @@ const T = isAr ? {
         buildHead: "البناء الأنسب لكل تطبيق", buildA: "كود واحد مشترك", buildOr: "أو", buildB: "تطبيق أصلي بالكامل",
         tags: ["الطلبات", "الحجوزات", "برامج الولاء", "التوصيل", "إعادة بناء التطبيقات القديمة"] },
   s4: { name: "أنظمة الإدارة والمتاجر", line: "من نقطة بيع لمتجر واحد إلى منصة متعددة الفروع.",
-        scale: ["متجر واحد", "فروع متعددة", "نظام واحد"],
+        scale: ["نقاط البيع", "المخزون", "كل الفروع في لوحة واحدة"],
         tags: ["المخزون", "نقاط البيع", "سجلات العملاء", "برامج سطح المكتب", "الانتقال من الورق والجداول"] },
   s5: { name: "الشبكات والأمن", line: "كاميرات، وشبكات منظّمة، وواي فاي للزوار — وكل كلمات المرور بين يديك.",
-        cams: "الكاميرات", router: "شبكتك", staff: "الموظفون", guests: "الزوار",
+        cams: "الكاميرات", recorder: "جهاز التسجيل", router: "الراوتر", staff: "شبكة الموظفين", guests: "شبكة الزوار",
         tags: ["كاميرات المراقبة", "التحكم بالدخول", "واي فاي للموظفين والزوار", "بوابة زوار تعرض موقعك"] },
   s6: { name: "الاستشارات والتدريب", line: "لست متأكداً ماذا تفعل بأنظمتك؟ نساعدك على القرار — ثم ندرّب فريقك على إدارتها.",
         choices: ["نبني", "نشتري", "نُبقي", "نستبدل"],
@@ -99,10 +99,10 @@ const T = isAr ? {
         buildHead: "The right build for each app", buildA: "One shared codebase", buildOr: "or", buildB: "Fully native",
         tags: ["Ordering", "Booking", "Loyalty", "Delivery", "Old app rebuilds"] },
   s4: { name: "Management & store systems", line: "From one shop's point of sale to a multi-branch platform.",
-        scale: ["One shop", "Many branches", "One system"],
+        scale: ["Point of sale", "Inventory", "Every branch, one dashboard"],
         tags: ["Inventory", "Point of sale", "Customer records", "Desktop apps", "From paper & spreadsheets"] },
   s5: { name: "Networks & security", line: "Cameras, organised networks and guest Wi-Fi — with every password in your hands.",
-        cams: "Cameras", router: "Your network", staff: "Staff", guests: "Guests",
+        cams: "Cameras", recorder: "Recorder", router: "Router", staff: "Staff network", guests: "Guest Wi-Fi",
         tags: ["Surveillance cameras", "Access control", "Staff & guest Wi-Fi", "Guest portal with your website"] },
   s6: { name: "Consulting & training", line: "Not sure what to do with your systems? We help you decide — then train your team to run them.",
         choices: ["Build", "Buy", "Keep", "Replace"],
@@ -233,10 +233,18 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
         </div>
         <div class="art art-jailbreak" aria-hidden="true">
           <figure>
-            <svg viewBox="0 0 160 170" width="150">
-              <path d="M45 62v-22a35 35 0 0 1 70 0v22" class="draw"></path>
-              <rect x="10" y="62" width="140" height="100" rx="6" fill="#d9ccf0" class="draw"></rect>
-              <path d="M30 100c18-26 36 26 54 0s28 18 44-8M34 136c22-18 40 18 62-4s22 8 32 0" class="draw" stroke-width="2.5"></path>
+            <!-- Server tower wrapped in crossed chains with a padlock. -->
+            <svg viewBox="0 0 180 196" width="160">
+              <rect x="40" y="8" width="100" height="180" rx="6" fill="#d9ccf0" class="draw"></rect>
+              <rect x="54" y="24" width="72" height="18" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <rect x="54" y="50" width="72" height="18" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <rect x="54" y="150" width="72" height="18" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <circle cx="116" cy="33" r="3" fill="#1f1f1f"></circle><circle cx="116" cy="59" r="3" fill="#1f1f1f"></circle><circle cx="116" cy="159" r="3" fill="#1f1f1f"></circle>
+              <rect x="23.0" y="37.1" width="31.1" height="12" rx="6" transform="rotate(46.8 38.6 43.1)" fill="none" class="draw" stroke-width="2.5"></rect><path d="M40.7 61.4h30.1" transform="rotate(46.8 55.7 61.4)" class="draw" stroke-width="4"></path><rect x="57.3" y="73.7" width="31.1" height="12" rx="6" transform="rotate(46.8 72.9 79.7)" fill="none" class="draw" stroke-width="2.5"></rect><path d="M75.0 98.0h30.1" transform="rotate(46.8 90.0 98.0)" class="draw" stroke-width="4"></path><rect x="91.6" y="110.3" width="31.1" height="12" rx="6" transform="rotate(46.8 107.1 116.3)" fill="none" class="draw" stroke-width="2.5"></rect><path d="M109.2 134.6h30.1" transform="rotate(46.8 124.3 134.6)" class="draw" stroke-width="4"></path><rect x="125.9" y="146.9" width="31.1" height="12" rx="6" transform="rotate(46.8 141.4 152.9)" fill="none" class="draw" stroke-width="2.5"></rect>
+              <rect x="23.0" y="146.9" width="31.1" height="12" rx="6" transform="rotate(-46.8 38.6 152.9)" fill="none" class="draw" stroke-width="2.5"></rect><path d="M40.7 134.6h30.1" transform="rotate(-46.8 55.7 134.6)" class="draw" stroke-width="4"></path><rect x="57.3" y="110.3" width="31.1" height="12" rx="6" transform="rotate(-46.8 72.9 116.3)" fill="none" class="draw" stroke-width="2.5"></rect><path d="M75.0 98.0h30.1" transform="rotate(-46.8 90.0 98.0)" class="draw" stroke-width="4"></path><rect x="91.6" y="73.7" width="31.1" height="12" rx="6" transform="rotate(-46.8 107.1 79.7)" fill="none" class="draw" stroke-width="2.5"></rect><path d="M109.2 61.4h30.1" transform="rotate(-46.8 124.3 61.4)" class="draw" stroke-width="4"></path><rect x="125.9" y="37.1" width="31.1" height="12" rx="6" transform="rotate(-46.8 141.4 43.1)" fill="none" class="draw" stroke-width="2.5"></rect>
+              <path d="M74 94v-14a16 16 0 0 1 32 0v14" class="draw" stroke-width="4"></path>
+              <rect x="60" y="92" width="60" height="46" rx="5" fill="#f7e7b0" class="draw"></rect>
+              <circle cx="90" cy="110" r="5" fill="#1f1f1f"></circle><path d="M90 114v12" class="draw" stroke-width="3.5"></path>
             </svg>
             <figcaption>{T.s1.from}</figcaption>
           </figure>
@@ -309,20 +317,50 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
         <!-- Management & store systems -->
         <article id="systems" class="card svc bg-mint">
           <div class="art art-scale" aria-hidden="true">
+            <!-- Point of sale: register with screen, receipt and cash drawer. -->
             <figure>
-              <svg viewBox="0 0 104 90" width="96"><path d="M2 30l14-26h72l14 26z" fill="#f8c9b8" class="draw"></path><rect x="10" y="30" width="84" height="56" fill="#faf6ee" class="draw"></rect><rect x="38" y="52" width="28" height="34" fill="#f7e7b0" class="draw" stroke-width="2"></rect></svg>
+              <svg viewBox="0 0 150 132" width="122">
+                <path d="M112 50V14h24v36" fill="#faf6ee" class="draw" stroke-width="2.5"></path>
+                <path d="M118 24h12M118 32h12M118 40h8" class="draw" stroke-width="2"></path>
+                <rect x="104" y="50" width="40" height="18" rx="3" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+                <rect x="20" y="6" width="72" height="46" rx="4" fill="#c6ddf0" class="draw"></rect>
+                <path d="M32 20h30M32 30h44M32 40h22" class="draw" stroke-width="2"></path>
+                <path d="M56 52v14" class="draw"></path>
+                <rect x="8" y="66" width="136" height="30" rx="3" fill="#faf6ee" class="draw"></rect>
+                <path d="M22 76h8M38 76h8M54 76h8M22 86h8M38 86h8M54 86h8" class="draw" stroke-width="2.5"></path>
+                <rect x="8" y="96" width="136" height="30" rx="3" fill="#f7e7b0" class="draw"></rect>
+                <path d="M60 111h32" class="draw"></path>
+              </svg>
               <figcaption>{T.s4.scale[0]}</figcaption>
             </figure>
+            <!-- Inventory: stacked boxes with a barcode label. -->
             <figure>
-              <svg viewBox="0 0 64 140" width="56">
-                <path d="M4 22l8-16h40l8 16z" fill="#f8c9b8" class="draw" stroke-width="2.5"></path><rect x="8" y="22" width="48" height="24" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
-                <path d="M4 70l8-16h40l8 16z" fill="#f8c9b8" class="draw" stroke-width="2.5"></path><rect x="8" y="70" width="48" height="24" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
-                <path d="M4 118l8-16h40l8 16z" fill="#f8c9b8" class="draw" stroke-width="2.5"></path><rect x="8" y="118" width="48" height="20" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <svg viewBox="0 0 128 118" width="100">
+                <rect x="36" y="6" width="56" height="50" fill="#f9d2ae" class="draw"></rect><path d="M64 6v16" class="draw" stroke-width="2.5"></path>
+                <rect x="6" y="60" width="56" height="52" fill="#f9d2ae" class="draw"></rect><path d="M34 60v16" class="draw" stroke-width="2.5"></path>
+                <rect x="66" y="60" width="56" height="52" fill="#f9d2ae" class="draw"></rect><path d="M94 60v16" class="draw" stroke-width="2.5"></path>
+                <rect x="76" y="84" width="36" height="20" fill="#faf6ee" class="draw" stroke-width="2"></rect>
+                <path d="M81 88v12M85 88v12M88 88v12M93 88v12M96 88v12M101 88v12M106 88v12" stroke="#1f1f1f" stroke-width="1.6"></path>
               </svg>
               <figcaption>{T.s4.scale[1]}</figcaption>
             </figure>
+            <!-- One dashboard fed by every branch. -->
             <figure>
-              <svg viewBox="0 0 80 92" width="72"><rect x="4" y="4" width="72" height="84" fill="#d9ccf0" class="draw"></rect><path d="M16 26h48M16 46h48M16 66h48" class="draw" stroke-width="2"></path></svg>
+              <svg viewBox="0 0 170 150" width="136">
+                <rect x="28" y="4" width="114" height="74" rx="4" fill="#faf6ee" class="draw"></rect>
+                <path d="M28 18h114" class="draw" stroke-width="2"></path>
+                <rect x="42" y="50" width="12" height="18" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+                <rect x="60" y="38" width="12" height="30" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+                <rect x="78" y="44" width="12" height="24" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+                <rect x="96" y="28" width="12" height="40" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+                <path d="M114 58l8-10l8 4l6-12" class="draw" stroke-width="2"></path>
+                <path d="M85 78v14" class="draw"></path>
+                <path d="M26 118V104h59v-12M144 118V104H85" class="draw" stroke-width="2"></path>
+                <path d="M85 104v14" class="draw" stroke-width="2"></path>
+                <path d="M8 128l6-10h24l6 10z" fill="#f8c9b8" class="draw" stroke-width="2.5"></path><rect x="11" y="128" width="30" height="16" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+                <path d="M67 128l6-10h24l6 10z" fill="#f8c9b8" class="draw" stroke-width="2.5"></path><rect x="70" y="128" width="30" height="16" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+                <path d="M126 128l6-10h24l6 10z" fill="#f8c9b8" class="draw" stroke-width="2.5"></path><rect x="129" y="128" width="30" height="16" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              </svg>
               <figcaption>{T.s4.scale[2]}</figcaption>
             </figure>
           </div>
@@ -339,22 +377,58 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
         <!-- Networks & security -->
         <article id="networks" class="card svc bg-apricot">
           <div class="art art-network" aria-hidden="true">
+            <!-- Cameras: a wall-mounted bullet camera and a ceiling dome. -->
             <figure>
-              <div class="cams">
-                <svg viewBox="0 0 64 56" width="58"><path d="M4 16l48-12l6 24l-48 12z" fill="#d9ccf0" class="draw"></path><path d="M30 34v18H14" class="draw" stroke-width="2.5"></path></svg>
-                <svg viewBox="0 0 64 56" width="58"><path d="M4 16l48-12l6 24l-48 12z" fill="#d9ccf0" class="draw"></path><path d="M30 34v18H14" class="draw" stroke-width="2.5"></path></svg>
-              </div>
+              <svg viewBox="0 0 76 120" width="62">
+                <rect x="2" y="4" width="10" height="34" rx="2" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+                <path d="M12 30l12-8" class="draw"></path>
+                <rect x="20" y="8" width="44" height="22" rx="4" fill="#d9ccf0" class="draw" stroke-width="2.5"></rect>
+                <path d="M16 6h56v6" class="draw" stroke-width="2.5"></path>
+                <circle cx="64" cy="19" r="8" fill="#faf6ee" class="draw" stroke-width="2.5"></circle>
+                <circle cx="64" cy="19" r="3" fill="#1f1f1f"></circle>
+                <rect x="8" y="70" width="60" height="8" rx="2" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+                <path d="M16 78a22 22 0 0 0 44 0" fill="#c6ddf0" class="draw" stroke-width="2.5"></path>
+                <circle cx="38" cy="90" r="5" fill="#1f1f1f"></circle>
+              </svg>
               <figcaption>{T.s5.cams}</figcaption>
             </figure>
             <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
+            <!-- Recorder: a screen showing four camera feeds. -->
             <figure>
-              <svg viewBox="0 0 104 76" width="96"><path d="M24 30l-10-26M80 30l10-26" class="draw" stroke-width="2.5"></path><rect x="2" y="30" width="100" height="44" rx="6" fill="#faf6ee" class="draw"></rect><circle cx="26" cy="52" r="5" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="46" cy="52" r="5" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle></svg>
+              <svg viewBox="0 0 104 92" width="92">
+                <rect x="4" y="4" width="96" height="64" rx="4" fill="#faf6ee" class="draw"></rect>
+                <rect x="12" y="12" width="38" height="22" fill="#c6ddf0" class="draw" stroke-width="2"></rect>
+                <rect x="54" y="12" width="38" height="22" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+                <rect x="12" y="38" width="38" height="22" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+                <rect x="54" y="38" width="38" height="22" fill="#c6ddf0" class="draw" stroke-width="2"></rect>
+                <circle cx="18" cy="18" r="2.5" fill="#1f1f1f"></circle><circle cx="60" cy="18" r="2.5" fill="#1f1f1f"></circle><circle cx="18" cy="44" r="2.5" fill="#1f1f1f"></circle><circle cx="60" cy="44" r="2.5" fill="#1f1f1f"></circle>
+                <path d="M52 68v12M36 82h32" class="draw"></path>
+              </svg>
+              <figcaption>{T.s5.recorder}</figcaption>
+            </figure>
+            <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
+            <!-- Router with Wi-Fi waves. -->
+            <figure>
+              <svg viewBox="0 0 100 92" width="84">
+                <path d="M36 32a20 20 0 0 1 28 0M26 22a34 34 0 0 1 48 0" class="draw" stroke-width="2.5"></path>
+                <circle cx="50" cy="40" r="3.5" fill="#1f1f1f"></circle>
+                <path d="M22 58l-8-22M78 58l8-22" class="draw" stroke-width="2.5"></path>
+                <rect x="6" y="58" width="88" height="28" rx="6" fill="#faf6ee" class="draw"></rect>
+                <circle cx="24" cy="72" r="3.5" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="38" cy="72" r="3.5" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="52" cy="72" r="3.5" fill="#f7e7b0" stroke="#1f1f1f" stroke-width="2"></circle>
+              </svg>
               <figcaption>{T.s5.router}</figcaption>
             </figure>
             <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
+            <!-- Two separate networks: staff laptop, guest phone. -->
             <div class="nets">
-              <span class="bg-sky">{T.s5.staff}</span>
-              <span class="bg-mint">{T.s5.guests}</span>
+              <figure>
+                <svg viewBox="0 0 84 56" width="66"><rect x="14" y="4" width="56" height="36" rx="3" fill="#c6ddf0" class="draw" stroke-width="2.5"></rect><path d="M4 40h76l-6 12H10z" fill="#faf6ee" class="draw" stroke-width="2.5"></path></svg>
+                <figcaption>{T.s5.staff}</figcaption>
+              </figure>
+              <figure>
+                <svg viewBox="0 0 84 56" width="66"><rect x="28" y="4" width="28" height="48" rx="5" fill="#bfe6d6" class="draw" stroke-width="2.5"></rect><path d="M38 46h8" class="draw" stroke-width="2.5"></path><path d="M64 18a10 10 0 0 1 12 0M60 12a16 16 0 0 1 20 0" class="draw" stroke-width="2"></path></svg>
+                <figcaption>{T.s5.guests}</figcaption>
+              </figure>
             </div>
           </div>
           <h2>{T.s5.name}</h2>
@@ -544,13 +618,17 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
+  /* Each step is centered in its column; the arrow sits in the gap
+     between this badge and the next one. */
   .step {
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
+    text-align: center;
   }
-  .step-row { display: flex; align-items: center; width: 100%; margin-bottom: 6px; }
+  .step-row { display: flex; justify-content: center; width: 100%; margin-bottom: 6px; }
   .badge {
     width: 96px;
     height: 96px;
@@ -560,7 +638,13 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     align-items: center;
     justify-content: center;
   }
-  .step-arrow { flex-grow: 1; height: 24px; min-width: 24px; margin: 0 12px; }
+  .step-arrow {
+    position: absolute;
+    top: 36px;
+    inset-inline-start: calc(50% + 60px);
+    width: calc(100% - 120px);
+    height: 24px;
+  }
   .step-num { font-family: var(--k-font-mono); font-size: 14px; color: var(--k-ink-muted); }
   .step-title { font-size: 20px; color: var(--k-ink); }
   .step-desc { font-size: 15px; line-height: 22px; color: var(--k-ink-muted); max-width: 200px; }
@@ -714,20 +798,9 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     direction: ltr;
   }
 
-  .art-network { justify-content: space-between; align-items: center; min-height: 200px; }
-  .cams { display: flex; flex-direction: column; gap: 14px; }
-  .nets { display: flex; flex-direction: column; gap: 16px; }
-  .nets span {
-    width: 110px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid var(--k-ink);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--k-ink);
-  }
+  .art-network { justify-content: space-between; align-items: center; gap: 8px; min-height: 200px; }
+  .art-network .art-arrow { width: 34px; }
+  .nets { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
   .art-decide { justify-content: center; align-items: center; gap: 0; }
   .question {
@@ -870,7 +943,7 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .method { padding: 56px 0; }
     .sec-h2 { font-size: 32px; margin-bottom: 28px; }
     .steps { grid-template-columns: 1fr; row-gap: 24px; }
-    .step { display: grid; grid-template-columns: 72px 1fr; column-gap: 16px; row-gap: 2px; align-items: start; }
+    .step { display: grid; grid-template-columns: 72px 1fr; column-gap: 16px; row-gap: 2px; align-items: start; justify-items: start; text-align: start; }
     .step-row { grid-row: 1 / span 3; margin: 0; }
     .step .badge { width: 72px; height: 72px; }
     .step-arrow { display: none; }
@@ -886,9 +959,9 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .art-arrow { width: 32px; }
     .art-jailbreak svg:first-child { width: 110px; }
     .files li { width: 110px; height: 36px; font-size: 15px; }
-    .nets span { width: 80px; height: 44px; font-size: 13px; }
-    .cams svg { width: 44px; }
-    .art-network > figure > svg { width: 72px; }
+    .art-network { gap: 4px; }
+    .art-network .art-arrow { width: 22px; }
+    .art-network figcaption { font-size: 11px; }
     .branches { width: 84px; }
     .choices li { width: 108px; }
     .receive { padding: 24px; }
