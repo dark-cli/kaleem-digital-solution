@@ -60,16 +60,6 @@ const T = isAr ? {
   hostSys: ["سحابة مجانية", "خادم مخصّص", "داخل مقرّك"],
   receiveHead: "مهما بنينا، ستستلم",
   receive: ["كل الحسابات وكلمات المرور", "الكود في حسابك", "النطاق باسمك", "توثيق كامل", "تدريب لفريقك"],
-  termsHead: "واضح من البداية",
-  terms: [
-    { t: "أمر عمل", d: "النطاق، والسعر أو سقف الساعات، والمدة — مكتوبة" },
-    { t: "دفعة مقدّمة", d: "والباقي عند التسليم" },
-    { t: "التسليم", d: "كل المفاتيح بين يديك" },
-    { t: "إصلاحات مجانية", d: "وتعديلات صغيرة" },
-    { t: "استشارات مجانية", d: "تشمل جلسة تدريب" },
-  ],
-  days: "يوماً",
-  termsNote: "بالساعة أو بسعر ثابت، مع اشتراك شهري اختياري. الاستضافة والنطاقات والأجهزة تدفعها للمزوّد مباشرة — دون أي زيادة منّا.",
   ctaHead: "لست متأكداً أي خدمة تحتاج؟ ابدأ بتقييم مجاني.",
   ctaLabel: "احجز تقييماً مجانياً",
 } : {
@@ -112,16 +102,6 @@ const T = isAr ? {
   hostSys: ["Free cloud", "Dedicated server", "On your premises"],
   receiveHead: "Whatever we build, you receive",
   receive: ["Every account & password", "The code, in your account", "Domain in your name", "Full documentation", "Training for your team"],
-  termsHead: "Clear from the start",
-  terms: [
-    { t: "Work order", d: "Scope, price or hour cap, and timeline — in writing" },
-    { t: "Up front", d: "The rest on delivery" },
-    { t: "Handover", d: "Every key in your hands" },
-    { t: "Free fixes", d: "And small edits" },
-    { t: "Free advice", d: "Including a training session" },
-  ],
-  days: "days",
-  termsNote: "By the hour or fixed price, with an optional monthly plan. Hosting, domains and hardware are paid to the provider directly — never marked up.",
   ctaHead: "Not sure which one you need? Start with a free audit.",
   ctaLabel: "Book a free audit",
 };
@@ -164,13 +144,6 @@ const STEP_STYLE = [
 
 const RECEIVE_ICONS = [ICON.key, ICON.code, ICON.globe, ICON.doc, ICON.team];
 
-const TERM_BADGES = [
-  { icon: ICON.doc, bg: "bg-paper" },
-  { text: "30–50%", bg: "bg-butter" },
-  { icon: ICON.key, bg: "bg-mint" },
-  { num: "14", bg: "bg-sky" },
-  { num: "60", bg: "bg-lilac" },
-];
 
 // Solid hand-drawn arrow: a slightly wavy shaft and an open head.
 const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>`;
@@ -446,7 +419,7 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
           <ul class="chips">{T.s6.tags.map((t) => <li>{t}</li>)}</ul>
         </div>
         <div class="art art-decide" aria-hidden="true">
-          <span class="question">?</span>
+          <div class="question" data-sky role="img" aria-label="?"></div>
           <svg class="branches flip-rtl" viewBox="0 0 120 200" preserveAspectRatio="none">
             <path d="M0 100c50 0 60-76 112-80M0 100c50 0 60-24 112-28M0 100c50 0 60 24 112 28M0 100c50 0 60 76 112 80" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round"></path>
             <path d="M104 13l10 7l-10 7M104 65l10 7l-10 7M104 121l10 7l-10 7M104 173l10 7l-10 7" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -475,29 +448,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     </div>
   </section>
 
-  <!-- ─── TERMS as a timeline ─── -->
-  <section class="terms bg-paper-2">
-    <div class="container">
-      <h2 class="sec-h2">{T.termsHead}</h2>
-      <ol class="timeline">
-        {T.terms.map((t, i) => {
-          const b = TERM_BADGES[i];
-          return (
-            <li>
-              <span class={`badge card ${b.bg}`}>
-                {b.icon && <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true" set:html={b.icon}></svg>}
-                {b.text && <bdi class="mono big">{b.text}</bdi>}
-                {b.num && <><span class="mono num">{b.num}</span><span class="unit">{T.days}</span></>}
-              </span>
-              <strong>{t.t}</strong>
-              <span>{t.d}</span>
-            </li>
-          );
-        })}
-      </ol>
-      <p class="terms-note">{T.termsNote}</p>
-    </div>
-  </section>
 
   <!-- ─── CTA ─── -->
   <section class="cta bg-mint">
@@ -822,19 +772,17 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
 
   .art-decide { justify-content: center; align-items: center; gap: 0; }
   .question {
-    width: 84px;
-    height: 84px;
+    width: 160px;
+    height: 160px;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid var(--k-ink);
-    border-radius: 50%;
-    background: var(--k-paper);
-    font-family: var(--k-font-serif);
-    font-size: 40px;
-    font-weight: 700;
-    color: var(--k-ink);
+    margin-inline: auto;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160' preserveAspectRatio='xMidYMid meet'%3E%3Ctext x='80' y='80' font-family='Georgia, serif' font-size='140' font-weight='700' text-anchor='middle' dominant-baseline='central' fill='black'%3E?%3C/text%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160' preserveAspectRatio='xMidYMid meet'%3E%3Ctext x='80' y='80' font-family='Georgia, serif' font-size='140' font-weight='700' text-anchor='middle' dominant-baseline='central' fill='black'%3E?%3C/text%3E%3C/svg%3E");
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    background-color: transparent !important;
   }
   .branches { width: 110px; height: 200px; flex-shrink: 0; }
   .choices {
@@ -885,43 +833,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
   }
   .receive .ico { flex-shrink: 0; }
 
-  /* ─── Terms timeline ─── */
-  .terms {
-    padding: 80px 0;
-    border-top: 2px solid var(--k-ink);
-    border-bottom: 2px solid var(--k-ink);
-  }
-  .timeline {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 24px;
-  }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    top: 44px;
-    inset-inline: 10%;
-    border-top: 3px solid var(--k-ink);
-  }
-  .timeline li {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    text-align: center;
-  }
-  .timeline .badge { width: 88px; height: 88px; margin-bottom: 4px; }
-  .timeline strong { font-size: 19px; color: var(--k-ink); }
-  .timeline li > span:last-child { font-size: 15px; line-height: 22px; color: var(--k-ink-muted); max-width: 200px; }
-  .big { font-size: 16px; font-weight: 600; }
-  .num { font-size: 28px; line-height: 30px; font-weight: 600; }
-  .unit { font-size: 12px; font-weight: 600; }
-  .terms-note { margin: 44px 0 0; font-size: 16px; line-height: 26px; color: var(--k-ink-muted); max-width: 900px; }
 
   /* ─── CTA ─── */
   .cta { padding: 88px 0; }
@@ -946,8 +857,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .svc-grid { grid-template-columns: minmax(0, 1fr); }
     .svc-wide { grid-template-columns: minmax(0, 1fr); gap: 32px; }
     .receive ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .timeline { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 40px; }
-    .timeline::before { display: none; }
     .cta-key { display: none; }
   }
 
@@ -982,13 +891,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .choices li { width: 108px; }
     .receive { padding: 24px; }
     .receive ul { grid-template-columns: 1fr; gap: 14px; }
-    .terms { padding: 56px 0; }
-    .timeline { grid-template-columns: 1fr; gap: 20px; }
-    .timeline li { display: grid; grid-template-columns: 72px 1fr; column-gap: 16px; text-align: start; align-items: center; }
-    .timeline .badge { width: 72px; height: 72px; grid-row: 1 / span 2; margin: 0; }
-    .timeline li > span:last-child { max-width: none; }
-    .num { font-size: 24px; line-height: 26px; }
-    .big { font-size: 14px; }
     .cta { padding: 56px 0; }
     .cta h2 { font-size: 34px; }
   }
