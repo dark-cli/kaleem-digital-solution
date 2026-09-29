@@ -1,6 +1,10 @@
 ---
 // Copyright (c) 2026 Kaleem Digital Solutions — https://kaleem.dev
-// WebGL starfield renderer + hidden controls panel.
+// WebGL starfield renderer + tuning panel.
+//
+// The panel (sliders for speed, dot size, twinkle…) is for tuning the sky
+// while developing: it renders only under `astro dev` and never ships in
+// the built site. Settle on values there, then copy them into P below.
 //
 // Architecture: the sky is a MATERIAL, not a page background.
 // - Any element with data-sky="" gets its own dedicated canvas.
@@ -22,7 +26,8 @@
 ---
 
 <div id="starfield-persist" transition:persist="starfield">
-  <div class="star-controls" id="star-controls" data-collapsed="false">
+  {import.meta.env.DEV && (
+  <div class="star-controls" id="star-controls" data-collapsed="true">
     <button class="star-controls-toggle" id="star-controls-toggle" aria-label="Toggle starfield controls">
       <span class="star-controls-icon">✦</span>
     </button>
@@ -76,6 +81,7 @@
       </label>
     </div>
   </div>
+  )}
 </div>
 
 <script is:inline>
@@ -289,6 +295,7 @@
     // ── Controls wiring ──
     const root = document.documentElement;
     const panel = document.getElementById('star-controls');
+    if (panel) {
     const $ = function (id) { return document.getElementById(id); };
     const speed = $('star-speed'), dot = $('star-dot'), tile = $('star-tile');
     const color = $('star-color'), twinkle = $('star-twinkle');
@@ -338,6 +345,8 @@
       const collapsed = panel.getAttribute('data-collapsed') === 'true';
       panel.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
     });
+    readParams();
+    }
 
     // ── Render loop ──
     let raf = 0, startT = 0;
@@ -411,7 +420,6 @@
     document.addEventListener('astro:page-load', scanForSkies);
 
     // Boot
-    readParams();
     scanForSkies();
     startRAF();
 
@@ -431,8 +439,8 @@
     inset-block-end: 24px;
     inset-inline-start: 24px;
     z-index: 1100;
-    /* Hidden by default. Flip to `display: flex` to expose the tuner. */
-    display: none;
+    /* Dev only (see the note at the top); starts collapsed to the ✦ button. */
+    display: flex;
     align-items: flex-end;
     gap: 12px;
     font-family: var(--k-font-en, system-ui);

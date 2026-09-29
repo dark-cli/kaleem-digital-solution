@@ -26,7 +26,7 @@ const T = isAr ? {
 
   results:     "النتائج",
   r1Title:     "الأداء",
-  r1:          "97/100 في PageSpeed — أسرع بعشر مرات من الموقع القديم",
+  r1:          "تفتح الصفحات في أقل من ثانية بدلاً من 3 إلى 10 ثوانٍ. الموقع مخزَّن مؤقتاً على Cloudflare قرب كل زائر، فيبقى سريعاً حتى مع الإنترنت البطيء.",
   r2Title:     "البيانات",
   r2:          "600 مقالة مع تعليقاتها، منظّفة وموثّقة بالكامل",
   r3Title:     "الملكية",
@@ -67,9 +67,9 @@ const T = isAr ? {
   p2:          "نصوص غير منظّمة وصعبة القراءة",
   p3:          "صور عشوائية مولّدة بالذكاء الاصطناعي وعناصر CSS معطّلة",
   p4:          "عناصر غير متناسقة وتخطيط رديء",
-  p5:          "بطء شديد وانقطاعات متكررة",
-  p6:          "روابط معطّلة وقوائم لا تستجيب",
-  p7:          "لا يعمل على الهواتف إطلاقاً",
+  p5:          "كل صفحة تستغرق 3 إلى 10 ثوانٍ وتُعاد بالكامل، حتى عند الرجوع للخلف",
+  p6:          "روابط معطّلة، وأزرار كثيرة لا تستجيب",
+  p7:          "القائمة معطّلة على الهاتف",
   p8:          "المقالات مجرد كتل نصية بلا أي تنسيق",
 
   beforeAfterHead: "التصميم الجديد",
@@ -91,7 +91,7 @@ const T = isAr ? {
   f7:          "بحث مدعوم بالذكاء الاصطناعي (نماذج لغوية كبيرة)",
   f8:          "جاهز للربط مع أي تطبيق ذكاء اصطناعي",
   f9:          "وضعان فاتح وداكن",
-  f10:         "سرعة فائقة وتوفّر بنسبة 99.9%",
+  f10:         "ينتقل بين الصفحات دون إعادة تحميل، والرجوع للخلف فوري",
 
   pageComparisonsHead: "كل صفحة تغيّرت",
   homepageLabel: "الصفحة الرئيسية",
@@ -99,6 +99,9 @@ const T = isAr ? {
   libraryLabel:  "المكتبة",
   compareHead:   "قبل وبعد",
   oldLabel:      "قبل",
+  proofNote:     "PageSpeed على الهاتف: ‎74 ← 97",
+  oldReport:     "تقرير الموقع القديم",
+  newReport:     "تقرير الموقع الجديد",
   newLabel:      "بعد",
 
 
@@ -118,7 +121,7 @@ const T = isAr ? {
 
   results:     "The results",
   r1Title:     "Performance",
-  r1:          "97/100 on PageSpeed — 10× faster than the legacy site",
+  r1:          "Pages open in under a second instead of 3 to 10. The site is cached on Cloudflare close to every visitor, so it stays fast even on slow connections.",
   r2Title:     "Data",
   r2:          "600 articles and their comments, fully cleaned and documented",
   r3Title:     "Ownership",
@@ -159,9 +162,9 @@ const T = isAr ? {
   p2:          "Unreadable and disorganized text",
   p3:          "Random AI-generated images and broken CSS",
   p4:          "Misaligned elements and a poor layout",
-  p5:          "Painfully slow with frequent downtime",
-  p6:          "Broken links and unresponsive menus",
-  p7:          "No mobile support whatsoever",
+  p5:          "Every page took 3 to 10 seconds and reloaded in full, even going back",
+  p6:          "Broken links, and many buttons didn't respond",
+  p7:          "The menu was broken on phones",
   p8:          "Articles were just walls of text with no visual structure",
 
   beforeAfterHead: "The new design",
@@ -183,7 +186,7 @@ const T = isAr ? {
   f7:          "AI-powered search (LLM integration)",
   f8:          "Ready to connect to any AI application",
   f9:          "Light and dark themes",
-  f10:         "Lightning-fast with 99.9% uptime",
+  f10:         "Moves between pages without reloading; going back is instant",
 
   pageComparisonsHead: "Every page transformed",
   homepageLabel: "Homepage",
@@ -191,11 +194,14 @@ const T = isAr ? {
   libraryLabel:  "Library",
   compareHead:   "Before and after",
   oldLabel:      "Before",
+  proofNote:     "Mobile PageSpeed: 74 → 97",
+  oldReport:     "Old site's report",
+  newReport:     "New site's report",
   newLabel:      "After",
 
 };
 // Slides for the rotating design window, each with a note for the aside.
-const SITE = "https://alimran.clinic/en";
+const SITE = `https://alimran.clinic/${locale}`;
 const SLIDES = (isAr ? [
   { label: "الصفحة الرئيسية", note: "الرسالة والطبيب الاستشاري وأربعة أرقام تبني الثقة، كلها في أول الصفحة." },
   { label: "الوضع الفاتح", note: "كل صفحة بوضعين فاتح وداكن، والموقع يتذكّر اختيار الزائر." },
@@ -238,7 +244,10 @@ const SLIDES = (isAr ? [
 const PROBLEMS = [T.p1, T.p2, T.p3, T.p4, T.p5, T.p6, T.p7, T.p8];
 const FEATURES = [T.f1, T.f2, T.f3, T.f4, T.f5, T.f6, T.f7, T.f8, T.f9, T.f10];
 const RESULTS = [
-  { t: T.r1Title, v: T.r1 }, { t: T.r2Title, v: T.r2 }, { t: T.r3Title, v: T.r3 },
+  { t: T.r1Title, v: T.r1, proofNote: T.proofNote, proof: [
+    { label: T.oldReport, href: "https://pagespeed.web.dev/analysis/https-alimranmed-com/r6lyy9qjqs?form_factor=mobile" },
+    { label: T.newReport, href: "https://pagespeed.web.dev/analysis/https-alimran-clinic/5mz18s71ut?form_factor=mobile" },
+  ] }, { t: T.r2Title, v: T.r2 }, { t: T.r3Title, v: T.r3 },
   { t: T.r4Title, v: T.r4 }, { t: T.r5Title, v: T.r5 }, { t: T.r6Title, v: T.r6 },
 ];
 // Step titles carry their own "1." numbering in the copy; the list numbers them.
@@ -330,6 +339,12 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <div>
             <dt>{r.t}</dt>
             <dd>{r.v}</dd>
+            {r.proof && (
+              <p class="r-proof">
+                <span>{r.proofNote}</span>
+                {r.proof.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+              </p>
+            )}
           </div>
         ))}
       </dl>
@@ -351,6 +366,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   </section>
 
   <!-- ─── PAGE-BY-PAGE COMPARISONS ───────────────────────── -->
+  <!-- "Before" windows link to the old site itself, not the Wayback Machine
+       (blocked in Iraq). If the old site goes down, cache those pages and
+       host them ourselves — see docs/notes.md. -->
   <section class="page-comparisons-section bg-paper-2">
     <div class="container">
       <h2 class="section-heading">{T.pageComparisonsHead}</h2>
@@ -360,13 +378,13 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.homepageLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
+              <a href="https://alimranmed.com/" target="_blank" rel="noopener" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/old-homepage.png" alt={isAr ? "الصفحة الرئيسية القديمة" : "Old homepage"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/" target="_blank" class="comparison-link window-link">
+              <a href={`https://alimran.clinic/${locale}/`} target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/new-homepage.png" alt={isAr ? "الصفحة الرئيسية الجديدة" : "New homepage"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -379,13 +397,13 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.articlesLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
-                <WindowWidget src="/assets/illustrations/old-articles-1.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
+              <a href="https://alimranmed.com/brain-tumor/" target="_blank" rel="noopener" class="comparison-link window-link">
+                <WindowWidget src="/assets/illustrations/old-article-brain-tumor.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="comparison-link window-link">
+              <a href={`https://alimran.clinic/${locale}/treatments/brain-tumor/`} target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/new-articles-1.png" alt={isAr ? "صفحة مقالة جديدة" : "New article page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -398,13 +416,13 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.libraryLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
-                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة المكتبة القديمة" : "Old library page"} />
+              <a href="https://alimranmed.com/rtms/" target="_blank" rel="noopener" class="comparison-link window-link">
+                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة قديمة عن TMS" : "Old TMS page"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/library/" target="_blank" class="comparison-link window-link">
+              <a href={`https://alimran.clinic/${locale}/library/`} target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/library-feature.png" alt={isAr ? "صفحة المكتبة الجديدة" : "New library page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -850,6 +868,15 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     margin-bottom: 8px;
   }
   .results-table dd { margin: 0; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--k-ink); }
+  .r-proof { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+  .r-proof a {
+    color: var(--k-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+  .r-proof a::after { content: " ↗"; }
+  .r-proof a:hover { text-decoration-color: var(--k-sky); }
 
   /* Process: numbered list down a line, then the tech tags */
   .process-section {
