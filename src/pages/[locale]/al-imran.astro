@@ -249,19 +249,19 @@ const T = isAr ? {
       <h2 class="section-heading">{T.beforeAfterHead}</h2>
       <p class="showcase-description">{T.designShowcaseDesc}</p>
       <div class="showcase-grid">
-        <a href="https://alimran.clinic/en/" target="_blank" class="showcase-item">
+        <a href="https://alimran.clinic/en/" target="_blank" class="showcase-item window-link">
           <WindowWidget src="/assets/illustrations/new-home-dark.png" alt={isAr ? "الصفحة الرئيسية" : "Homepage"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.homeLabel}</p>
         </a>
-        <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="showcase-item">
+        <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="showcase-item window-link">
           <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt={isAr ? "صفحة مقالة" : "Article page"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.articleLabel}</p>
         </a>
-        <a href="https://alimran.clinic/en/treatments/cancer-pain/#s-2" target="_blank" class="showcase-item">
+        <a href="https://alimran.clinic/en/treatments/cancer-pain/#s-2" target="_blank" class="showcase-item window-link">
           <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt={isAr ? "تفاصيل مقالة" : "Article details"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.articleLabel}</p>
         </a>
-        <a href="https://alimran.clinic/en/library/" target="_blank" class="showcase-item">
+        <a href="https://alimran.clinic/en/library/" target="_blank" class="showcase-item window-link">
           <WindowWidget src="/assets/illustrations/new-library-dark.png" alt={isAr ? "المكتبة" : "Library"} chromeColor="sky-shader" />
           <p class="showcase-label">{T.libraryLabel}</p>
         </a>
@@ -344,13 +344,13 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.homepageLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
+              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/old-homepage.png" alt={isAr ? "الصفحة الرئيسية القديمة" : "Old homepage"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/" target="_blank" class="comparison-link">
+              <a href="https://alimran.clinic/en/" target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/new-homepage.png" alt={isAr ? "الصفحة الرئيسية الجديدة" : "New homepage"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -363,13 +363,13 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.articlesLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
+              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/old-articles-1.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="comparison-link">
+              <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/new-articles-1.png" alt={isAr ? "صفحة مقالة جديدة" : "New article page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -382,13 +382,13 @@ const T = isAr ? {
           <h3 class="comparison-label">{T.libraryLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link">
+              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة المكتبة القديمة" : "Old library page"} />
               </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/library/" target="_blank" class="comparison-link">
+              <a href="https://alimran.clinic/en/library/" target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/library-feature.png" alt={isAr ? "صفحة المكتبة الجديدة" : "New library page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -712,22 +712,12 @@ const T = isAr ? {
     flex-direction: column;
     gap: var(--k-space-4);
     cursor: pointer;
-    transition: transform 150ms ease;
-  }
-
-  .showcase-item:hover {
-    transform: translateY(-4px);
   }
 
   .comparison-link {
     text-decoration: none;
     display: block;
     cursor: pointer;
-    transition: transform 150ms ease;
-  }
-
-  .comparison-link:hover {
-    transform: translateY(-4px);
   }
 
   .comparison-label-small {
