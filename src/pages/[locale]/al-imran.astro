@@ -540,15 +540,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
       root.addEventListener("mouseleave", function () { paused = false; });
       root.addEventListener("focusin", function () { paused = true; });
       root.addEventListener("focusout", function () { paused = false; });
-      // The floating call button sits in the corner the overlay's
-      // "next" button uses on phones; hide it while the overlay is visible.
-      if ("IntersectionObserver" in window) {
-        var io = new IntersectionObserver(function (entries) {
-          document.body.classList.toggle("rot-overlay-visible", entries[0].isIntersecting);
-        });
-        io.observe(root.querySelector(".rot-overlay"));
-        document.addEventListener("astro:before-swap", function () { io.disconnect(); document.body.classList.remove("rot-overlay-visible"); }, { once: true });
-      }
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       timer = setInterval(function () { if (!paused) show(i + 1); }, 5000);
     }
@@ -702,7 +693,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   }
   .rot-nav:hover, .rot-nav:focus-visible { background: rgba(236, 238, 230, 0.15); }
   :global(html[dir="rtl"]) .flip-rtl svg { transform: scaleX(-1); }
-  :global(body.rot-overlay-visible .call-fab) { opacity: 0 !important; pointer-events: none !important; }
 
   .rot-window { padding: 0; }
   .rot-stage {

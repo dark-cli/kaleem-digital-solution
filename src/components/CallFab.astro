@@ -1,6 +1,7 @@
 ---
 /**
- * Site-wide floating call button — mobile only. Uses the Kaleem sketch
+ * Site-wide floating call button — mobile only, shown as the footer
+ * arrives. Uses the Kaleem sketch
  * aesthetic (ink outline + offset "second pen line" shadow) instead of
  * the drop-shadow circle from the old template.
  */
@@ -22,11 +23,14 @@ const aria = locale === "ar"
 
 <script is:inline>
   (function () {
+    // Show the button only as the footer comes into view (it is the
+    // footer's call button on phones), not while reading the page.
     function tick() {
       var el = document.querySelector(".call-fab");
-      if (!el) return;
-      if (window.scrollY > 400) el.classList.add("is-visible");
-      else el.classList.remove("is-visible");
+      var footer = document.querySelector("footer");
+      if (!el || !footer) return;
+      var near = footer.getBoundingClientRect().top < window.innerHeight + 120;
+      el.classList.toggle("is-visible", near);
     }
     if (!window.__callFabBound) {
       window.__callFabBound = true;
