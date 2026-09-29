@@ -26,7 +26,7 @@ const T = isAr ? {
 
   results:     "النتائج",
   r1Title:     "الأداء",
-  r1:          "97/100 في PageSpeed على الهاتف بعد أن كان 74 — يظهر المحتوى الرئيسي خلال 2.1 ثانية بدلاً من 4.9",
+  r1:          "تفتح الصفحات في أقل من ثانية بدلاً من 3 إلى 10 ثوانٍ. الموقع مخزَّن مؤقتاً على Cloudflare قرب كل زائر، فيبقى سريعاً حتى مع الإنترنت البطيء.",
   r2Title:     "البيانات",
   r2:          "600 مقالة مع تعليقاتها، منظّفة وموثّقة بالكامل",
   r3Title:     "الملكية",
@@ -67,9 +67,9 @@ const T = isAr ? {
   p2:          "نصوص غير منظّمة وصعبة القراءة",
   p3:          "صور عشوائية مولّدة بالذكاء الاصطناعي وعناصر CSS معطّلة",
   p4:          "عناصر غير متناسقة وتخطيط رديء",
-  p5:          "بطء شديد وانقطاعات متكررة",
-  p6:          "روابط معطّلة وقوائم لا تستجيب",
-  p7:          "لا يعمل على الهواتف إطلاقاً",
+  p5:          "كل صفحة تستغرق 3 إلى 10 ثوانٍ وتُعاد بالكامل، حتى عند الرجوع للخلف",
+  p6:          "روابط معطّلة، وأزرار كثيرة لا تستجيب",
+  p7:          "القائمة معطّلة على الهاتف",
   p8:          "المقالات مجرد كتل نصية بلا أي تنسيق",
 
   beforeAfterHead: "التصميم الجديد",
@@ -91,7 +91,7 @@ const T = isAr ? {
   f7:          "بحث مدعوم بالذكاء الاصطناعي (نماذج لغوية كبيرة)",
   f8:          "جاهز للربط مع أي تطبيق ذكاء اصطناعي",
   f9:          "وضعان فاتح وداكن",
-  f10:         "سريع، ويُحمَّل من خوادم قريبة من كل زائر",
+  f10:         "ينتقل بين الصفحات دون إعادة تحميل، والرجوع للخلف فوري",
 
   pageComparisonsHead: "كل صفحة تغيّرت",
   homepageLabel: "الصفحة الرئيسية",
@@ -99,6 +99,7 @@ const T = isAr ? {
   libraryLabel:  "المكتبة",
   compareHead:   "قبل وبعد",
   oldLabel:      "قبل",
+  proofNote:     "PageSpeed على الهاتف: ‎74 ← 97",
   oldReport:     "تقرير الموقع القديم",
   newReport:     "تقرير الموقع الجديد",
   newLabel:      "بعد",
@@ -120,7 +121,7 @@ const T = isAr ? {
 
   results:     "The results",
   r1Title:     "Performance",
-  r1:          "Mobile PageSpeed 97/100, up from 74 — the main content shows in 2.1 s instead of 4.9 s",
+  r1:          "Pages open in under a second instead of 3 to 10. The site is cached on Cloudflare close to every visitor, so it stays fast even on slow connections.",
   r2Title:     "Data",
   r2:          "600 articles and their comments, fully cleaned and documented",
   r3Title:     "Ownership",
@@ -161,9 +162,9 @@ const T = isAr ? {
   p2:          "Unreadable and disorganized text",
   p3:          "Random AI-generated images and broken CSS",
   p4:          "Misaligned elements and a poor layout",
-  p5:          "Painfully slow with frequent downtime",
-  p6:          "Broken links and unresponsive menus",
-  p7:          "No mobile support whatsoever",
+  p5:          "Every page took 3 to 10 seconds and reloaded in full, even going back",
+  p6:          "Broken links, and many buttons didn't respond",
+  p7:          "The menu was broken on phones",
   p8:          "Articles were just walls of text with no visual structure",
 
   beforeAfterHead: "The new design",
@@ -185,7 +186,7 @@ const T = isAr ? {
   f7:          "AI-powered search (LLM integration)",
   f8:          "Ready to connect to any AI application",
   f9:          "Light and dark themes",
-  f10:         "Fast, served from servers close to every visitor",
+  f10:         "Moves between pages without reloading; going back is instant",
 
   pageComparisonsHead: "Every page transformed",
   homepageLabel: "Homepage",
@@ -193,6 +194,7 @@ const T = isAr ? {
   libraryLabel:  "Library",
   compareHead:   "Before and after",
   oldLabel:      "Before",
+  proofNote:     "Mobile PageSpeed: 74 → 97",
   oldReport:     "Old site's report",
   newReport:     "New site's report",
   newLabel:      "After",
@@ -242,7 +244,7 @@ const SLIDES = (isAr ? [
 const PROBLEMS = [T.p1, T.p2, T.p3, T.p4, T.p5, T.p6, T.p7, T.p8];
 const FEATURES = [T.f1, T.f2, T.f3, T.f4, T.f5, T.f6, T.f7, T.f8, T.f9, T.f10];
 const RESULTS = [
-  { t: T.r1Title, v: T.r1, proof: [
+  { t: T.r1Title, v: T.r1, proofNote: T.proofNote, proof: [
     { label: T.oldReport, href: "https://pagespeed.web.dev/analysis/https-alimranmed-com/r6lyy9qjqs?form_factor=mobile" },
     { label: T.newReport, href: "https://pagespeed.web.dev/analysis/https-alimran-clinic/5mz18s71ut?form_factor=mobile" },
   ] }, { t: T.r2Title, v: T.r2 }, { t: T.r3Title, v: T.r3 },
@@ -339,6 +341,7 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
             <dd>{r.v}</dd>
             {r.proof && (
               <p class="r-proof">
+                <span>{r.proofNote}</span>
                 {r.proof.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
               </p>
             )}

@@ -31,6 +31,17 @@ The results table quotes Google PageSpeed Insights, mobile:
 | Best Practices           | 92                   | 100                  |
 | SEO                      | 92                   | 100                  |
 
+What the page says, and where each part comes from:
+
+- "Pages open in under a second instead of 3 to 10": observed by us in
+  real use. The new site is cached on Cloudflare and swaps pages without
+  a full reload (after the first page, the next one downloads ~20 KB).
+  The old site reloaded every page in full, including going back.
+- "Mobile PageSpeed: 74 → 97": the reports below. They are the supporting
+  proof, not the headline: PageSpeed emulates a slow phone and doesn't
+  capture the full-page reloads, so it undersells the difference.
+- Don't claim "10×" or uptime percentages: nothing measured backs them.
+
 Reports (linked from the page):
 
 - Old: https://pagespeed.web.dev/analysis/https-alimranmed-com/r6lyy9qjqs?form_factor=mobile
