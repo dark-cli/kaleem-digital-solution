@@ -26,7 +26,7 @@ const T = isAr ? {
 
   results:     "النتائج",
   r1Title:     "الأداء",
-  r1:          "97/100 في PageSpeed — أسرع بعشر مرات من الموقع القديم",
+  r1:          "97/100 في اختبار PageSpeed من Google",
   r2Title:     "البيانات",
   r2:          "600 مقالة مع تعليقاتها، منظّفة وموثّقة بالكامل",
   r3Title:     "الملكية",
@@ -91,15 +91,15 @@ const T = isAr ? {
   f7:          "بحث مدعوم بالذكاء الاصطناعي (نماذج لغوية كبيرة)",
   f8:          "جاهز للربط مع أي تطبيق ذكاء اصطناعي",
   f9:          "وضعان فاتح وداكن",
-  f10:         "سرعة فائقة وتوفّر بنسبة 99.9%",
+  f10:         "سريع، ويُحمَّل من خوادم قريبة من كل زائر",
 
   pageComparisonsHead: "كل صفحة تغيّرت",
   homepageLabel: "الصفحة الرئيسية",
   articlesLabel: "صفحات المقالات",
   libraryLabel:  "المكتبة",
   compareHead:   "قبل وبعد",
-  oldLabel:      "قبل",
-  newLabel:      "بعد",
+  oldLabel:      "قبل (الموقع القديم لم يعد متاحاً)",
+  newLabel:      "بعد (افتح الموقع المباشر)",
 
 
 } : {
@@ -118,7 +118,7 @@ const T = isAr ? {
 
   results:     "The results",
   r1Title:     "Performance",
-  r1:          "97/100 on PageSpeed — 10× faster than the legacy site",
+  r1:          "97/100 on Google PageSpeed",
   r2Title:     "Data",
   r2:          "600 articles and their comments, fully cleaned and documented",
   r3Title:     "Ownership",
@@ -183,15 +183,15 @@ const T = isAr ? {
   f7:          "AI-powered search (LLM integration)",
   f8:          "Ready to connect to any AI application",
   f9:          "Light and dark themes",
-  f10:         "Lightning-fast with 99.9% uptime",
+  f10:         "Fast, served from servers close to every visitor",
 
   pageComparisonsHead: "Every page transformed",
   homepageLabel: "Homepage",
   articlesLabel: "Article pages",
   libraryLabel:  "Library",
   compareHead:   "Before and after",
-  oldLabel:      "Before",
-  newLabel:      "After",
+  oldLabel:      "Before (the old site is offline)",
+  newLabel:      "After (open the live site)",
 
 };
 // Slides for the rotating design window, each with a note for the aside.
@@ -360,9 +360,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.homepageLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
+              <div class="comparison-link">
                 <WindowWidget src="/assets/illustrations/old-homepage.png" alt={isAr ? "الصفحة الرئيسية القديمة" : "Old homepage"} />
-              </a>
+              </div>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
@@ -379,9 +379,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.articlesLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
+              <div class="comparison-link">
                 <WindowWidget src="/assets/illustrations/old-articles-1.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
-              </a>
+              </div>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
@@ -398,9 +398,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.libraryLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <a href="https://web.archive.org/web/20240101000000*/alimranmed.com" target="_blank" class="comparison-link window-link">
+              <div class="comparison-link">
                 <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة المكتبة القديمة" : "Old library page"} />
-              </a>
+              </div>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
