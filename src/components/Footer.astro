@@ -1,16 +1,20 @@
 ---
 /**
  * Footer — Kaleem Digital Solutions (2026).
- * Chalkboard background with chalk text.
- * Four-column grid: Company, Services, Work, Contact
- * Plus copyright row.
+ * Chalkboard background with chalk text, painted by the sky shader.
  *
- * Phones: the footer is exactly one screen tall minus the sticky header,
- * so at the end of the page header + footer meet as one full-screen sky.
- * The brand block is hidden there (the header shows it) and the contact
- * column leads: headline, "Book a free audit", then WhatsApp, email,
- * hours and offices. The floating call button (CallFab) appears as the
- * footer arrives, so the footer carries no second call button.
+ * The footer is the call to action for every page (pages no longer end
+ * with their own "book an audit" section):
+ *   1. Contact block: headline, then one row of clearly clickable buttons
+ *      (Book a free audit / WhatsApp / Email), then hours and offices as
+ *      plain label–value pairs.
+ *   2. Links row: brand (desktop) + page links, underlined as links.
+ *   3. Copyright + language.
+ *
+ * Phones: the footer is one screen tall minus the sticky header, so at the
+ * end of the page header + footer meet as one full-screen sky. The floating
+ * call button (CallFab) appears as the footer arrives, so the footer
+ * carries no call button of its own.
  */
 import { currentLocale, localizedHref, alternateHref } from "../lib/i18n";
 import { CONTACT } from "../consts";
@@ -26,256 +30,228 @@ const altLabel = otherLocale === "ar" ? "عربي" : "English";
 
 const isAr = locale === "ar";
 
-const lCompany = isAr ? "الشركة" : "Company";
-const lServices = isAr ? "الخدمات" : "Services";
-const lWork = isAr ? "الأعمال" : "Work";
-const lContact = isAr ? "تواصل معنا" : "Contact";
-const lSocial = isAr ? "تابعنا" : "Follow";
+const T = isAr ? {
+  contact: "تواصل معنا",
+  headline: "حدّثنا عن النظام الذي يقيّدك.",
+  audit: "احجز تقييماً مجانياً",
+  whatsapp: "واتساب",
+  email: "البريد الإلكتروني",
+  hoursLabel: "ساعات العمل",
+  officesLabel: "المكاتب",
+  navLabel: "روابط الموقع",
+  copyright: `© ${year} كليم. جميع الحقوق محفوظة.`,
+} : {
+  contact: "Contact",
+  headline: "Tell us about the system that's holding you back.",
+  audit: "Book a free audit",
+  whatsapp: "WhatsApp",
+  email: "Email",
+  hoursLabel: "Hours",
+  officesLabel: "Offices",
+  navLabel: "Site links",
+  copyright: `© ${year} Kaleem. All rights reserved.`,
+};
 
-const companyLinks = [
-  { label: isAr ? "من نحن" : "About", href: "/about/" },
-];
-
-const servicesLinks = [
+const links = [
   { label: isAr ? "الخدمات" : "Services", href: "/services/" },
-  { label: isAr ? "دراسات الحالة" : "Case Studies", href: "/work/" },
+  { label: isAr ? "الأعمال" : "Work",     href: "/work/" },
+  { label: isAr ? "من نحن" : "About",     href: "/about/" },
+  { label: isAr ? "تواصل معنا" : "Contact", href: "/contact/" },
 ];
 
-const workLinks = [
-  { label: isAr ? "الأعمال" : "Work", href: "/work/" },
-];
-
-const contactLink = { label: isAr ? "احجز تقييماً مجانياً" : "Book a free audit", href: "/contact/" };
 const hours = isAr ? CONTACT.hours.ar : CONTACT.hours.en;
-const offices = (isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(isAr ? " · " : " · ");
-const lWhatsApp = isAr ? "واتساب" : "WhatsApp";
-
-const copyright = isAr
-  ? `© ${year} كليم. جميع الحقوق محفوظة.`
-  : `© ${year} Kaleem. All rights reserved.`;
-const promise = isAr
-  ? "نحرّر بياناتك ونحدّث أنظمتك — وتبقى المفاتيح بيدك."
-  : "We free your data and modernize your systems — and you keep the keys.";
-const contactPromise = isAr
-  ? "حدّثنا عن النظام الذي يقيّدك."
-  : "Tell us about the system that's holding you back.";
+const offices = (isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(" · ");
 ---
 
 <footer class="footer board" data-sky>
   <div class="container">
-    <div class="footer-grid">
-      <!-- Brand Column (hidden on phones: the header above shows it) -->
-      <div class="f-brand-col">
-        <div class="f-brand">
-          <svg width="30" height="30" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"/><rect x="48" y="6" width="18" height="18" fill="#f7e39a"/></svg>
-          <span>{isAr ? "كليم" : "kaleem"}</span>
-        </div>
-        <p class="f-brand-promise">{promise}</p>
+    <!-- 1. Contact: the call to action for every page -->
+    <div class="f-contact">
+      <p class="f-label">{T.contact}</p>
+      <h2 class="f-headline">{T.headline}</h2>
+      <div class="f-actions">
+        <a class="skb skb-mint f-audit" href={L("/contact/")}>{T.audit}</a>
+        <a class="f-btn" href={CONTACT.whatsapp} target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M9 9.5c.3 1.8 1.7 3.3 3.5 3.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+          <span>{T.whatsapp}</span>
+        </a>
+        <a class="f-btn" href={`mailto:${CONTACT.email}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect><path d="M3.5 6.5l8.5 6.5l8.5-6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+          <span>{CONTACT.email}</span>
+        </a>
       </div>
-
-      <!-- Services -->
-      <div class="f-nav">
-        <p class="f-label">{lServices}</p>
-        <ul class="f-links">
-          {servicesLinks.map((l) => (
-            <li><a href={L(l.href)}>{l.label}</a></li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Work -->
-      <div class="f-nav">
-        <p class="f-label">{lWork}</p>
-        <ul class="f-links">
-          {workLinks.map((l) => (
-            <li><a href={L(l.href)}>{l.label}</a></li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Contact -->
-      <div class="f-contact">
-        <p class="f-label">{lContact}</p>
-        <p class="f-promise">{contactPromise}</p>
-        <a class="skb" href={L(contactLink.href)}>{contactLink.label}</a>
-        <ul class="f-details">
-          <li><a href={CONTACT.whatsapp} target="_blank" rel="noopener">{lWhatsApp} · <bdi>{CONTACT.phones[0]}</bdi></a></li>
-          <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
-          <li>{hours}</li>
-          <li>{offices}</li>
-        </ul>
-      </div>
+      <dl class="f-info">
+        <div><dt>{T.hoursLabel}</dt><dd>{hours}</dd></div>
+        <div><dt>{T.officesLabel}</dt><dd>{offices}</dd></div>
+      </dl>
     </div>
 
-    <!-- Copyright -->
+    <!-- 2. Brand + page links -->
+    <div class="f-row">
+      <a class="f-brand" href={L("/")}>
+        <svg width="28" height="28" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"/><rect x="48" y="6" width="18" height="18" fill="#f7e39a"/></svg>
+        <span>{isAr ? "كليم" : "kaleem"}</span>
+      </a>
+      <nav aria-label={T.navLabel}>
+        <ul class="f-links">
+          {links.map((l) => <li><a href={L(l.href)}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 3. Copyright + language -->
     <div class="footer-bottom">
-      <p>{copyright}</p>
+      <p>{T.copyright}</p>
       <p><a href={altHref}>{altLabel}</a></p>
     </div>
   </div>
 </footer>
 
 <style>
-  .footer {
-    margin-top: 88px;
-  }
+  /* Pages end straight into the footer: it is their call to action. */
+  .footer { margin-top: 0; }
 
   .footer .container {
     max-width: var(--k-max);
     margin: 0 auto;
-    padding: var(--k-space-10) var(--k-gutter-desktop);
+    padding: var(--k-space-10) var(--k-gutter-desktop) var(--k-space-8);
   }
 
-  .footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    margin-bottom: 40px;
-    padding-bottom: 40px;
-    border-bottom: 2px solid var(--k-board-line);
+  /* Text sits on the animated starfield: chalk/butter tones plus a soft
+     shadow keep it legible without an opaque background. */
+  .footer :is(p, h2, dt, dd, span, a) { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55); }
+
+  /* ─── 1. Contact ─── */
+  .f-label {
+    margin: 0 0 14px;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--k-butter);
+  }
+  .f-headline {
+    margin: 0 0 28px;
+    max-width: 18ch;
+    font-family: var(--k-font-serif);
+    font-size: 44px;
+    line-height: 1.15;
+    font-weight: 700;
+    color: var(--k-chalk);
   }
 
-  .f-brand {
+  /* Everything clickable in the contact block looks like a button. */
+  .f-actions {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+  }
+  .footer .f-audit { text-shadow: none; }
+  .f-btn {
+    min-height: 48px;
+    padding: 0 18px;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  /* All footer text sits on the animated starfield. Bright chalk /
-     butter tones + text-shadow scrim keep everything legible without
-     needing an opaque background. */
-  .f-brand span {
-    font-family: var(--k-font-mono);
-    font-weight: 700;
-    font-size: 22px;
-    color: var(--k-butter);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 8px rgba(0, 0, 0, 0.35);
-  }
-
-  .f-brand-promise {
-    font-size: 15px;
-    line-height: 26px;
+    border: 1.5px solid var(--k-chalk);
+    border-radius: var(--k-radius-sketch-btn);
+    background: rgba(29, 35, 32, 0.6);
+    font-size: 16px;
+    font-weight: 600;
     color: var(--k-chalk);
-    margin: 0;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+    text-decoration: none;
+    transition: background-color 140ms ease, transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
   }
+  .f-btn svg { flex-shrink: 0; }
+  .f-btn:hover, .f-btn:focus-visible {
+    color: #fff;
+    text-decoration: none;
+    background: rgba(236, 238, 230, 0.16);
+    transform: translateY(-2px);
+  }
+  .f-btn:focus-visible { outline: 2px solid var(--k-sky); outline-offset: 2px; }
 
-  .f-label {
+  /* Plain information, spaced as label–value pairs (not links). */
+  .f-info {
+    margin: 32px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 56px;
+  }
+  .f-info dt {
+    margin-bottom: 6px;
     font-family: var(--k-font-mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--k-butter);
-    margin: 0 0 16px;
+    color: var(--k-chalk-dim);
+  }
+  .f-info dd { margin: 0; font-size: 15px; line-height: 1.5; color: var(--k-chalk); }
+
+  /* ─── 2. Brand + links ─── */
+  .f-row {
+    margin-top: 56px;
+    padding: 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 40px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--k-board-line);
+    border-bottom: 1px solid var(--k-board-line);
+  }
+  .f-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .f-brand span {
+    font-family: var(--k-font-mono);
+    font-size: 22px;
     font-weight: 700;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+    color: var(--k-butter);
   }
-
-  .f-promise {
-    font-size: 14px;
-    color: var(--k-chalk);
-    line-height: 1.5;
-    margin: 0 0 16px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  }
-
   .f-links {
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 12px 32px;
   }
-
-  .f-links a {
-    font-size: 15px;
-    font-weight: 500;
+  .f-links a, .footer-bottom a {
+    font-size: 16px;
+    font-weight: 600;
     color: var(--k-chalk);
-    text-decoration: none;
-    display: inline-block;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-    transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2),
-                color 140ms ease;
-  }
-
-  .f-links a:hover,
-  .f-links a:focus-visible {
-    color: #fff;
-    transform: translateY(-2px);
     text-decoration: underline;
-    text-underline-offset: 5px;
-    text-decoration-thickness: 2px;
+    text-decoration-color: rgba(236, 238, 230, 0.45);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+    transition: color 140ms ease, text-decoration-color 140ms ease;
   }
-
-  .f-links a:focus-visible {
-    outline: 2px solid var(--k-sky);
-    outline-offset: 2px;
+  .f-links a:hover, .f-links a:focus-visible,
+  .footer-bottom a:hover, .footer-bottom a:focus-visible {
+    color: #fff;
+    text-decoration-color: var(--k-butter);
   }
+  .f-links a:focus-visible, .footer-bottom a:focus-visible { outline: 2px solid var(--k-sky); outline-offset: 3px; }
 
+  /* ─── 3. Bottom ─── */
   .footer-bottom {
+    padding-top: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding-top: 20px;
     flex-wrap: wrap;
   }
+  .footer-bottom p { margin: 0; font-size: 13px; color: var(--k-chalk-muted); }
+  .footer-bottom a { font-size: 14px; }
 
-  .footer-bottom p {
-    margin: 0;
-    font-size: 13px;
-    color: var(--k-chalk);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  }
-
-  .footer-bottom a {
-    color: var(--k-chalk);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2),
-                color 140ms ease;
-    display: inline-block;
-  }
-
-  .footer-bottom a:hover,
-  .footer-bottom a:focus-visible {
-    color: #fff;
-    transform: translateY(-2px);
-    text-decoration-thickness: 2px;
-  }
-
-  .footer-bottom a:focus-visible {
-    outline: 2px solid var(--k-sky);
-    outline-offset: 2px;
-  }
-
-  .f-details {
-    list-style: none;
-    margin: 20px 0 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--k-chalk);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  }
-  .f-details a { color: var(--k-chalk); text-decoration: underline; text-underline-offset: 3px; }
-  .f-details a:hover, .f-details a:focus-visible { color: #fff; }
-
-  /* CTA button in footer */
-  .footer .skb {
-    background-color: var(--k-mint);
-    color: var(--k-ink);
-    display: inline-flex;
-    margin-top: 8px;
-  }
-
-  /* Responsive */
+  /* ─── Phones: one full screen of sky under the sticky header ─── */
   @media (max-width: 671px) {
     /* One screen tall minus the sticky header (93px; taller in Arabic,
        where it simply overlaps): at the end of the page, header + footer
@@ -289,31 +265,18 @@ const contactPromise = isAr
       width: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: var(--k-space-9) var(--k-gutter-mobile) var(--k-space-7);
+      padding: var(--k-space-9) var(--k-gutter-mobile) var(--k-space-6);
     }
-    .footer-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 28px 22px;
-      margin-bottom: 28px;
-      padding-bottom: 28px;
-    }
-    .f-brand-col { display: none; }
-    .f-contact { order: -1; flex-basis: 100%; }
-    .f-promise {
-      font-family: var(--k-font-serif);
-      font-size: 30px;
-      line-height: 1.2;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-    .footer .skb { width: 100%; }
-    /* Page links in one compact row. */
-    .f-nav { display: contents; }
-    .f-nav .f-label { display: none; }
-    .f-nav .f-links { flex-direction: row; flex-wrap: wrap; gap: 8px 22px; }
+    .f-contact { margin-bottom: 36px; }
+    .f-headline { font-size: 30px; margin-bottom: 24px; }
+    .f-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+    .f-actions > a { width: 100%; justify-content: center; }
+    .f-info { flex-direction: column; gap: 18px; margin-top: 28px; }
+    /* The header above already shows the brand. */
+    .f-brand { display: none; }
+    .f-row { margin-top: auto; padding: 20px 0; }
+    .f-links { gap: 12px 24px; }
     /* Keep the bottom row clear of the floating call button's corner. */
-    .footer-bottom { padding-inline-end: 80px; }
+    .footer-bottom { padding-top: 18px; padding-inline-end: 80px; }
   }
 </style>

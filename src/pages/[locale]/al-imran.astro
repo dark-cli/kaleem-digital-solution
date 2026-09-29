@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WindowWidget from "../../components/WindowWidget.astro";
-import { currentLocale, localizedHref } from "../../lib/i18n";
+import { currentLocale } from "../../lib/i18n";
 
 export async function getStaticPaths() {
   return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
@@ -9,7 +9,6 @@ export async function getStaticPaths() {
 
 const locale = currentLocale(Astro);
 const isAr = locale === "ar";
-const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
   title:        "مركز العمران الطبي — دراسة حالة من كليم",
@@ -102,8 +101,6 @@ const T = isAr ? {
   oldLabel:      "قبل",
   newLabel:      "بعد",
 
-  ctaHead:      "جاهز لتحرير منصتك الرقمية؟",
-  ctaLabel:     "احجز تقييماً مجانياً",
 
 } : {
   title:        "Alimran Medical Center — Kaleem case study",
@@ -196,8 +193,6 @@ const T = isAr ? {
   oldLabel:      "Before",
   newLabel:      "After",
 
-  ctaHead:      "Ready to liberate your digital platform?",
-  ctaLabel:     "Book a free audit",
 };
 // Slides for the rotating design window, each with a note for the aside.
 const SITE = "https://alimran.clinic/en";
@@ -480,13 +475,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     </div>
   </section>
 
-  <!-- ─── FINAL CTA ───────────────────────────────────────── -->
-  <section class="cta-section bg-peach">
-    <div class="container">
-      <h2>{T.ctaHead}</h2>
-      <a class="skb skb-sky" href={L("/contact/")}>{T.ctaLabel}</a>
-    </div>
-  </section>
 </BaseLayout>
 
 
@@ -935,19 +923,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   .own-row li { display: flex; align-items: flex-start; gap: 10px; font-size: 17px; line-height: 1.5; font-weight: 600; color: var(--k-ink); }
   .check { flex-shrink: 0; margin-top: 2px; }
 
-  /* CTA */
-  .cta-section {
-    padding: var(--k-space-10) 0;
-    text-align: center;
-  }
-
-  .cta-section h2 {
-    margin: 0 0 var(--k-space-6);
-    font-size: clamp(28px, 4vw, 40px);
-    color: var(--k-ink);
-    font-weight: 700;
-  }
-
   /* Responsive */
   @media (max-width: 1055px) {
     .showcase-grid { grid-template-columns: minmax(0, 1fr); }
@@ -976,8 +951,7 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     .compare,
     .page-comparisons-section,
     .results-section,
-    .process-section,
-    .cta-section {
+    .process-section {
       padding: var(--k-space-8) 0;
     }
 

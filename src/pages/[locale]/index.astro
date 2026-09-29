@@ -48,7 +48,6 @@ const T = isAr ? {
   keepHeading: "كل شيء يبقى لك",
   keep: ["كل الحسابات وكلمات المرور", "الكود في حسابك", "النطاق باسمك", "توثيق كامل", "تدريب لفريقك"],
   valuesLink: "قيمنا",
-  finalCTA: "حرّر منصتك الرقمية.",
 } : {
   title: "Kaleem — Real digital solutions for Iraq",
   description: "We free data from legacy systems and modernize them: extract it, clean it, and rebuild your digital platforms on modern foundations you own.",
@@ -85,7 +84,6 @@ const T = isAr ? {
   keepHeading: "Everything stays yours",
   keep: ["Every account & password", "The code, in your account", "Domain in your name", "Full documentation", "Training for your team"],
   valuesLink: "Our values",
-  finalCTA: "Liberate your digital platform.",
 };
 
 const KEEP_ICONS = [
@@ -211,23 +209,6 @@ const KEEP_ICONS = [
     </div>
   </section>
 
-  <!-- ─── FINAL CTA ─── -->
-  <section class="final-cta bg-mint">
-    <div class="container final-grid">
-      <div class="final-text">
-        <h2>{T.finalCTA}</h2>
-        <a class="skb skb-butter" href={L("/contact/")}>{T.bookAudit}</a>
-      </div>
-      <svg class="final-art flip-rtl" width="220" height="180" viewBox="0 0 220 180" aria-hidden="true">
-        <g fill="none" stroke="#1f1f1f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="70" cy="90" r="36" fill="#f7e7b0"></circle>
-          <circle cx="70" cy="90" r="12" fill="#bfe6d6"></circle>
-          <path d="M106 90h90M170 90v24M190 90v16"></path>
-          <path d="M20 30l10 10M30 30l-10 10M190 30l8 8M198 30l-8 8"></path>
-        </g>
-      </svg>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
@@ -466,24 +447,6 @@ const KEEP_ICONS = [
     color: var(--k-ink);
   }
 
-  /* ─── Final CTA ─── */
-  .final-cta { padding: 96px 0; border-top: 2px solid var(--k-ink); }
-  .final-grid {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 48px;
-    align-items: center;
-  }
-  .final-text { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
-  .final-text h2 {
-    margin: 0;
-    font-family: var(--k-font-serif);
-    font-size: 52px;
-    line-height: 1.2;
-    font-weight: 700;
-    color: var(--k-ink);
-  }
-
   /* ─── Responsive ─── */
   @media (max-width: 1055px) {
     .hero-grid { grid-template-columns: 1fr; }
@@ -491,8 +454,6 @@ const KEEP_ICONS = [
     .svc-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .work-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
     .flow-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-    .final-art { display: none; }
-    .final-grid { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 671px) {
@@ -521,7 +482,5 @@ const KEEP_ICONS = [
     .keep { padding: 36px 0; }
     .keep h2 { font-size: 24px; }
     .keep ul { flex-direction: column; flex-basis: auto; }
-    .final-cta { padding: 56px 0; }
-    .final-text h2 { font-size: 34px; }
   }
 </style>

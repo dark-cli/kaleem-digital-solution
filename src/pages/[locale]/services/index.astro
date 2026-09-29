@@ -11,7 +11,7 @@
  * (arrows carry .flip-rtl).
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { currentLocale, localizedHref } from "../../../lib/i18n";
+import { currentLocale } from "../../../lib/i18n";
 import { SERVICE_BG, SERVICE_ICON } from "../../../data/services";
 
 export function getStaticPaths() {
@@ -20,7 +20,6 @@ export function getStaticPaths() {
 
 const locale = currentLocale(Astro);
 const isAr = locale === "ar";
-const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
   title:       "الخدمات — كليم",
@@ -62,8 +61,6 @@ const T = isAr ? {
   hostSys: ["سحابة مجانية", "خادم مخصّص", "داخل مقرّك"],
   receiveHead: "مهما بنينا، ستستلم",
   receive: ["كل الحسابات وكلمات المرور", "الكود في حسابك", "النطاق باسمك", "توثيق كامل", "تدريب لفريقك"],
-  ctaHead: "لست متأكداً أي خدمة تحتاج؟ ابدأ بتقييم مجاني.",
-  ctaLabel: "احجز تقييماً مجانياً",
 } : {
   title:       "Services — Kaleem",
   description: "The Jailbreak, websites and web apps, mobile apps, management systems, networks and security, and consulting — six services, one method, and every key handed to you.",
@@ -104,8 +101,6 @@ const T = isAr ? {
   hostSys: ["Free cloud", "Dedicated server", "On your premises"],
   receiveHead: "Whatever we build, you receive",
   receive: ["Every account & password", "The code, in your account", "Domain in your name", "Full documentation", "Training for your team"],
-  ctaHead: "Not sure which one you need? Start with a free audit.",
-  ctaLabel: "Book a free audit",
 };
 
 // 32×32 line icons for the steps and the "you receive" strip.
@@ -446,16 +441,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
   </section>
 
 
-  <!-- ─── CTA ─── -->
-  <section class="cta bg-mint">
-    <div class="container cta-grid">
-      <div class="cta-text">
-        <h2>{T.ctaHead}</h2>
-        <a class="skb skb-butter" href={L("/contact/")}>{T.ctaLabel}</a>
-      </div>
-      <svg class="cta-key flip-rtl" width="220" height="160" viewBox="0 0 220 180" aria-hidden="true"><g fill="none" stroke="#1f1f1f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="70" cy="90" r="36" fill="#f7e7b0"></circle><circle cx="70" cy="90" r="12" fill="#faf6ee"></circle><path d="M106 90h90M170 90v24M190 90v16"></path></g></svg>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
@@ -831,21 +816,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
   .receive .ico { flex-shrink: 0; }
 
 
-  /* ─── CTA ─── */
-  .cta { padding: 88px 0; }
-  .cta-grid { display: flex; align-items: center; justify-content: space-between; gap: 48px; }
-  .cta-text { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
-  .cta h2 {
-    margin: 0;
-    max-width: 760px;
-    font-family: var(--k-font-serif);
-    font-size: 50px;
-    line-height: 1.16;
-    font-weight: 700;
-    color: var(--k-ink);
-  }
-  .cta-key { flex-shrink: 0; }
-
   /* ─── Responsive ─── */
   @media (max-width: 1055px) {
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -854,7 +824,6 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .svc-grid { grid-template-columns: minmax(0, 1fr); }
     .svc-wide { grid-template-columns: minmax(0, 1fr); gap: 32px; }
     .receive ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .cta-key { display: none; }
   }
 
   @media (max-width: 671px) {
@@ -888,7 +857,5 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .choices li { width: 108px; }
     .receive { padding: 24px; }
     .receive ul { grid-template-columns: 1fr; gap: 14px; }
-    .cta { padding: 56px 0; }
-    .cta h2 { font-size: 34px; }
   }
 </style>
