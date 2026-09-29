@@ -261,11 +261,12 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     </div>
   </section>
 
-  <!-- ─── THE NEW DESIGN: one rotating window + design notes aside ───
-       Slides cross-fade every few seconds (paused on hover/focus, off
-       for reduced motion). The aside follows the article-layout
-       art-aside pattern: a mono label, a rule, then a ruled list — here
-       one note per slide; clicking a note shows its slide. -->
+  <!-- ─── THE NEW DESIGN: one rotating window as the body, with the
+       design notes in a side aside (the article-layout art-aside
+       pattern: sticky, mono label, rule, ruled list). Below 1056px the
+       aside gives way to swipeable tabs above the window and a caption
+       under it. Slides cross-fade every 5s, pause on hover/focus, and
+       don't autoplay for reduced motion. -->
   <section class="showcase" data-rotator>
     <div class="container">
       <h2 class="section-heading">{T.beforeAfterHead}</h2>
@@ -285,16 +286,24 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
             ))}
           </ol>
         </aside>
-        <a class="window-link rot-link" href={SLIDES[0].href} target="_blank" rel="noopener">
-          <div class="sk window rot-window">
-            <div class="window-chrome" data-sky></div>
-            <div class="rot-stage">
-              {SLIDES.map((s, i) => (
-                <img src={s.src} alt={s.label} class:list={["rot-img", { active: i === 0 }]} data-href={s.href} loading={i === 0 ? "eager" : "lazy"} />
-              ))}
-            </div>
+        <div class="showcase-body">
+          <div class="note-tabs">
+            {SLIDES.map((s, i) => (
+              <button type="button" class:list={["tab", { active: i === 0 }]} data-slide={i} aria-pressed={i === 0 ? "true" : "false"}>{s.label}</button>
+            ))}
           </div>
-        </a>
+          <a class="window-link rot-link" href={SLIDES[0].href} target="_blank" rel="noopener">
+            <div class="sk window rot-window">
+              <div class="window-chrome" data-sky></div>
+              <div class="rot-stage">
+                {SLIDES.map((s, i) => (
+                  <img src={s.src} alt={s.label} class:list={["rot-img", { active: i === 0 }]} data-href={s.href} data-note={s.note} loading={i === 0 ? "eager" : "lazy"} />
+                ))}
+              </div>
+            </div>
+          </a>
+          <p class="note-caption" aria-live="polite">{SLIDES[0].note}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -475,19 +484,29 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
       var root = document.querySelector("[data-rotator]");
       if (!root) return;
       var imgs = root.querySelectorAll(".rot-img");
-      var notes = root.querySelectorAll(".note");
+      var notes = root.querySelectorAll(".note, .tab");
+      var tabs = root.querySelector(".note-tabs");
+      var caption = root.querySelector(".note-caption");
       var link = root.querySelector(".rot-link");
       var i = 0, paused = false;
       function show(n) {
         i = (n + imgs.length) % imgs.length;
         imgs.forEach(function (img, k) { img.classList.toggle("active", k === i); });
-        notes.forEach(function (b, k) {
-          b.classList.toggle("active", k === i);
-          b.setAttribute("aria-pressed", k === i ? "true" : "false");
+        notes.forEach(function (b) {
+          var on = Number(b.getAttribute("data-slide")) === i;
+          b.classList.toggle("active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
         });
         link.href = imgs[i].getAttribute("data-href");
+        caption.textContent = imgs[i].getAttribute("data-note");
+        // Slide the tab strip (not the page) so the active tab is visible.
+        var tab = tabs.querySelector(".tab.active");
+        if (tab && tabs.offsetParent) {
+          var t = tab.getBoundingClientRect(), s = tabs.getBoundingClientRect();
+          tabs.scrollBy({ left: (t.left + t.width / 2) - (s.left + s.width / 2), behavior: "smooth" });
+        }
       }
-      notes.forEach(function (b, k) { b.addEventListener("click", function () { show(k); }); });
+      notes.forEach(function (b) { b.addEventListener("click", function () { show(Number(b.getAttribute("data-slide"))); }); });
       root.addEventListener("mouseenter", function () { paused = true; });
       root.addEventListener("mouseleave", function () { paused = false; });
       root.addEventListener("focusin", function () { paused = true; });
@@ -560,13 +579,15 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     color: var(--k-ink-muted);
     text-align: center;
   }
+  /* Desktop: narrow sticky aside + the window as the body. */
   .showcase-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 600px);
+    grid-template-columns: 240px minmax(0, 1fr);
     gap: 56px;
     align-items: start;
   }
-  .design-notes { min-width: 0; }
+  .showcase-body { min-width: 0; max-width: 720px; }
+  .design-notes { min-width: 0; position: sticky; top: 112px; }
   .notes-label {
     margin: 0 0 14px;
     font-family: var(--k-font-mono);
@@ -581,11 +602,11 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 14px 16px;
+    gap: 6px;
+    padding: 11px 12px;
     border: 0;
     border-bottom: 1px solid var(--k-ink);
-    border-inline-start: 4px solid transparent;
+    border-inline-start: 3px solid transparent;
     background: transparent;
     font: inherit;
     text-align: start;
@@ -593,14 +614,51 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     cursor: pointer;
     transition: background-color 200ms ease, border-color 200ms ease;
   }
-  .note strong { font-size: 17px; color: var(--k-ink); }
-  .note span { font-size: 15px; line-height: 1.5; }
-  .note:hover { background: var(--k-paper-2); }
+  .note strong { font-size: 15px; font-weight: 600; }
+  /* Only the current page shows its comment, keeping the aside short. */
+  .note span { display: none; font-size: 14px; line-height: 1.5; }
+  .note:hover { color: var(--k-ink); }
   .note.active {
     border-inline-start-color: var(--k-ink);
     background: var(--k-butter);
     color: var(--k-ink);
   }
+  .note.active strong { font-weight: 700; }
+  .note.active span { display: block; }
+
+  /* Small screens only: tabs above the window, caption under it. */
+  .note-tabs, .note-caption { display: none; }
+  .note-tabs {
+    gap: 8px;
+    overflow-x: auto;
+    padding: 2px 2px 14px;
+    scrollbar-width: none;
+  }
+  .note-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1.5px solid var(--k-ink);
+    border-radius: var(--k-radius-pill);
+    background: var(--k-paper);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--k-ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tab.active { background: var(--k-butter); }
+  .note-caption {
+    margin: 18px 0 0;
+    padding-inline-start: 14px;
+    border-inline-start: 3px solid var(--k-ink);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--k-ink);
+  }
+
   .rot-link { display: block; }
   .rot-window { padding: 0; }
   .rot-stage {
@@ -857,10 +915,17 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   }
 
   /* Responsive */
+  @media (max-width: 1055px) {
+    .showcase-grid { grid-template-columns: minmax(0, 1fr); }
+    .showcase-body { max-width: 640px; margin: 0 auto; width: 100%; }
+    .design-notes { display: none; }
+    .note-tabs { display: flex; }
+    .note-caption { display: block; }
+  }
+
   @media (max-width: 900px) {
     .story-grid, .compare-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-    .showcase-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-    .rot-link { order: -1; max-width: 600px; }
+
     .results-table { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .comparison-row {
       grid-template-columns: 1fr;
