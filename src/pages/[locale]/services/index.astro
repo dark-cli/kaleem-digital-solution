@@ -226,7 +226,9 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
       <!-- The Jailbreak — full width, signature -->
       <article id="jailbreak" class="card svc svc-wide bg-butter">
         <div class="svc-body">
-          <span class="k-tag bg-paper signature">{T.signature}</span>
+          <!-- Sky shader marks the signature service. The label sits in its
+               own span so it layers above the shader canvas. -->
+          <span class="k-tag signature sky-tag" data-sky><span>{T.signature}</span></span>
           <h2>{T.s1.name}</h2>
           <p class="svc-line">{T.s1.line}</p>
           <ul class="chips">{T.s1.tags.map((t) => <li>{t}</li>)}</ul>
@@ -250,9 +252,13 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
           </figure>
           <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
           <figure>
-            <ul class="files">
-              <li>.md</li><li>.csv</li><li>.json</li><li>.sql</li>
-            </ul>
+            <!-- The freed data gets the sky, like the new-site screenshots on
+                 the Alimran case study; the locked server stays plain. -->
+            <div class="files-sky" data-sky>
+              <ul class="files">
+                <li>.md</li><li>.csv</li><li>.json</li><li>.sql</li>
+              </ul>
+            </div>
             <figcaption>{T.s1.to}</figcaption>
           </figure>
         </div>
@@ -664,6 +670,7 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
   }
   .svc-body { display: flex; flex-direction: column; gap: 18px; }
   .signature { align-self: flex-start; }
+  .sky-tag { color: var(--k-butter); }
   .svc h2 {
     margin: 0;
     font-family: var(--k-font-serif);
@@ -779,14 +786,22 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     flex-direction: column;
     gap: 10px;
   }
+  .files-sky {
+    padding: 16px;
+    border: var(--k-line) solid var(--k-ink);
+    border-radius: var(--k-radius-sketch);
+    box-shadow: 4px 4px 0 -2px var(--k-paper), 4px 4px 0 0 var(--k-ink);
+  }
   .files li {
     width: 150px;
     height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid var(--k-ink);
-    background: var(--k-paper);
+    border: 2.5px solid var(--k-chalk);
+    border-radius: 3px;
+    background: rgba(29, 35, 32, 0.55);
+    color: var(--k-chalk);
     font-family: var(--k-font-mono);
     font-size: 17px;
     font-weight: 600;
