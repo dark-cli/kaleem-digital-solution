@@ -172,7 +172,8 @@ const TERM_BADGES = [
   { num: "60", bg: "bg-lilac" },
 ];
 
-const ARROW = `<path d="M4 12h52M48 5l8 7l-8 7" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 7"></path>`;
+// Solid hand-drawn arrow: a slightly wavy shaft and an open head.
+const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>`;
 ---
 
 <BaseLayout title={T.title} description={T.description}>
@@ -372,7 +373,8 @@ const ARROW = `<path d="M4 12h52M48 5l8 7l-8 7" fill="none" stroke="#1f1f1f" str
         <div class="art art-decide" aria-hidden="true">
           <span class="question">?</span>
           <svg class="branches flip-rtl" viewBox="0 0 120 200" preserveAspectRatio="none">
-            <path d="M0 100c50 0 60-76 120-80M0 100c50 0 60-24 120-28M0 100c50 0 60 24 120 28M0 100c50 0 60 76 120 80" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 7"></path>
+            <path d="M0 100c50 0 60-76 112-80M0 100c50 0 60-24 112-28M0 100c50 0 60 24 112 28M0 100c50 0 60 76 112 80" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round"></path>
+            <path d="M104 13l10 7l-10 7M104 65l10 7l-10 7M104 121l10 7l-10 7M104 173l10 7l-10 7" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
           <ul class="choices">
             <li class="bg-butter">{T.s6.choices[0]}</li>
@@ -887,8 +889,8 @@ const ARROW = `<path d="M4 12h52M48 5l8 7l-8 7" fill="none" stroke="#1f1f1f" str
     .nets span { width: 80px; height: 44px; font-size: 13px; }
     .cams svg { width: 44px; }
     .art-network > figure > svg { width: 72px; }
-    .branches { width: 64px; }
-    .choices li { width: 116px; }
+    .branches { width: 84px; }
+    .choices li { width: 108px; }
     .receive { padding: 24px; }
     .receive ul { grid-template-columns: 1fr; gap: 14px; }
     .terms { padding: 56px 0; }
