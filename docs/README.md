@@ -19,6 +19,7 @@ Start with the [top-level README](../README.md) for a one-screen overview.
 - [`project-structure.md`](project-structure.md) — Where every file type lives
 - [`image-optimization.md`](image-optimization.md) — The WebP variant pipeline
 - [`tokens.md`](tokens.md) — Design tokens (colours, type, spacing)
+- [`notes.md`](notes.md) — Open reminders: Al-Imran "Before" links, PageSpeed numbers, sky tuner
 
 ## AI collaborators
 

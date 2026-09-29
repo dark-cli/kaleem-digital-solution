@@ -26,7 +26,7 @@ const T = isAr ? {
 
   results:     "النتائج",
   r1Title:     "الأداء",
-  r1:          "97/100 في اختبار PageSpeed من Google",
+  r1:          "97/100 في PageSpeed على الهاتف بعد أن كان 74 — يظهر المحتوى الرئيسي خلال 2.1 ثانية بدلاً من 4.9",
   r2Title:     "البيانات",
   r2:          "600 مقالة مع تعليقاتها، منظّفة وموثّقة بالكامل",
   r3Title:     "الملكية",
@@ -98,8 +98,10 @@ const T = isAr ? {
   articlesLabel: "صفحات المقالات",
   libraryLabel:  "المكتبة",
   compareHead:   "قبل وبعد",
-  oldLabel:      "قبل (الموقع القديم لم يعد متاحاً)",
-  newLabel:      "بعد (افتح الموقع المباشر)",
+  oldLabel:      "قبل",
+  oldReport:     "تقرير الموقع القديم",
+  newReport:     "تقرير الموقع الجديد",
+  newLabel:      "بعد",
 
 
 } : {
@@ -118,7 +120,7 @@ const T = isAr ? {
 
   results:     "The results",
   r1Title:     "Performance",
-  r1:          "97/100 on Google PageSpeed",
+  r1:          "Mobile PageSpeed 97/100, up from 74 — the main content shows in 2.1 s instead of 4.9 s",
   r2Title:     "Data",
   r2:          "600 articles and their comments, fully cleaned and documented",
   r3Title:     "Ownership",
@@ -190,12 +192,14 @@ const T = isAr ? {
   articlesLabel: "Article pages",
   libraryLabel:  "Library",
   compareHead:   "Before and after",
-  oldLabel:      "Before (the old site is offline)",
-  newLabel:      "After (open the live site)",
+  oldLabel:      "Before",
+  oldReport:     "Old site's report",
+  newReport:     "New site's report",
+  newLabel:      "After",
 
 };
 // Slides for the rotating design window, each with a note for the aside.
-const SITE = "https://alimran.clinic/en";
+const SITE = `https://alimran.clinic/${locale}`;
 const SLIDES = (isAr ? [
   { label: "الصفحة الرئيسية", note: "الرسالة والطبيب الاستشاري وأربعة أرقام تبني الثقة، كلها في أول الصفحة." },
   { label: "الوضع الفاتح", note: "كل صفحة بوضعين فاتح وداكن، والموقع يتذكّر اختيار الزائر." },
@@ -238,7 +242,10 @@ const SLIDES = (isAr ? [
 const PROBLEMS = [T.p1, T.p2, T.p3, T.p4, T.p5, T.p6, T.p7, T.p8];
 const FEATURES = [T.f1, T.f2, T.f3, T.f4, T.f5, T.f6, T.f7, T.f8, T.f9, T.f10];
 const RESULTS = [
-  { t: T.r1Title, v: T.r1 }, { t: T.r2Title, v: T.r2 }, { t: T.r3Title, v: T.r3 },
+  { t: T.r1Title, v: T.r1, proof: [
+    { label: T.oldReport, href: "https://pagespeed.web.dev/analysis/https-alimranmed-com/r6lyy9qjqs?form_factor=mobile" },
+    { label: T.newReport, href: "https://pagespeed.web.dev/analysis/https-alimran-clinic/5mz18s71ut?form_factor=mobile" },
+  ] }, { t: T.r2Title, v: T.r2 }, { t: T.r3Title, v: T.r3 },
   { t: T.r4Title, v: T.r4 }, { t: T.r5Title, v: T.r5 }, { t: T.r6Title, v: T.r6 },
 ];
 // Step titles carry their own "1." numbering in the copy; the list numbers them.
@@ -330,6 +337,11 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <div>
             <dt>{r.t}</dt>
             <dd>{r.v}</dd>
+            {r.proof && (
+              <p class="r-proof">
+                {r.proof.map((l) => <a href={l.href} target="_blank" rel="noopener">{l.label}</a>)}
+              </p>
+            )}
           </div>
         ))}
       </dl>
@@ -351,6 +363,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   </section>
 
   <!-- ─── PAGE-BY-PAGE COMPARISONS ───────────────────────── -->
+  <!-- "Before" windows link to the old site itself, not the Wayback Machine
+       (blocked in Iraq). If the old site goes down, cache those pages and
+       host them ourselves — see docs/notes.md. -->
   <section class="page-comparisons-section bg-paper-2">
     <div class="container">
       <h2 class="section-heading">{T.pageComparisonsHead}</h2>
@@ -360,13 +375,13 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.homepageLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <div class="comparison-link">
+              <a href="https://alimranmed.com/" target="_blank" rel="noopener" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/old-homepage.png" alt={isAr ? "الصفحة الرئيسية القديمة" : "Old homepage"} />
-              </div>
+              </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/" target="_blank" class="comparison-link window-link">
+              <a href={`https://alimran.clinic/${locale}/`} target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/new-homepage.png" alt={isAr ? "الصفحة الرئيسية الجديدة" : "New homepage"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -379,13 +394,13 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.articlesLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <div class="comparison-link">
-                <WindowWidget src="/assets/illustrations/old-articles-1.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
-              </div>
+              <a href="https://alimranmed.com/brain-tumor/" target="_blank" rel="noopener" class="comparison-link window-link">
+                <WindowWidget src="/assets/illustrations/old-article-brain-tumor.png" alt={isAr ? "صفحة مقالة قديمة" : "Old article page"} />
+              </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="comparison-link window-link">
+              <a href={`https://alimran.clinic/${locale}/treatments/brain-tumor/`} target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/new-articles-1.png" alt={isAr ? "صفحة مقالة جديدة" : "New article page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -398,13 +413,13 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           <h3 class="comparison-label">{T.libraryLabel}</h3>
           <div class="comparison-row">
             <div class="comparison-column">
-              <div class="comparison-link">
-                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة المكتبة القديمة" : "Old library page"} />
-              </div>
+              <a href="https://alimranmed.com/rtms/" target="_blank" rel="noopener" class="comparison-link window-link">
+                <WindowWidget src="/assets/illustrations/old-articles-2.png" alt={isAr ? "صفحة قديمة عن TMS" : "Old TMS page"} />
+              </a>
               <p class="comparison-label-small">{T.oldLabel}</p>
             </div>
             <div class="comparison-column">
-              <a href="https://alimran.clinic/en/library/" target="_blank" class="comparison-link window-link">
+              <a href={`https://alimran.clinic/${locale}/library/`} target="_blank" class="comparison-link window-link">
                 <WindowWidget src="/assets/illustrations/library-feature.png" alt={isAr ? "صفحة المكتبة الجديدة" : "New library page"} chromeColor="sky-shader" />
               </a>
               <p class="comparison-label-small">{T.newLabel}</p>
@@ -850,6 +865,15 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     margin-bottom: 8px;
   }
   .results-table dd { margin: 0; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--k-ink); }
+  .r-proof { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+  .r-proof a {
+    color: var(--k-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+  .r-proof a::after { content: " ↗"; }
+  .r-proof a:hover { text-decoration-color: var(--k-sky); }
 
   /* Process: numbered list down a line, then the tech tags */
   .process-section {
