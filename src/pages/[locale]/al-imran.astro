@@ -74,6 +74,7 @@ const T = isAr ? {
   p8:          "المقالات مجرد كتل نصية بلا أي تنسيق",
 
   beforeAfterHead: "التصميم الجديد",
+  notesLabel:   "ملاحظات على التصميم",
   designShowcaseDesc: "تصميم يتكيّف بالكامل مع الهواتف، مع وضعين فاتح وداكن، ومبني للسرعة والوضوح في كل تفصيلة.",
   homeLabel:   "الصفحة الرئيسية",
   articleLabel: "صفحات المقالات",
@@ -164,6 +165,7 @@ const T = isAr ? {
   p8:          "Articles were just walls of text with no visual structure",
 
   beforeAfterHead: "The new design",
+  notesLabel:   "Design notes",
   designShowcaseDesc: "Fully responsive design with light and dark themes, built for speed and clarity in every detail.",
   homeLabel:   "Homepage",
   articleLabel: "Article pages",
@@ -191,6 +193,46 @@ const T = isAr ? {
   ctaHead:      "Ready to liberate your digital platform?",
   ctaLabel:     "Book a free audit",
 };
+// Slides for the rotating design window, each with a note for the aside.
+const SITE = "https://alimran.clinic/en";
+const SLIDES = (isAr ? [
+  { label: "الصفحة الرئيسية", note: "الرسالة والطبيب الاستشاري وأربعة أرقام تبني الثقة، كلها في أول الصفحة." },
+  { label: "الوضع الفاتح", note: "كل صفحة بوضعين فاتح وداكن، والموقع يتذكّر اختيار الزائر." },
+  { label: "صفحة الحالة", note: "كل حالة تبدأ بلمحة سريعة: ما هي، وأعراضها، وكيف تُعالج، مع من راجعها ومتى." },
+  { label: "تفاصيل المقالة", note: "الحقائق الطبية أرقام وخطوات لا كتل نصية، والفهرس وزر الاتصال يرافقان القارئ." },
+  { label: "المكتبة", note: "كل المقالات في فهرس واحد، مع تصفية حسب النوع." },
+  { label: "البحث", note: "بحث فوري من أي صفحة، مقسّم إلى حالات وإجراءات." },
+  { label: "ملف الاستشاري", note: "سيرة كاملة للطبيب: الشهادات والمناصب والإنجازات." },
+] : [
+  { label: "Homepage", note: "The promise, the consultant and four trust numbers, all above the fold." },
+  { label: "Light theme", note: "Every page in light and dark; the site remembers the visitor's choice." },
+  { label: "Condition page", note: "Each condition opens at a glance: what it is, signs, treatment, and who reviewed it." },
+  { label: "Article details", note: "Clinical facts as numbers and steps, not walls of text; contents and call button follow the reader." },
+  { label: "Library", note: "Every article in one index, filterable by type." },
+  { label: "Search", note: "Instant search from any page, grouped into conditions and procedures." },
+  { label: "Consultant profile", note: "A full CV for the lead consultant: credentials and appointments." },
+]).map((s, i) => ({
+  ...s,
+  src: [
+    "/assets/illustrations/new-home-dark.png",
+    "/assets/illustrations/new-homepage.png",
+    "/assets/illustrations/new-article-1-dark.png",
+    "/assets/illustrations/new-article-2-dark.png",
+    "/assets/illustrations/new-library-dark.png",
+    "/assets/illustrations/search-feature.png",
+    "/assets/illustrations/theme-dark.png",
+  ][i],
+  href: [
+    `${SITE}/`,
+    `${SITE}/`,
+    `${SITE}/treatments/cancer-pain/`,
+    `${SITE}/treatments/cancer-pain/#s-2`,
+    `${SITE}/library/`,
+    `${SITE}/`,
+    `${SITE}/doctors/hussein-imran-mousa/`,
+  ][i],
+}));
+
 // Lists built from the copy above, so the markup stays short.
 const PROBLEMS = [T.p1, T.p2, T.p3, T.p4, T.p5, T.p6, T.p7, T.p8];
 const FEATURES = [T.f1, T.f2, T.f3, T.f4, T.f5, T.f6, T.f7, T.f8, T.f9, T.f10];
@@ -219,8 +261,47 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     </div>
   </section>
 
+  <!-- ─── THE NEW DESIGN: one rotating window + design notes aside ───
+       Slides cross-fade every few seconds (paused on hover/focus, off
+       for reduced motion). The aside follows the article-layout
+       art-aside pattern: a mono label, a rule, then a ruled list — here
+       one note per slide; clicking a note shows its slide. -->
+  <section class="showcase" data-rotator>
+    <div class="container">
+      <h2 class="section-heading">{T.beforeAfterHead}</h2>
+      <p class="showcase-description">{T.designShowcaseDesc}</p>
+      <div class="showcase-grid">
+        <aside class="design-notes">
+          <p class="notes-label">{T.notesLabel}</p>
+          <span class="notes-rule" aria-hidden="true"></span>
+          <ol>
+            {SLIDES.map((s, i) => (
+              <li>
+                <button type="button" class:list={["note", { active: i === 0 }]} data-slide={i} aria-pressed={i === 0 ? "true" : "false"}>
+                  <strong>{s.label}</strong>
+                  <span>{s.note}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </aside>
+        <a class="window-link rot-link" href={SLIDES[0].href} target="_blank" rel="noopener">
+          <div class="sk window rot-window">
+            <div class="window-chrome" data-sky></div>
+            <div class="rot-stage">
+              {SLIDES.map((s, i) => (
+                <img src={s.src} alt={s.label} class:list={["rot-img", { active: i === 0 }]} data-href={s.href} loading={i === 0 ? "eager" : "lazy"} />
+              ))}
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
   <!-- ─── RESULTS: a ruled table, no boxes ─── -->
-  <section class="results-section">
+  <section class="results-section bg-paper-2">
     <div class="container">
       <h2 class="section-heading">{T.results}</h2>
       <dl class="results-table">
@@ -235,7 +316,7 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   </section>
 
   <!-- ─── CHALLENGE & SOLUTION: two plain text columns ─── -->
-  <section class="story bg-paper-2">
+  <section class="story">
     <div class="container story-grid">
       <div>
         <h2 class="col-h2">{T.challenge}</h2>
@@ -249,7 +330,7 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   </section>
 
   <!-- ─── PAGE-BY-PAGE COMPARISONS ───────────────────────── -->
-  <section class="page-comparisons-section">
+  <section class="page-comparisons-section bg-paper-2">
     <div class="container">
       <h2 class="section-heading">{T.pageComparisonsHead}</h2>
       <div class="comparisons-grid">
@@ -314,7 +395,7 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   </section>
 
   <!-- ─── BEFORE / AFTER: the old site's problems next to the new site's features ─── -->
-  <section class="compare bg-paper-2">
+  <section class="compare">
     <div class="container">
       <h2 class="section-heading">{T.compareHead}</h2>
       <div class="compare-grid">
@@ -330,32 +411,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
             {FEATURES.map((f) => <li><span class="mark bg-mint" aria-hidden="true">✓</span>{f}</li>)}
           </ul>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── DESIGN SHOWCASE ────────────────────────────────── -->
-  <section class="design-showcase-section">
-    <div class="container">
-      <h2 class="section-heading">{T.beforeAfterHead}</h2>
-      <p class="showcase-description">{T.designShowcaseDesc}</p>
-      <div class="showcase-grid">
-        <a href="https://alimran.clinic/en/" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-home-dark.png" alt={isAr ? "الصفحة الرئيسية" : "Homepage"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.homeLabel}</p>
-        </a>
-        <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt={isAr ? "صفحة مقالة" : "Article page"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.articleLabel}</p>
-        </a>
-        <a href="https://alimran.clinic/en/treatments/cancer-pain/#s-2" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt={isAr ? "تفاصيل مقالة" : "Article details"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.articleLabel}</p>
-        </a>
-        <a href="https://alimran.clinic/en/library/" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-library-dark.png" alt={isAr ? "المكتبة" : "Library"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.libraryLabel}</p>
-        </a>
       </div>
     </div>
   </section>
@@ -408,6 +463,44 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   </section>
 </BaseLayout>
 
+
+<script is:inline>
+  // Rotating design window: cross-fade through the slides, keep the
+  // design-notes aside in sync, and point the window link at the page
+  // being shown. Pauses on hover/focus; no autoplay for reduced motion.
+  (function () {
+    var timer = 0;
+    function init() {
+      clearInterval(timer);
+      var root = document.querySelector("[data-rotator]");
+      if (!root) return;
+      var imgs = root.querySelectorAll(".rot-img");
+      var notes = root.querySelectorAll(".note");
+      var link = root.querySelector(".rot-link");
+      var i = 0, paused = false;
+      function show(n) {
+        i = (n + imgs.length) % imgs.length;
+        imgs.forEach(function (img, k) { img.classList.toggle("active", k === i); });
+        notes.forEach(function (b, k) {
+          b.classList.toggle("active", k === i);
+          b.setAttribute("aria-pressed", k === i ? "true" : "false");
+        });
+        link.href = imgs[i].getAttribute("data-href");
+      }
+      notes.forEach(function (b, k) { b.addEventListener("click", function () { show(k); }); });
+      root.addEventListener("mouseenter", function () { paused = true; });
+      root.addEventListener("mouseleave", function () { paused = false; });
+      root.addEventListener("focusin", function () { paused = true; });
+      root.addEventListener("focusout", function () { paused = false; });
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      timer = setInterval(function () { if (!paused) show(i + 1); }, 5000);
+    }
+    document.addEventListener("astro:page-load", init);
+    document.addEventListener("astro:before-swap", function () { clearInterval(timer); });
+    init();
+  })();
+</script>
+
 <style>
   .container {
     max-width: var(--k-max);
@@ -457,11 +550,8 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     color: var(--k-ink);
   }
 
-  /* Design Showcase */
-  .design-showcase-section {
-    padding: var(--k-space-10) 0;
-  }
-
+  /* The new design: rotating window + design-notes aside */
+  .showcase { padding: var(--k-space-10) 0; }
   .showcase-description {
     margin: 0 auto var(--k-space-9);
     max-width: 60ch;
@@ -470,27 +560,67 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     color: var(--k-ink-muted);
     text-align: center;
   }
-
   .showcase-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--k-space-7);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 600px);
+    gap: 56px;
+    align-items: start;
   }
-
-  .showcase-item {
+  .design-notes { min-width: 0; }
+  .notes-label {
+    margin: 0 0 14px;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+  }
+  .notes-rule { display: block; border-top: 2px solid var(--k-ink); }
+  .design-notes ol { margin: 0; padding: 0; list-style: none; }
+  .note {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--k-space-4);
+    gap: 4px;
+    padding: 14px 16px;
+    border: 0;
+    border-bottom: 1px solid var(--k-ink);
+    border-inline-start: 4px solid transparent;
+    background: transparent;
+    font: inherit;
+    text-align: start;
+    color: var(--k-ink-muted);
+    cursor: pointer;
+    transition: background-color 200ms ease, border-color 200ms ease;
   }
-
-
-  .showcase-label {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 500;
-    text-align: center;
+  .note strong { font-size: 17px; color: var(--k-ink); }
+  .note span { font-size: 15px; line-height: 1.5; }
+  .note:hover { background: var(--k-paper-2); }
+  .note.active {
+    border-inline-start-color: var(--k-ink);
+    background: var(--k-butter);
     color: var(--k-ink);
   }
+  .rot-link { display: block; }
+  .rot-window { padding: 0; }
+  .rot-stage {
+    position: relative;
+    aspect-ratio: 1269 / 1424;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+  .rot-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+    transition: opacity 600ms ease;
+  }
+  .rot-img.active { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .rot-img, .note { transition: none; } }
 
   /* Page-by-Page Comparisons */
   .page-comparisons-section {
@@ -527,14 +657,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     display: flex;
     flex-direction: column;
     gap: var(--k-space-4);
-  }
-
-  .showcase-item {
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--k-space-4);
-    cursor: pointer;
   }
 
   .comparison-link {
@@ -737,6 +859,8 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   /* Responsive */
   @media (max-width: 900px) {
     .story-grid, .compare-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .showcase-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .rot-link { order: -1; max-width: 600px; }
     .results-table { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .comparison-row {
       grid-template-columns: 1fr;
@@ -749,9 +873,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     }
 
     .hero-section,
+    .showcase,
     .story,
     .compare,
-    .design-showcase-section,
     .page-comparisons-section,
     .results-section,
     .process-section,
@@ -761,10 +885,6 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
 
     .hero-h1 {
       font-size: clamp(32px, 6vw, 48px);
-    }
-
-    .showcase-grid {
-      grid-template-columns: 1fr;
     }
 
     .results-table { grid-template-columns: minmax(0, 1fr); }
