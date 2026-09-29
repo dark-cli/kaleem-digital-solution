@@ -94,6 +94,7 @@ const T = isAr ? {
   homepageLabel: "الصفحة الرئيسية",
   articlesLabel: "صفحات المقالات",
   libraryLabel:  "المكتبة",
+  compareHead:   "قبل وبعد",
   oldLabel:      "قبل",
   newLabel:      "بعد",
 
@@ -183,12 +184,28 @@ const T = isAr ? {
   homepageLabel: "Homepage",
   articlesLabel: "Article pages",
   libraryLabel:  "Library",
+  compareHead:   "Before and after",
   oldLabel:      "Before",
   newLabel:      "After",
 
   ctaHead:      "Ready to liberate your digital platform?",
   ctaLabel:     "Book a free audit",
 };
+// Lists built from the copy above, so the markup stays short.
+const PROBLEMS = [T.p1, T.p2, T.p3, T.p4, T.p5, T.p6, T.p7, T.p8];
+const FEATURES = [T.f1, T.f2, T.f3, T.f4, T.f5, T.f6, T.f7, T.f8, T.f9, T.f10];
+const RESULTS = [
+  { t: T.r1Title, v: T.r1 }, { t: T.r2Title, v: T.r2 }, { t: T.r3Title, v: T.r3 },
+  { t: T.r4Title, v: T.r4 }, { t: T.r5Title, v: T.r5 }, { t: T.r6Title, v: T.r6 },
+];
+// Step titles carry their own "1." numbering in the copy; the list numbers them.
+const STEPS = [
+  { t: T.step1Title, d: T.step1 }, { t: T.step2Title, d: T.step2 }, { t: T.step3Title, d: T.step3 },
+  { t: T.step4Title, d: T.step4 }, { t: T.step5Title, d: T.step5 },
+].map((s) => ({ ...s, t: s.t.replace(/^\d+\.\s*/, "") }));
+const TECH = [T.t1, T.t2, T.t3, T.t4];
+const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
+
 ---
 
 <BaseLayout title={T.title} description={T.description}>
@@ -202,134 +219,31 @@ const T = isAr ? {
     </div>
   </section>
 
-  <!-- ─── PROBLEMS GRID ──────────────────────────────────── -->
-  <section class="problems-section bg-paper-2">
+  <!-- ─── RESULTS: a ruled table, no boxes ─── -->
+  <section class="results-section">
     <div class="container">
-      <h2 class="section-heading">{T.problemsHead}</h2>
-      <div class="problems-grid">
-        <div class="sk problem-card bg-butter">
-          <span class="problem-icon">✕</span>
-          <p>{T.p1}</p>
-        </div>
-        <div class="sk problem-card bg-peach">
-          <span class="problem-icon">✕</span>
-          <p>{T.p2}</p>
-        </div>
-        <div class="sk problem-card bg-apricot">
-          <span class="problem-icon">✕</span>
-          <p>{T.p3}</p>
-        </div>
-        <div class="sk problem-card bg-lilac">
-          <span class="problem-icon">✕</span>
-          <p>{T.p4}</p>
-        </div>
-        <div class="sk problem-card bg-butter">
-          <span class="problem-icon">✕</span>
-          <p>{T.p5}</p>
-        </div>
-        <div class="sk problem-card bg-peach">
-          <span class="problem-icon">✕</span>
-          <p>{T.p6}</p>
-        </div>
-        <div class="sk problem-card bg-sky">
-          <span class="problem-icon">✕</span>
-          <p>{T.p7}</p>
-        </div>
-        <div class="sk problem-card bg-apricot">
-          <span class="problem-icon">✕</span>
-          <p>{T.p8}</p>
-        </div>
-      </div>
+      <h2 class="section-heading">{T.results}</h2>
+      <dl class="results-table">
+        {RESULTS.map((r) => (
+          <div>
+            <dt>{r.t}</dt>
+            <dd>{r.v}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   </section>
 
-  <!-- ─── DESIGN SHOWCASE ────────────────────────────────── -->
-  <section class="design-showcase-section">
-    <div class="container">
-      <h2 class="section-heading">{T.beforeAfterHead}</h2>
-      <p class="showcase-description">{T.designShowcaseDesc}</p>
-      <div class="showcase-grid">
-        <a href="https://alimran.clinic/en/" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-home-dark.png" alt={isAr ? "الصفحة الرئيسية" : "Homepage"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.homeLabel}</p>
-        </a>
-        <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt={isAr ? "صفحة مقالة" : "Article page"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.articleLabel}</p>
-        </a>
-        <a href="https://alimran.clinic/en/treatments/cancer-pain/#s-2" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt={isAr ? "تفاصيل مقالة" : "Article details"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.articleLabel}</p>
-        </a>
-        <a href="https://alimran.clinic/en/library/" target="_blank" class="showcase-item window-link">
-          <WindowWidget src="/assets/illustrations/new-library-dark.png" alt={isAr ? "المكتبة" : "Library"} chromeColor="sky-shader" />
-          <p class="showcase-label">{T.libraryLabel}</p>
-        </a>
+  <!-- ─── CHALLENGE & SOLUTION: two plain text columns ─── -->
+  <section class="story bg-paper-2">
+    <div class="container story-grid">
+      <div>
+        <h2 class="col-h2">{T.challenge}</h2>
+        <p>{T.challengeDesc}</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ─── FEATURES GRID ───────────────────────────────────── -->
-  <section class="features-section bg-paper-2">
-    <div class="container">
-      <h2 class="section-heading">{T.featuresHead}</h2>
-      <div class="features-grid">
-        <div class="sk feature-card bg-sky">
-          <span class="feature-icon">✓</span>
-          <p>{T.f1}</p>
-        </div>
-        <div class="sk feature-card bg-mint">
-          <span class="feature-icon">✓</span>
-          <p>{T.f2}</p>
-        </div>
-        <div class="sk feature-card bg-lilac">
-          <span class="feature-icon">✓</span>
-          <p>{T.f3}</p>
-        </div>
-        <div class="sk feature-card bg-butter">
-          <span class="feature-icon">✓</span>
-          <p>{T.f4}</p>
-        </div>
-        <div class="sk feature-card bg-apricot">
-          <span class="feature-icon">✓</span>
-          <p>{T.f5}</p>
-        </div>
-        <div class="sk feature-card bg-peach">
-          <span class="feature-icon">✓</span>
-          <p>{T.f6}</p>
-        </div>
-        <div class="sk feature-card bg-sky">
-          <span class="feature-icon">✓</span>
-          <p>{T.f7}</p>
-        </div>
-        <div class="sk feature-card bg-butter">
-          <span class="feature-icon">✓</span>
-          <p>{T.f8}</p>
-        </div>
-        <div class="sk feature-card bg-lilac">
-          <span class="feature-icon">✓</span>
-          <p>{T.f9}</p>
-        </div>
-        <div class="sk feature-card bg-mint">
-          <span class="feature-icon">✓</span>
-          <p>{T.f10}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── CHALLENGE & SOLUTION ───────────────────────────── -->
-  <section class="section-pair">
-    <div class="container">
-      <div class="pair-grid">
-        <div class="sk card-butter">
-          <h2>{T.challenge}</h2>
-          <p>{T.challengeDesc}</p>
-        </div>
-        <div class="sk card-mint">
-          <h2>{T.solution}</h2>
-          <p>{T.solutionDesc}</p>
-        </div>
+      <div>
+        <h2 class="col-h2">{T.solution}</h2>
+        <p>{T.solutionDesc}</p>
       </div>
     </div>
   </section>
@@ -399,119 +313,89 @@ const T = isAr ? {
     </div>
   </section>
 
-  <!-- ─── RESULTS GRID ────────────────────────────────────── -->
-  <section class="results-section bg-paper-2">
+  <!-- ─── BEFORE / AFTER: the old site's problems next to the new site's features ─── -->
+  <section class="compare bg-paper-2">
     <div class="container">
-      <h2 class="section-heading">{T.results}</h2>
-      <div class="results-grid">
-        <div class="sk result-card bg-lilac">
-          <span class="result-label">{T.r1Title}</span>
-          <span class="result-value">{T.r1}</span>
+      <h2 class="section-heading">{T.compareHead}</h2>
+      <div class="compare-grid">
+        <div>
+          <h3 class="list-h3"><span class="mark bg-peach">✕</span>{T.problemsHead}</h3>
+          <ul class="mark-list">
+            {PROBLEMS.map((p) => <li><span class="mark bg-peach" aria-hidden="true">✕</span>{p}</li>)}
+          </ul>
         </div>
-        <div class="sk result-card bg-peach">
-          <span class="result-label">{T.r2Title}</span>
-          <span class="result-value">{T.r2}</span>
-        </div>
-        <div class="sk result-card bg-butter">
-          <span class="result-label">{T.r3Title}</span>
-          <span class="result-value">{T.r3}</span>
-        </div>
-        <div class="sk result-card bg-sky">
-          <span class="result-label">{T.r4Title}</span>
-          <span class="result-value">{T.r4}</span>
-        </div>
-        <div class="sk result-card bg-apricot">
-          <span class="result-label">{T.r5Title}</span>
-          <span class="result-value">{T.r5}</span>
-        </div>
-        <div class="sk result-card bg-lilac">
-          <span class="result-label">{T.r6Title}</span>
-          <span class="result-value">{T.r6}</span>
+        <div>
+          <h3 class="list-h3"><span class="mark bg-mint">✓</span>{T.featuresHead}</h3>
+          <ul class="mark-list">
+            {FEATURES.map((f) => <li><span class="mark bg-mint" aria-hidden="true">✓</span>{f}</li>)}
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ─── TECHNICAL ARCHITECTURE ──────────────────────────── -->
-  <section class="tech-section">
+  <!-- ─── DESIGN SHOWCASE ────────────────────────────────── -->
+  <section class="design-showcase-section">
     <div class="container">
-      <h2 class="section-heading">{T.technicalHead}</h2>
-      <div class="tech-grid">
-        <div class="sk tech-item bg-butter">
-          <p>{T.t1}</p>
-        </div>
-        <div class="sk tech-item bg-sky">
-          <p>{T.t2}</p>
-        </div>
-        <div class="sk tech-item bg-mint">
-          <p>{T.t3}</p>
-        </div>
-        <div class="sk tech-item bg-apricot">
-          <p>{T.t4}</p>
-        </div>
+      <h2 class="section-heading">{T.beforeAfterHead}</h2>
+      <p class="showcase-description">{T.designShowcaseDesc}</p>
+      <div class="showcase-grid">
+        <a href="https://alimran.clinic/en/" target="_blank" class="showcase-item window-link">
+          <WindowWidget src="/assets/illustrations/new-home-dark.png" alt={isAr ? "الصفحة الرئيسية" : "Homepage"} chromeColor="sky-shader" />
+          <p class="showcase-label">{T.homeLabel}</p>
+        </a>
+        <a href="https://alimran.clinic/en/treatments/brain-tumor/" target="_blank" class="showcase-item window-link">
+          <WindowWidget src="/assets/illustrations/new-article-1-dark.png" alt={isAr ? "صفحة مقالة" : "Article page"} chromeColor="sky-shader" />
+          <p class="showcase-label">{T.articleLabel}</p>
+        </a>
+        <a href="https://alimran.clinic/en/treatments/cancer-pain/#s-2" target="_blank" class="showcase-item window-link">
+          <WindowWidget src="/assets/illustrations/new-article-2-dark.png" alt={isAr ? "تفاصيل مقالة" : "Article details"} chromeColor="sky-shader" />
+          <p class="showcase-label">{T.articleLabel}</p>
+        </a>
+        <a href="https://alimran.clinic/en/library/" target="_blank" class="showcase-item window-link">
+          <WindowWidget src="/assets/illustrations/new-library-dark.png" alt={isAr ? "المكتبة" : "Library"} chromeColor="sky-shader" />
+          <p class="showcase-label">{T.libraryLabel}</p>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- ─── THE PROCESS ──────────────────────────────────────── -->
-  <section class="process-section bg-paper-2">
-    <div class="container">
+  <!-- ─── PROCESS: a numbered list down a line ─── -->
+  <section class="process-section">
+    <div class="container narrow">
       <h2 class="section-heading">{T.processHead}</h2>
-      <div class="process-grid">
-        <div class="sk process-step bg-lilac">
-          <h3>{T.step1Title}</h3>
-          <p>{T.step1}</p>
-        </div>
-        <div class="sk process-step bg-butter">
-          <h3>{T.step2Title}</h3>
-          <p>{T.step2}</p>
-        </div>
-        <div class="sk process-step bg-sky">
-          <h3>{T.step3Title}</h3>
-          <p>{T.step3}</p>
-        </div>
-        <div class="sk process-step bg-mint">
-          <h3>{T.step4Title}</h3>
-          <p>{T.step4}</p>
-        </div>
-        <div class="sk process-step bg-peach">
-          <h3>{T.step5Title}</h3>
-          <p>{T.step5}</p>
-        </div>
+      <ol class="process-list">
+        {STEPS.map((s, i) => (
+          <li>
+            <span class="num">{i + 1}</span>
+            <div>
+              <h3>{s.t}</h3>
+              <p>{s.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="tech">
+        <h3>{T.technicalHead}</h3>
+        <ul class="tags">
+          {TECH.map((t) => <li>{t}</li>)}
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- ─── OWNERSHIP ───────────────────────────────────────── -->
+  <!-- ─── OWNERSHIP: inline check list on a band ─── -->
   <section class="ownership-section bg-lilac">
-    <div class="container">
-      <h2 class="section-heading">{T.ownershipHead}</h2>
-      <div class="ownership-list">
-        <div class="sk ownership-item">
-          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>{T.o1}</p>
-        </div>
-        <div class="sk ownership-item">
-          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>{T.o2}</p>
-        </div>
-        <div class="sk ownership-item">
-          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>{T.o3}</p>
-        </div>
-        <div class="sk ownership-item">
-          <svg class="check" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>{T.o4}</p>
-        </div>
-      </div>
+    <div class="container own-row">
+      <h2>{T.ownershipHead}</h2>
+      <ul>
+        {OWNERSHIP.map((o) => (
+          <li>
+            <svg class="check" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12.5l5 5 13-14" fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            {o}
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -573,66 +457,6 @@ const T = isAr ? {
     color: var(--k-ink);
   }
 
-  /* Pair Grid */
-  .section-pair {
-    padding: var(--k-space-10) 0;
-  }
-
-  .pair-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--k-space-7);
-  }
-
-  .pair-grid > div {
-    padding: var(--k-space-7);
-  }
-
-  .pair-grid h2 {
-    margin: 0 0 var(--k-space-4);
-    font-size: clamp(24px, 3.4vw, 34px);
-    color: var(--k-ink);
-    font-weight: 700;
-  }
-
-  .pair-grid p {
-    margin: 0;
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--k-ink);
-  }
-
-  /* Problems Grid */
-  .problems-section {
-    padding: var(--k-space-10) 0;
-  }
-
-  .problems-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--k-space-6);
-  }
-
-  .problem-card {
-    padding: var(--k-space-6);
-    display: flex;
-    flex-direction: column;
-    gap: var(--k-space-3);
-  }
-
-  .problem-icon {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--k-ink);
-  }
-
-  .problem-card p {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--k-ink);
-  }
-
   /* Design Showcase */
   .design-showcase-section {
     padding: var(--k-space-10) 0;
@@ -671,7 +495,6 @@ const T = isAr ? {
   /* Page-by-Page Comparisons */
   .page-comparisons-section {
     padding: var(--k-space-10) 0;
-    background: var(--k-paper-2);
   }
 
   .comparisons-grid {
@@ -731,42 +554,6 @@ const T = isAr ? {
   }
 
 
-  /* Features Grid */
-  .features-section {
-    padding: var(--k-space-10) 0;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--k-space-6);
-  }
-
-  .feature-card {
-    padding: var(--k-space-6);
-    display: flex;
-    flex-direction: column;
-    gap: var(--k-space-3);
-  }
-
-  .feature-icon {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--k-ink);
-  }
-
-  .feature-card p {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--k-ink);
-  }
-
-  /* Results */
-  .results-section {
-    padding: var(--k-space-10) 0;
-  }
-
   .section-heading {
     margin: 0 0 var(--k-space-8);
     font-size: clamp(32px, 5vw, 48px);
@@ -775,115 +562,164 @@ const T = isAr ? {
     text-align: center;
   }
 
-  .results-grid {
+  /* Challenge & solution: two text columns */
+  .story { padding: var(--k-space-10) 0; }
+  .story-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--k-space-6);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px;
   }
+  .col-h2 {
+    margin: 0 0 var(--k-space-4);
+    font-size: clamp(26px, 3.4vw, 34px);
+    font-weight: 700;
+    color: var(--k-ink);
+  }
+  .story p { margin: 0; font-size: 17px; line-height: 1.75; color: var(--k-ink); }
 
-  .result-card {
-    padding: var(--k-space-6);
+  /* Before / after: two marked lists side by side */
+  .compare { padding: var(--k-space-10) 0; }
+  .compare-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px;
+  }
+  .list-h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--k-ink);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--k-ink);
+  }
+  .mark-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: flex;
     flex-direction: column;
-    gap: var(--k-space-3);
+    gap: 14px;
+  }
+  .mark-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--k-ink);
+  }
+  .mark {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--k-ink);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--k-ink);
   }
 
-  .result-label {
+  /* Results: a ruled table, label over value */
+  .results-section { padding: var(--k-space-10) 0; }
+  .results-table {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 40px;
+    border-top: 2px solid var(--k-ink);
+  }
+  .results-table div {
+    padding: 22px 0;
+    border-bottom: 2px solid var(--k-ink);
+  }
+  .results-table dt {
     font-family: var(--k-font-mono);
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--k-ink-muted);
+    margin-bottom: 8px;
   }
+  .results-table dd { margin: 0; font-size: 19px; font-weight: 600; line-height: 1.45; color: var(--k-ink); }
 
-  .result-value {
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: var(--k-ink);
-  }
-
-  /* Tech Section */
-  .tech-section {
-    padding: var(--k-space-10) 0;
-  }
-
-  .tech-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--k-space-6);
-  }
-
-  .tech-item {
-    padding: var(--k-space-6);
-  }
-
-  .tech-item p {
-    margin: 0;
-    font-size: 17px;
-    line-height: 1.6;
-    color: var(--k-ink);
-    font-weight: 500;
-  }
-
-  /* Process */
+  /* Process: numbered list down a line, then the tech tags */
   .process-section {
     padding: var(--k-space-10) 0;
+    background: var(--k-paper-2);
+    border-top: 2px solid var(--k-ink);
   }
-
-  .process-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--k-space-6);
-  }
-
-  .process-step {
-    padding: var(--k-space-6);
-  }
-
-  .process-step h3 {
-    margin: 0 0 var(--k-space-3);
-    font-size: 18px;
-    color: var(--k-ink);
-    font-weight: 700;
-  }
-
-  .process-step p {
+  .narrow { max-width: 860px; }
+  .process-list {
+    position: relative;
     margin: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--k-ink);
-  }
-
-  /* Ownership */
-  .ownership-section {
-    padding: var(--k-space-10) 0;
-  }
-
-  .ownership-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--k-space-6);
-  }
-
-  .ownership-item {
+    padding: 0;
+    list-style: none;
     display: flex;
-    gap: var(--k-space-4);
-    padding: var(--k-space-5);
-    background: var(--k-paper);
+    flex-direction: column;
+    gap: 28px;
   }
-
-  .check {
+  .process-list li { position: relative; display: flex; gap: 20px; align-items: flex-start; }
+  /* Connector from each circle down to the next one (none after the last). */
+  .process-list li:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 44px;
+    bottom: -28px;
+    inset-inline-start: 21px;
+    border-inline-start: 3px solid var(--k-ink);
+  }
+  .num {
+    width: 44px;
+    height: 44px;
     flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .ownership-item p {
-    margin: 0;
-    font-size: 16px;
-    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2.5px solid var(--k-ink);
+    border-radius: 50%;
+    background: var(--k-paper);
+    font-family: var(--k-font-mono);
+    font-size: 18px;
+    font-weight: 600;
     color: var(--k-ink);
   }
+  .process-list h3 { margin: 8px 0 4px; font-size: 20px; font-weight: 700; color: var(--k-ink); }
+  .process-list p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--k-ink-muted); }
+
+  .tech { margin-top: 48px; }
+  .tech h3 { margin: 0 0 16px; font-size: 20px; font-weight: 700; color: var(--k-ink); }
+  .tags { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
+  .tags li {
+    padding: 6px 14px;
+    border: 1.5px solid var(--k-ink);
+    border-radius: var(--k-radius-pill);
+    background: var(--k-paper);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--k-ink);
+  }
+
+  /* Ownership: one band with an inline check list */
+  .ownership-section { padding: 48px 0; border-top: 2px solid var(--k-ink); }
+  .own-row { display: flex; flex-direction: column; gap: 20px; }
+  .own-row h2 { margin: 0; font-size: clamp(26px, 3.4vw, 34px); font-weight: 700; color: var(--k-ink); }
+  .own-row ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 40px;
+  }
+  .own-row li { display: flex; align-items: flex-start; gap: 10px; font-size: 17px; line-height: 1.5; font-weight: 600; color: var(--k-ink); }
+  .check { flex-shrink: 0; margin-top: 2px; }
 
   /* CTA */
   .cta-section {
@@ -900,9 +736,8 @@ const T = isAr ? {
 
   /* Responsive */
   @media (max-width: 900px) {
-    .pair-grid {
-      grid-template-columns: 1fr;
-    }
+    .story-grid, .compare-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .results-table { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .comparison-row {
       grid-template-columns: 1fr;
     }
@@ -914,15 +749,12 @@ const T = isAr ? {
     }
 
     .hero-section,
-    .problems-section,
-    .section-pair,
+    .story,
+    .compare,
     .design-showcase-section,
     .page-comparisons-section,
-    .features-section,
     .results-section,
-    .tech-section,
     .process-section,
-    .ownership-section,
     .cta-section {
       padding: var(--k-space-8) 0;
     }
@@ -934,5 +766,8 @@ const T = isAr ? {
     .showcase-grid {
       grid-template-columns: 1fr;
     }
+
+    .results-table { grid-template-columns: minmax(0, 1fr); }
+    .own-row ul { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
