@@ -103,7 +103,7 @@ const socials = [
       <div class="sk audit-card bg-paper">
         <h2>{T.bookAudit}</h2>
         <p>{T.auditNote}</p>
-        <a class="skb skb-mint" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent(isAr ? "طلب تقييم مجاني" : "Free audit request")}`}>
+        <a class="skb skb-mint" href={L("/audit/")}>
           {T.bookAudit}
         </a>
       </div>

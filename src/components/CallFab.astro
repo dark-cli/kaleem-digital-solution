@@ -44,7 +44,9 @@ const aria = locale === "ar"
 <style is:global>
   .call-fab {
     position: fixed;
-    bottom: 20px;
+    /* Well clear of the screen edge and the phone's home bar / browser
+       toolbar, and above the footer's bottom rows. */
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     inset-inline-end: 20px;
     z-index: 60;
     display: inline-flex;

@@ -71,7 +71,7 @@ const offices = (isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(" · ");
       <p class="f-label">{T.contact}</p>
       <h2 class="f-headline">{T.headline}</h2>
       <div class="f-actions">
-        <a class="skb skb-mint f-audit" href={L("/contact/")}>{T.audit}</a>
+        <a class="skb skb-mint f-audit" href={L("/audit/")}>{T.audit}</a>
         <a class="f-btn" href={CONTACT.whatsapp} target="_blank" rel="noopener">
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M9 9.5c.3 1.8 1.7 3.3 3.5 3.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
           <span>{T.whatsapp}</span>
@@ -280,9 +280,9 @@ const offices = (isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(" · ");
     .f-info { flex-direction: column; gap: 18px; margin-top: 28px; }
     /* The header above already shows the brand. */
     .f-brand { display: none; }
-    .f-row { padding: 20px 0; }
+    /* Links row sits beside the raised floating call button. */
+    .f-row { padding: 20px 0; padding-inline-end: 80px; }
     .f-links { gap: 12px 24px; }
-    /* Keep the bottom row clear of the floating call button's corner. */
-    .footer-bottom { padding-top: 18px; padding-inline-end: 80px; }
+    .footer-bottom { padding-top: 18px; }
   }
 </style>

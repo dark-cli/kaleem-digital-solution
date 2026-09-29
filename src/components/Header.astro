@@ -80,7 +80,7 @@ const ctaLabel = locale === "ar" ? "احجز تقييماً مجانياً" : "B
       <a class="fbtn fbtn-sm fbtn-paper" href={altHref} aria-label={altLabel} title={altLabel}>
         {altLabel}
       </a>
-      <a class="skb skb-lilac header-cta" href={L("/contact/")}>
+      <a class="skb skb-lilac header-cta" href={L("/audit/")}>
         {ctaLabel}
       </a>
       <button
@@ -123,7 +123,7 @@ const ctaLabel = locale === "ar" ? "احجز تقييماً مجانياً" : "B
       <a class="drawer-link" href={altHref}>{altLabel}</a>
     </li>
   </ul>
-  <a class="skb skb-lilac" href={L("/contact/")}>{ctaLabel}</a>
+  <a class="skb skb-lilac" href={L("/audit/")}>{ctaLabel}</a>
 </aside>
 <div id="menu-scrim" class="menu-scrim" aria-hidden="true"></div>
 
@@ -339,7 +339,10 @@ const ctaLabel = locale === "ar" ? "احجز تقييماً مجانياً" : "B
     transform: translateX(-100%);
   }
 
-  .mobile-nav.open {
+  /* Must out-rank the RTL rule above, or the Arabic drawer stays parked
+     off-screen when "open". */
+  .mobile-nav.open,
+  html[dir="rtl"] .mobile-nav.open {
     transform: translateX(0);
   }
 
