@@ -68,33 +68,15 @@ const businessSchema = {
      browser can start decoding without re-scanning after a script/style. -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<!-- The Kaleem pastel design is light-only; tell browsers not to apply a
+     dark scheme to form controls, scrollbars or auto-darkening. -->
+<meta name="color-scheme" content="light only" />
 
 <script is:inline>
   // Mark embedded contexts so overscroll containment CSS can opt out.
   if (window.self !== window.top) {
     document.documentElement.classList.add("is-embedded");
   }
-  // Apply theme before paint to avoid FOUC. Preference precedence:
-  // 1) explicit user choice in localStorage, 2) prefers-color-scheme.
-  // Also re-apply on Astro View Transitions swaps — ClientRouter replaces
-  // the <html> attributes on navigation, which would drop data-theme.
-  (function () {
-    function apply() {
-      try {
-        var stored = localStorage.getItem("theme");
-        var wantsDark = stored
-          ? stored === "dark"
-          : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if (wantsDark) {
-          document.documentElement.setAttribute("data-theme", "dark");
-        } else {
-          document.documentElement.removeAttribute("data-theme");
-        }
-      } catch (e) {}
-    }
-    apply();
-    document.addEventListener("astro:after-swap", apply);
-  })();
 </script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <!-- Self-hosted webfonts. Files in public/fonts/ are downloaded from Google
