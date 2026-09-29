@@ -3,8 +3,8 @@
 The site lives on **Cloudflare Pages** with Workers as the runtime. There is no
 staging environment — every push to `main` deploys straight to production.
 
-Repo: [dark-cli/alimranmed-web](https://github.com/dark-cli/alimranmed-web)
-Live URL: [alimran.clinic](https://alimran.clinic/)
+Repo: [dark-cli/kaleem-digital-solution](https://github.com/dark-cli/kaleem-digital-solution)
+Live URL: [kaleem.dev](https://kaleem.dev/)
 
 ---
 
@@ -36,7 +36,7 @@ After `git push`, the deploy typically takes **5–10 minutes**:
 6. The public URL flips to the new version
 
 You can watch progress at [dash.cloudflare.com](https://dash.cloudflare.com/) →
-Workers & Pages → alimranmed-web → Deployments.
+Workers & Pages → kaleem-web → Deployments.
 
 ## When the site doesn't update after ~10 minutes
 
@@ -93,11 +93,10 @@ dates are real.
 
 ## Domain and DNS
 
-- **`alimran.clinic`** — apex, Cloudflare-managed. A/AAAA records point at the Pages project.
-- **`www.alimran.clinic`** — CNAME → apex.
+- **`kaleem.dev`** — apex, Cloudflare-managed. Points at the `kaleem-web` project.
+- **`smarthome.kaleem.dev`** — the smart-home business; separate from this site.
 - HTTPS is Cloudflare Universal SSL (free tier, auto-renewed).
 - HTTP → HTTPS is enforced at the edge.
-- The old WordPress site at `alimranmed.com` is a **separate zone** and stays live during a migration window. See `public/_redirects` for the URL map.
 
 ---
 
@@ -114,7 +113,7 @@ This bypasses the automated flow and requires `wrangler login` first. Use it onl
 for emergency hotfixes when GitHub is unavailable — normally, `git push` is the
 correct path.
 
-## Legacy WordPress redirects
+## Legacy WordPress redirects (example from the Alimran migration)
 
 The clinic previously ran two WordPress sites: `alimranmed.com` (English) and
 `ar.alimranmed.com` (Arabic). Both have negligible external inbound traffic

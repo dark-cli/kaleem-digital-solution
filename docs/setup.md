@@ -11,8 +11,8 @@
 ## Clone and install
 
 ```bash
-git clone https://github.com/dark-cli/alimranmed-web.git
-cd alimranmed-web
+git clone https://github.com/dark-cli/kaleem-digital-solution.git
+cd kaleem-digital-solution
 npm install
 ```
 

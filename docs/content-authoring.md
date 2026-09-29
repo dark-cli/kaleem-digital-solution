@@ -23,7 +23,7 @@ src/content/<collection>/<slug>/<locale>.md
 Both language versions of the same topic live side by side in the same folder.
 They share the slug but their content is independent.
 
-Publish URL: `https://alimran.clinic/<locale>/<collection>/<slug>/`.
+Publish URL: `https://kaleem.dev/<locale>/<collection>/<slug>/`.
 
 ---
 

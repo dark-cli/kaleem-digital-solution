@@ -19,7 +19,7 @@ npm run dev
 Then visit [http://localhost:4321/admin/](http://localhost:4321/admin/) in **Chrome, Edge, or Brave**.
 
 1. Click **"Work with Local Repository"**
-2. Pick the `alimranmed-web` folder when prompted
+2. Pick the `kaleem-digital-solution` folder when prompted
 3. Grant read/write permission
 
 The admin now reads and writes files directly to your local disk. Changes
@@ -28,7 +28,7 @@ git tool.
 
 **In production:**
 
-The `/admin/` route is deployed at `https://alimran.clinic/admin/`, but with
+The `/admin/` route is deployed at `https://kaleem.dev/admin/`, but with
 the current setup **the "Work with Local Repository" button is the only usable
 option**. GitHub-based authentication is not yet configured (see Limitations
 below).

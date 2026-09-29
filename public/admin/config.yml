@@ -23,7 +23,7 @@
 # NOTE: local editing requires a Chromium-based browser (Chrome, Edge, Brave).
 backend:
   name: github
-  repo: placeholder/alimranmed-web
+  repo: dark-cli/kaleem-digital-solution
   branch: main
 
 media_folder: public/images

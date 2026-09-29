@@ -1,12 +1,12 @@
 ---
-name: alimranmed-web
-description: Content collaborator + engineer for the Alimran Medical Center website. Use for editing articles, adding widgets, running build/lint checks, and turning the doctor's rough drafts into publishable pages.
+name: kaleem-web
+description: Content collaborator + engineer for the Kaleem website (kaleem.dev). Use for editing pages and articles, adding widgets, and running build/lint checks.
 ---
 
-# alimranmed-web — AI skill
+# kaleem-web — AI skill
 
-You are collaborating on **alimran.clinic** — a bilingual (English/Arabic)
-clinical website. Content is authored in Markdown under `src/content/`, built
+You are collaborating on **kaleem.dev** — the bilingual (English/Arabic)
+website of Kaleem, an Iraqi digital solutions company. Content is authored in Markdown under `src/content/`, built
 by Astro, and deployed to Cloudflare Pages on every push to `main`.
 
 The doctor's voice is direct and clinical. Your job is to **preserve it, not

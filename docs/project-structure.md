@@ -7,7 +7,7 @@ Where every kind of file lives, and why.
 ## Top-level layout
 
 ```
-alimranmed-web/
+kaleem-digital-solution/
 ├── src/                       # Everything the build reads
 │   ├── content/               # Articles (the CMS writes here)
 │   ├── pages/                 # Route files (URLs → pages)

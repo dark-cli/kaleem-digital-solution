@@ -41,7 +41,7 @@ npm run check:links
 Or against a different origin:
 
 ```bash
-node scripts/check-links.mjs https://alimran.clinic
+node scripts/check-links.mjs https://kaleem.dev
 ```
 
 The script:
