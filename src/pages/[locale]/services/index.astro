@@ -50,7 +50,7 @@ const T = isAr ? {
         scale: ["نقاط البيع", "المخزون", "كل الفروع في لوحة واحدة"],
         tags: ["المخزون", "نقاط البيع", "سجلات العملاء", "برامج سطح المكتب", "الانتقال من الورق والجداول"] },
   s5: { name: "الشبكات والأمن", line: "كاميرات، وشبكات منظّمة، وواي فاي للزوار — وكل كلمات المرور بين يديك.",
-        cams: "الكاميرات", recorder: "جهاز التسجيل", router: "الراوتر", staff: "شبكة الموظفين", guests: "شبكة الزوار",
+        cams: "الكاميرات", recorder: "جهاز التسجيل", server: "الخادم", router: "الراوتر", staff: "شبكة الموظفين", guests: "شبكة الزوار",
         tags: ["كاميرات المراقبة", "التحكم بالدخول", "واي فاي للموظفين والزوار", "بوابة زوار تعرض موقعك"] },
   s6: { name: "الاستشارات والتدريب", line: "لست متأكداً ماذا تفعل بأنظمتك؟ نساعدك على القرار — ثم ندرّب فريقك على إدارتها.",
         choices: ["نبني", "نشتري", "نُبقي", "نستبدل"],
@@ -102,7 +102,7 @@ const T = isAr ? {
         scale: ["Point of sale", "Inventory", "Every branch, one dashboard"],
         tags: ["Inventory", "Point of sale", "Customer records", "Desktop apps", "From paper & spreadsheets"] },
   s5: { name: "Networks & security", line: "Cameras, organised networks and guest Wi-Fi — with every password in your hands.",
-        cams: "Cameras", recorder: "Recorder", router: "Router", staff: "Staff network", guests: "Guest Wi-Fi",
+        cams: "Cameras", recorder: "Recorder", server: "Server", router: "Router", staff: "Staff network", guests: "Guest Wi-Fi",
         tags: ["Surveillance cameras", "Access control", "Staff & guest Wi-Fi", "Guest portal with your website"] },
   s6: { name: "Consulting & training", line: "Not sure what to do with your systems? We help you decide — then train your team to run them.",
         choices: ["Build", "Buy", "Keep", "Replace"],
@@ -376,60 +376,55 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
 
         <!-- Networks & security -->
         <article id="networks" class="card svc bg-apricot">
+          <!-- A simple star network: every device links to the router with a
+               dotted line (no arrows, traffic goes both ways). Labels carry a
+               halo in the card colour so lines pass cleanly behind them. -->
           <div class="art art-network" aria-hidden="true">
-            <!-- Cameras: a wall-mounted bullet camera and a ceiling dome. -->
-            <figure>
-              <svg viewBox="0 0 76 120" width="62">
-                <rect x="2" y="4" width="10" height="34" rx="2" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
-                <path d="M12 30l12-8" class="draw"></path>
-                <rect x="20" y="8" width="44" height="22" rx="4" fill="#d9ccf0" class="draw" stroke-width="2.5"></rect>
-                <path d="M16 6h56v6" class="draw" stroke-width="2.5"></path>
-                <circle cx="64" cy="19" r="8" fill="#faf6ee" class="draw" stroke-width="2.5"></circle>
-                <circle cx="64" cy="19" r="3" fill="#1f1f1f"></circle>
-                <rect x="8" y="70" width="60" height="8" rx="2" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
-                <path d="M16 78a22 22 0 0 0 44 0" fill="#c6ddf0" class="draw" stroke-width="2.5"></path>
-                <circle cx="38" cy="90" r="5" fill="#1f1f1f"></circle>
-              </svg>
-              <figcaption>{T.s5.cams}</figcaption>
-            </figure>
-            <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
-            <!-- Recorder: a screen showing four camera feeds. -->
-            <figure>
-              <svg viewBox="0 0 104 92" width="92">
-                <rect x="4" y="4" width="96" height="64" rx="4" fill="#faf6ee" class="draw"></rect>
-                <rect x="12" y="12" width="38" height="22" fill="#c6ddf0" class="draw" stroke-width="2"></rect>
-                <rect x="54" y="12" width="38" height="22" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
-                <rect x="12" y="38" width="38" height="22" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
-                <rect x="54" y="38" width="38" height="22" fill="#c6ddf0" class="draw" stroke-width="2"></rect>
-                <circle cx="18" cy="18" r="2.5" fill="#1f1f1f"></circle><circle cx="60" cy="18" r="2.5" fill="#1f1f1f"></circle><circle cx="18" cy="44" r="2.5" fill="#1f1f1f"></circle><circle cx="60" cy="44" r="2.5" fill="#1f1f1f"></circle>
-                <path d="M52 68v12M36 82h32" class="draw"></path>
-              </svg>
-              <figcaption>{T.s5.recorder}</figcaption>
-            </figure>
-            <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
-            <!-- Router with Wi-Fi waves. -->
-            <figure>
-              <svg viewBox="0 0 100 92" width="84">
-                <path d="M36 32a20 20 0 0 1 28 0M26 22a34 34 0 0 1 48 0" class="draw" stroke-width="2.5"></path>
-                <circle cx="50" cy="40" r="3.5" fill="#1f1f1f"></circle>
-                <path d="M22 58l-8-22M78 58l8-22" class="draw" stroke-width="2.5"></path>
-                <rect x="6" y="58" width="88" height="28" rx="6" fill="#faf6ee" class="draw"></rect>
-                <circle cx="24" cy="72" r="3.5" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="38" cy="72" r="3.5" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="52" cy="72" r="3.5" fill="#f7e7b0" stroke="#1f1f1f" stroke-width="2"></circle>
-              </svg>
-              <figcaption>{T.s5.router}</figcaption>
-            </figure>
-            <svg class="art-arrow flip-rtl" viewBox="0 0 60 24" set:html={ARROW}></svg>
-            <!-- Two separate networks: staff laptop, guest phone. -->
-            <div class="nets">
-              <figure>
-                <svg viewBox="0 0 84 56" width="66"><rect x="14" y="4" width="56" height="36" rx="3" fill="#c6ddf0" class="draw" stroke-width="2.5"></rect><path d="M4 40h76l-6 12H10z" fill="#faf6ee" class="draw" stroke-width="2.5"></path></svg>
-                <figcaption>{T.s5.staff}</figcaption>
-              </figure>
-              <figure>
-                <svg viewBox="0 0 84 56" width="66"><rect x="28" y="4" width="28" height="48" rx="5" fill="#bfe6d6" class="draw" stroke-width="2.5"></rect><path d="M38 46h8" class="draw" stroke-width="2.5"></path><path d="M64 18a10 10 0 0 1 12 0M60 12a16 16 0 0 1 20 0" class="draw" stroke-width="2"></path></svg>
-                <figcaption>{T.s5.guests}</figcaption>
-              </figure>
-            </div>
+            <svg class="net" viewBox="0 0 440 256">
+              <g fill="none" stroke="#1f1f1f" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0.5 8">
+                <path d="M220 131L72 34"></path>
+                <path d="M220 131L60 196"></path>
+                <path d="M220 131V34"></path>
+                <path d="M220 131L380 40"></path>
+                <path d="M220 131L380 196"></path>
+              </g>
+              <!-- Cameras: wall-mounted bullet + ceiling dome -->
+              <rect x="16" y="12" width="8" height="28" rx="2" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <rect x="28" y="16" width="36" height="18" rx="3" fill="#d9ccf0" class="draw" stroke-width="2.5"></rect>
+              <path d="M24 30l6-4M26 11h44v5" class="draw" stroke-width="2.5"></path>
+              <circle cx="66" cy="25" r="7" fill="#faf6ee" class="draw" stroke-width="2.5"></circle><circle cx="66" cy="25" r="2.5" fill="#1f1f1f"></circle>
+              <rect x="84" y="14" width="42" height="6" rx="2" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <path d="M90 20a15 15 0 0 0 30 0" fill="#c6ddf0" class="draw" stroke-width="2.5"></path><circle cx="105" cy="28" r="3" fill="#1f1f1f"></circle>
+              <text class="net-label" x="72" y="70" text-anchor="middle">{T.s5.cams}</text>
+              <!-- Recorder: screen with four feeds -->
+              <rect x="22" y="168" width="76" height="50" rx="3" fill="#faf6ee" class="draw" stroke-width="2.5"></rect>
+              <rect x="28" y="174" width="31" height="18" fill="#c6ddf0" class="draw" stroke-width="2"></rect><rect x="62" y="174" width="30" height="18" fill="#bfe6d6" class="draw" stroke-width="2"></rect>
+              <rect x="28" y="195" width="31" height="17" fill="#bfe6d6" class="draw" stroke-width="2"></rect><rect x="62" y="195" width="30" height="17" fill="#c6ddf0" class="draw" stroke-width="2"></rect>
+              <path d="M60 218v8M48 227h24" class="draw" stroke-width="2.5"></path>
+              <text class="net-label" x="60" y="250" text-anchor="middle">{T.s5.recorder}</text>
+              <!-- Server: three rack units -->
+              <rect x="188" y="4" width="64" height="16" rx="2" fill="#bfe6d6" class="draw" stroke-width="2.5"></rect>
+              <rect x="188" y="22" width="64" height="16" rx="2" fill="#bfe6d6" class="draw" stroke-width="2.5"></rect>
+              <rect x="188" y="40" width="64" height="16" rx="2" fill="#bfe6d6" class="draw" stroke-width="2.5"></rect>
+              <path d="M196 12h22M196 30h22M196 48h22" class="draw" stroke-width="2"></path>
+              <circle cx="242" cy="12" r="2.5" fill="#1f1f1f"></circle><circle cx="242" cy="30" r="2.5" fill="#1f1f1f"></circle><circle cx="242" cy="48" r="2.5" fill="#1f1f1f"></circle>
+              <text class="net-label" x="220" y="78" text-anchor="middle">{T.s5.server}</text>
+              <!-- Router with Wi-Fi, at the centre -->
+              <path d="M209 106a15 15 0 0 1 22 0M201 98a26 26 0 0 1 38 0" class="draw" stroke-width="2.5"></path>
+              <path d="M198 120l-6-16M242 120l6-16" class="draw" stroke-width="2.5"></path>
+              <rect x="182" y="118" width="76" height="26" rx="6" fill="#faf6ee" class="draw"></rect>
+              <circle cx="198" cy="131" r="3" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="210" cy="131" r="3" fill="#bfe6d6" stroke="#1f1f1f" stroke-width="2"></circle><circle cx="222" cy="131" r="3" fill="#f7e7b0" stroke="#1f1f1f" stroke-width="2"></circle>
+              <text class="net-label" x="220" y="166" text-anchor="middle">{T.s5.router}</text>
+              <!-- Staff network: laptop -->
+              <rect x="352" y="14" width="56" height="34" rx="3" fill="#c6ddf0" class="draw" stroke-width="2.5"></rect>
+              <path d="M342 48h76l-6 10h-64z" fill="#faf6ee" class="draw" stroke-width="2.5"></path>
+              <text class="net-label" x="380" y="80" text-anchor="middle">{T.s5.staff}</text>
+              <!-- Guest Wi-Fi: phone -->
+              <rect x="366" y="170" width="28" height="46" rx="5" fill="#bfe6d6" class="draw" stroke-width="2.5"></rect>
+              <path d="M376 209h8" class="draw" stroke-width="2.5"></path>
+              <path d="M402 184a9 9 0 0 1 12 0M398 177a16 16 0 0 1 20 0" class="draw" stroke-width="2"></path>
+              <text class="net-label" x="380" y="240" text-anchor="middle">{T.s5.guests}</text>
+            </svg>
           </div>
           <h2>{T.s5.name}</h2>
           <p class="svc-line">{T.s5.line}</p>
@@ -798,9 +793,17 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     direction: ltr;
   }
 
-  .art-network { justify-content: space-between; align-items: center; gap: 8px; min-height: 200px; }
-  .art-network .art-arrow { width: 34px; }
-  .nets { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .art-network { justify-content: center; }
+  .net { width: 100%; max-width: 440px; height: auto; }
+  .net-label {
+    font-size: 14px;
+    font-weight: 700;
+    fill: var(--k-ink);
+    stroke: var(--k-apricot);
+    stroke-width: 6px;
+    stroke-linejoin: round;
+    paint-order: stroke;
+  }
 
   .art-decide { justify-content: center; align-items: center; gap: 0; }
   .question {
@@ -952,16 +955,14 @@ const ARROW = `<path d="M4 13c10-3 20 2 30-1s14-1 20-0M44 5l11 7l-11 8" fill="no
     .services-stack, .svc-grid { gap: 28px; }
     .svc, .svc-wide { padding: 24px; }
     .svc h2, .svc-wide h2 { font-size: 28px; }
-    .art-scale, .art-network { min-height: 0; }
+    .art-scale { min-height: 0; }
     /* Figures shrink in proportion to their drawn size (flex-shrink is
        weighted by basis), so small → large stays readable. */
     .art-scale { gap: 10px; }
     .art-arrow { width: 32px; }
     .art-jailbreak svg:first-child { width: 110px; }
     .files li { width: 110px; height: 36px; font-size: 15px; }
-    .art-network { gap: 4px; }
-    .art-network .art-arrow { width: 22px; }
-    .art-network figcaption { font-size: 11px; }
+    .net-label { font-size: 17px; }
     .branches { width: 84px; }
     .choices li { width: 108px; }
     .receive { padding: 24px; }
