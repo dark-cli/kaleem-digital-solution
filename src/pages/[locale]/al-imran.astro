@@ -75,6 +75,9 @@ const T = isAr ? {
 
   beforeAfterHead: "التصميم الجديد",
   notesLabel:   "ملاحظات على التصميم",
+  prevLabel:    "الصفحة السابقة",
+  nextLabel:    "الصفحة التالية",
+  openLabel:    "افتح هذه الصفحة على موقع المركز",
   designShowcaseDesc: "تصميم يتكيّف بالكامل مع الهواتف، مع وضعين فاتح وداكن، ومبني للسرعة والوضوح في كل تفصيلة.",
   homeLabel:   "الصفحة الرئيسية",
   articleLabel: "صفحات المقالات",
@@ -166,6 +169,9 @@ const T = isAr ? {
 
   beforeAfterHead: "The new design",
   notesLabel:   "Design notes",
+  prevLabel:    "Previous page",
+  nextLabel:    "Next page",
+  openLabel:    "Open this page on the center's site",
   designShowcaseDesc: "Fully responsive design with light and dark themes, built for speed and clarity in every detail.",
   homeLabel:   "Homepage",
   articleLabel: "Article pages",
@@ -287,22 +293,33 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           </ol>
         </aside>
         <div class="showcase-body">
-          <div class="note-tabs">
-            {SLIDES.map((s, i) => (
-              <button type="button" class:list={["tab", { active: i === 0 }]} data-slide={i} aria-pressed={i === 0 ? "true" : "false"}>{s.label}</button>
-            ))}
-          </div>
-          <a class="window-link rot-link" href={SLIDES[0].href} target="_blank" rel="noopener">
+          <!-- The window lifts like other clickable windows; the screenshot
+               is the link, and on small screens a translucent overlay
+               carries the page name, its note and prev/next controls. -->
+          <div class="window-link rot-wrap">
             <div class="sk window rot-window">
               <div class="window-chrome" data-sky></div>
               <div class="rot-stage">
-                {SLIDES.map((s, i) => (
-                  <img src={s.src} alt={s.label} class:list={["rot-img", { active: i === 0 }]} data-href={s.href} data-note={s.note} loading={i === 0 ? "eager" : "lazy"} />
-                ))}
+                <a class="rot-open" href={SLIDES[0].href} target="_blank" rel="noopener" aria-label={T.openLabel}>
+                  {SLIDES.map((s, i) => (
+                    <img src={s.src} alt={s.label} class:list={["rot-img", { active: i === 0 }]} data-href={s.href} data-label={s.label} data-note={s.note} loading={i === 0 ? "eager" : "lazy"} />
+                  ))}
+                </a>
+                <div class="rot-overlay">
+                  <button type="button" class="rot-nav flip-rtl" data-step="-1" aria-label={T.prevLabel}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7l7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </button>
+                  <div class="rot-text" aria-live="polite">
+                    <strong><span class="rot-label">{SLIDES[0].label}</span> <bdi class="rot-count">1 / {SLIDES.length}</bdi></strong>
+                    <span class="rot-note">{SLIDES[0].note}</span>
+                  </div>
+                  <button type="button" class="rot-nav flip-rtl" data-step="1" aria-label={T.nextLabel}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7l-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </button>
+                </div>
               </div>
             </div>
-          </a>
-          <p class="note-caption" aria-live="polite">{SLIDES[0].note}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -475,8 +492,8 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
 
 <script is:inline>
   // Rotating design window: cross-fade through the slides, keep the
-  // design-notes aside in sync, and point the window link at the page
-  // being shown. Pauses on hover/focus; no autoplay for reduced motion.
+  // design-notes aside and the small-screen overlay in sync, and point
+  // the screenshot link at the page being shown. Pauses on hover/focus; no autoplay for reduced motion.
   (function () {
     var timer = 0;
     function init() {
@@ -484,10 +501,11 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
       var root = document.querySelector("[data-rotator]");
       if (!root) return;
       var imgs = root.querySelectorAll(".rot-img");
-      var notes = root.querySelectorAll(".note, .tab");
-      var tabs = root.querySelector(".note-tabs");
-      var caption = root.querySelector(".note-caption");
-      var link = root.querySelector(".rot-link");
+      var notes = root.querySelectorAll(".note");
+      var link = root.querySelector(".rot-open");
+      var label = root.querySelector(".rot-label");
+      var count = root.querySelector(".rot-count");
+      var note = root.querySelector(".rot-note");
       var i = 0, paused = false;
       function show(n) {
         i = (n + imgs.length) % imgs.length;
@@ -498,19 +516,39 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
           b.setAttribute("aria-pressed", on ? "true" : "false");
         });
         link.href = imgs[i].getAttribute("data-href");
-        caption.textContent = imgs[i].getAttribute("data-note");
-        // Slide the tab strip (not the page) so the active tab is visible.
-        var tab = tabs.querySelector(".tab.active");
-        if (tab && tabs.offsetParent) {
-          var t = tab.getBoundingClientRect(), s = tabs.getBoundingClientRect();
-          tabs.scrollBy({ left: (t.left + t.width / 2) - (s.left + s.width / 2), behavior: "smooth" });
-        }
+        label.textContent = imgs[i].getAttribute("data-label");
+        count.textContent = (i + 1) + " / " + imgs.length;
+        note.textContent = imgs[i].getAttribute("data-note");
       }
       notes.forEach(function (b) { b.addEventListener("click", function () { show(Number(b.getAttribute("data-slide"))); }); });
+      root.querySelectorAll(".rot-nav").forEach(function (b) {
+        b.addEventListener("click", function () { show(i + Number(b.getAttribute("data-step"))); });
+      });
+      // Swipe the screenshot to change page (right-to-left swipe = next;
+      // mirrored in Arabic).
+      var x0 = null;
+      var stage = root.querySelector(".rot-stage");
+      stage.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      stage.addEventListener("touchend", function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0; x0 = null;
+        if (Math.abs(dx) < 40) return;
+        var rtl = document.documentElement.dir === "rtl";
+        show(i + ((dx < 0) !== rtl ? 1 : -1));
+      });
       root.addEventListener("mouseenter", function () { paused = true; });
       root.addEventListener("mouseleave", function () { paused = false; });
       root.addEventListener("focusin", function () { paused = true; });
       root.addEventListener("focusout", function () { paused = false; });
+      // The floating call button sits in the corner the overlay's
+      // "next" button uses on phones; hide it while the overlay is visible.
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          document.body.classList.toggle("rot-overlay-visible", entries[0].isIntersecting);
+        });
+        io.observe(root.querySelector(".rot-overlay"));
+        document.addEventListener("astro:before-swap", function () { io.disconnect(); document.body.classList.remove("rot-overlay-visible"); }, { once: true });
+      }
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       timer = setInterval(function () { if (!paused) show(i + 1); }, 5000);
     }
@@ -626,40 +664,46 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
   .note.active strong { font-weight: 700; }
   .note.active span { display: block; }
 
-  /* Small screens only: tabs above the window, caption under it. */
-  .note-tabs, .note-caption { display: none; }
-  .note-tabs {
-    gap: 8px;
-    overflow-x: auto;
-    padding: 2px 2px 14px;
-    scrollbar-width: none;
-  }
-  .note-tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    flex-shrink: 0;
-    min-height: 40px;
-    padding: 0 14px;
-    border: 1.5px solid var(--k-ink);
-    border-radius: var(--k-radius-pill);
-    background: var(--k-paper);
-    font: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--k-ink);
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .tab.active { background: var(--k-butter); }
-  .note-caption {
-    margin: 18px 0 0;
-    padding-inline-start: 14px;
-    border-inline-start: 3px solid var(--k-ink);
-    font-size: 16px;
-    line-height: 1.55;
-    color: var(--k-ink);
-  }
+  .rot-open { position: absolute; inset: 0; display: block; }
 
-  .rot-link { display: block; }
+  /* Small screens only: a translucent bar over the bottom of the
+     screenshot with the page name, its note and prev/next buttons. */
+  .rot-overlay {
+    position: absolute;
+    inset-inline: 10px;
+    bottom: 10px;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(29, 35, 32, 0.78);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: var(--k-chalk);
+  }
+  .rot-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .rot-text strong { font-size: 15px; color: var(--k-butter); }
+  .rot-count { margin-inline-start: 6px; font-family: var(--k-font-mono); font-size: 12px; font-weight: 500; color: var(--k-chalk-muted); }
+  .rot-note { font-size: 14px; line-height: 1.45; }
+  .rot-nav {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--k-chalk);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--k-chalk);
+    cursor: pointer;
+  }
+  .rot-nav:hover, .rot-nav:focus-visible { background: rgba(236, 238, 230, 0.15); }
+  :global(html[dir="rtl"]) .flip-rtl svg { transform: scaleX(-1); }
+  :global(body.rot-overlay-visible .call-fab) { opacity: 0 !important; pointer-events: none !important; }
+
   .rot-window { padding: 0; }
   .rot-stage {
     position: relative;
@@ -919,8 +963,7 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
     .showcase-grid { grid-template-columns: minmax(0, 1fr); }
     .showcase-body { max-width: 640px; margin: 0 auto; width: 100%; }
     .design-notes { display: none; }
-    .note-tabs { display: flex; }
-    .note-caption { display: block; }
+    .rot-overlay { display: flex; }
   }
 
   @media (max-width: 900px) {
