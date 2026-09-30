@@ -1,0 +1,81 @@
+---
+/**
+ * Compact page header for inner pages (Work, case studies): the title on
+ * one side, the description on the other, stacked on narrow screens.
+ * Kept short on purpose: the page's first visual section comes right
+ * after it.
+ *
+ * The description is the slot: one paragraph, or a lead line
+ * (class="lead") plus a paragraph, plus an optional button.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Background utility class from global.css, e.g. "bg-sky". */
+  bg?: string;
+}
+
+const { eyebrow, title, bg = "bg-sky" } = Astro.props;
+---
+
+<section class:list={["page-hero", bg]}>
+  <div class="ph-grid">
+    <div class="ph-title">
+      <span class="ph-eyebrow">{eyebrow}</span>
+      <h1>{title}</h1>
+    </div>
+    <div class="ph-desc">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding: 64px 0 56px;
+    border-bottom: 2px solid var(--k-ink);
+  }
+  /* Same width and gutters as the pages' own .container. */
+  .ph-grid {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 64px;
+    align-items: center;
+  }
+  .ph-eyebrow {
+    display: block;
+    margin-bottom: 14px;
+    font-family: var(--k-font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+  }
+  h1 {
+    margin: 0;
+    max-width: 18ch;
+    font-size: clamp(38px, 4.6vw, 64px);
+    line-height: 1.07;
+    letter-spacing: -0.02em;
+    color: var(--k-ink);
+  }
+  .ph-desc :global(p) { margin: 0; font-size: 17px; line-height: 1.65; color: var(--k-ink); }
+  .ph-desc :global(p + p) { margin-top: 12px; }
+  .ph-desc :global(p.lead) { font-size: 20px; line-height: 1.45; font-weight: 600; }
+  .ph-desc :global(.skb) { margin-top: 20px; }
+
+  @media (max-width: 900px) {
+    .ph-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    h1 { max-width: 22ch; }
+  }
+  @media (max-width: 672px) {
+    .page-hero { padding: 40px 0 36px; }
+    .ph-grid { padding: 0 var(--k-gutter-mobile); }
+    h1 { font-size: clamp(32px, 8.4vw, 40px); }
+    .ph-desc :global(p) { font-size: 16px; }
+    .ph-desc :global(p.lead) { font-size: 18px; }
+  }
+</style>

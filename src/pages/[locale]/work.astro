@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Image from "../../components/Image.astro";
+import PageHero from "../../components/PageHero.astro";
 import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -18,6 +20,8 @@ const T = isAr ? {
   lede:        "كل مشروع ننجزه يثبت أن الانتقال من نظام قديم إلى نظام حديث ممكن دون فقدان البيانات أو توقّف العمل. إليك قصة مركز العمران الطبي.",
   moreSoon:    "المزيد من دراسات الحالة قريباً — حين يوافق عملاؤنا على مشاركة قصصهم.",
   readCase:    "اقرأ القصة كاملة ←",
+  nextTitle:   "مشروعك التالي",
+  nextCta:     "احجز تقييماً مجانياً",
 } : {
   title:       "Work — Kaleem",
   description: "Digital liberation and modernization projects from Kaleem — data extraction and platform rebuilds.",
@@ -26,6 +30,8 @@ const T = isAr ? {
   lede:        "Every project we complete proves that migration from old systems to modern ones is possible without data loss or downtime. Here's the story of Alimran Medical Center.",
   moreSoon:    "More case studies coming — as clients approve sharing their stories.",
   readCase:    "Read the full story →",
+  nextTitle:   "Your project next",
+  nextCta:     "Book a free audit",
 };
 
 const cases = isAr ? [
@@ -35,6 +41,8 @@ const cases = isAr ? [
     tags: ["استخراج البيانات", "تحديث الويب", "بنية مفتوحة"],
     tagBg: ["tag-butter", "tag-sky", "tag-mint"],
     href: "/ar/al-imran/",
+    image: "/assets/illustrations/alimran-clinic-homepage.png",
+    imageAlt: "الموقع الجديد لمركز العمران الطبي",
     accent: "bg-lilac",
   },
 ] : [
@@ -44,38 +52,47 @@ const cases = isAr ? [
     tags: ["Data extraction", "Web modernization", "Open infrastructure"],
     tagBg: ["tag-butter", "tag-sky", "tag-mint"],
     href: "/en/al-imran/",
+    image: "/assets/illustrations/alimran-clinic-homepage.png",
+    imageAlt: "The new Alimran Medical Center website",
     accent: "bg-lilac",
   },
 ];
 ---
 
 <BaseLayout title={T.title} description={T.description}>
-  <section class="work-hero bg-sky">
-    <div class="container">
-      <span class="eyebrow">{T.eyebrow}</span>
-      <h1 class="work-h1">{T.h1}</h1>
-      <p class="work-lede">{T.lede}</p>
-    </div>
-  </section>
+  <PageHero eyebrow={T.eyebrow} title={T.h1}>
+    <p>{T.lede}</p>
+  </PageHero>
 
+  <!-- ─── GALLERY: every project as a tile (screenshot, story, tags), then
+       a dashed "your project next" tile. New case studies are new tiles.
+       Idea for later (docs/notes.md): once there are enough projects, the
+       hero shows the best one and this gallery holds the rest. ─── -->
   <section class="work-list">
     <div class="container">
       <div class="cases-grid">
         {cases.map((c) => (
-          <article class={`sk case-card ${c.accent}`}>
-            <div class="case-body">
+          <a class="sk case-card window-link" href={c.href}>
+            <span class="case-chrome" data-sky aria-hidden="true"><i></i><i></i><i></i></span>
+            <Image src={c.image} alt={c.imageAlt} class="case-shot" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" fetchpriority="high" />
+            <span class="case-body">
               <h2>{c.title}</h2>
               <p>{c.summary}</p>
-              <div class="case-tags">
+              <span class="case-tags">
                 {c.tags.map((t, i) => (
                   <span class={`k-tag ${c.tagBg[i]}`}>{t}</span>
                 ))}
-              </div>
-            </div>
-            <a class="skb skb-paper" href={c.href}>{T.readCase}</a>
-          </article>
+              </span>
+              <span class="case-more">{T.readCase}</span>
+            </span>
+          </a>
         ))}
-        <div class="soon">{T.moreSoon}</div>
+        <a class="sk case-next" href={L("/audit/")}>
+          <svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 7v18M7 16h18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+          <span class="next-title">{T.nextTitle}</span>
+          <span class="next-text">{T.moreSoon}</span>
+          <span class="next-link">{T.nextCta}</span>
+        </a>
       </div>
     </div>
   </section>
@@ -88,103 +105,89 @@ const cases = isAr ? [
     padding: 0 var(--k-gutter-desktop);
   }
 
-  .work-hero {
-    padding: var(--k-space-10) 0 var(--k-space-11);
-    text-align: center;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-family: var(--k-font-mono);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--k-ink-muted);
-    margin-bottom: var(--k-space-4);
-  }
-
-  .work-h1 {
-    margin: 0 auto var(--k-space-5);
-    max-width: 20ch;
-    font-size: clamp(36px, 6vw, 64px);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: var(--k-ink);
-    font-weight: 700;
-  }
-
-  .work-lede {
-    margin: 0 auto;
-    max-width: 56ch;
-    font-size: 19px;
-    line-height: 1.65;
-    color: var(--k-ink-muted);
-  }
-
-  .work-list {
-    padding: var(--k-space-10) 0 var(--k-space-11);
-  }
+  .work-list { padding: 72px 0 96px; }
 
   .cases-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--k-space-7);
-    max-width: 900px;
-    margin: 0 auto;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 40px;
+    align-items: stretch;
   }
 
+  /* A project tile: screenshot on top, the story underneath. */
   .case-card {
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--k-space-6);
-  }
-
-  .case-body h2 {
-    margin: 0;
-    font-size: clamp(24px, 3.4vw, 34px);
-    color: var(--k-ink);
-  }
-
-  .case-body p {
-    color: var(--k-ink);
-    font-size: 17px;
-    line-height: 1.6;
-    max-width: 60ch;
-  }
-
-  .case-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .k-tag {
+    overflow: hidden;
     background: var(--k-paper);
+    color: var(--k-ink);
+    text-decoration: none;
   }
-
+  /* The window parts sit flush: no inherited flow spacing between them. */
+  .case-card > :global(*) { margin: 0; }
+  .case-chrome {
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border-bottom: 2px solid var(--k-ink);
+  }
+  .case-chrome i { width: 11px; height: 11px; border-radius: 50%; background: var(--k-peach); }
+  .case-chrome i:nth-child(2) { background: var(--k-butter); }
+  .case-chrome i:nth-child(3) { background: var(--k-mint); }
+  .case-card :global(.case-shot) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 2px solid var(--k-ink);
+  }
+  .case-body { display: flex; flex-direction: column; gap: 14px; padding: 26px 28px 28px; }
+  .case-body h2 { margin: 0; font-size: clamp(24px, 2.6vw, 32px); color: var(--k-ink); }
+  .case-body p { margin: 0; font-size: 16px; line-height: 1.6; }
+  .case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .k-tag { background: var(--k-paper); }
   .tag-butter { background: var(--k-butter); }
   .tag-sky    { background: var(--k-sky); }
-  .tag-apricot{ background: var(--k-apricot); }
   .tag-mint   { background: var(--k-mint); }
-  .tag-lilac  { background: var(--k-lilac); }
-  .tag-peach  { background: var(--k-peach); }
-
-  .case-card .skb {
-    align-self: flex-start;
+  .case-more {
+    margin-top: 4px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
   }
 
-  .soon {
+  /* The empty slot for the next project. */
+  .case-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 32px;
     text-align: center;
-    color: var(--k-ink-muted);
-    font-family: var(--k-font-mono);
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    padding: var(--k-space-6) 0;
+    border-style: dashed;
+    box-shadow: none;
+    background: transparent;
+    color: var(--k-ink);
+    text-decoration: none;
   }
+  .next-title { font-family: var(--k-font-serif); font-size: 30px; font-weight: 700; }
+  .next-text { max-width: 30ch; font-size: 16px; line-height: 1.6; color: var(--k-ink-muted); }
+  .next-link { margin-top: 6px; font-weight: 600; text-decoration: underline; text-underline-offset: 5px; }
+  .case-next:hover { background: color-mix(in srgb, var(--k-paper) 70%, transparent); }
+  .case-next:hover .next-link { text-decoration-color: var(--k-sky); }
 
+  @media (max-width: 900px) {
+    .cases-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  }
   @media (max-width: 672px) {
     .container { padding: 0 var(--k-gutter-mobile); }
-    .work-hero,
-    .work-list { padding: var(--k-space-8) 0; }
+    .work-list { padding: 40px 0 64px; }
+    .case-body { padding: 20px; }
+    .case-next { padding: 32px 20px; }
   }
 </style>

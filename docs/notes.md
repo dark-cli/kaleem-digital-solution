@@ -55,3 +55,22 @@ numbers if they stop opening.
 `src/components/StarfieldControls.astro` shows a ✦ tuning panel only under
 `npm run dev`. It is not in the built site. Copy the values you settle on
 into `P` in that file.
+
+## Work page: hero vs gallery (for later)
+
+Today the Work page is a compact header plus a gallery: one tile per
+project (screenshot, story, tags) and a dashed "Your project next" tile
+that links to the audit form. New case studies are new tiles.
+
+Once there are enough projects (roughly five or more), switch to:
+
+- **Hero** shows the best project: its screenshot in a window beside the
+  page's promise, as in the "Work page hero" artboard on the design canvas.
+- **Body** is the gallery of all the other projects.
+
+Don't do this with only one or two projects: the hero and the gallery
+would show the same work twice.
+
+The same rule applies to case-study pages: the hero stays compact, and
+before/after screenshots live in their own section ("Every page
+transformed"), not in the hero.
