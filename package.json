@@ -17,7 +17,7 @@
     "sharp": "^0.35.4",
     "turndown": "^7.2.4",
     "unist-util-visit": "^5.1.0",
-    "wrangler": "4.21.x"
+    "wrangler": "4.144.x"
   },
   "scripts": {
     "astro": "astro",
@@ -27,6 +27,7 @@
     "cf-typegen": "wrangler types",
     "check": "npm run prebuild && astro build && tsc && wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
+    "predev": "node scripts/optimize-images.mjs",
     "dev": "astro dev --host",
     "preview": "astro build && wrangler dev",
     "redirects": "node --experimental-strip-types --no-warnings scripts/generate-redirects.mjs",

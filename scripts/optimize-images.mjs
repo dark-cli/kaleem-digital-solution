@@ -2,7 +2,7 @@
 /**
  * Build-time image optimizer.
  *
- * Reads every image under TARGET_DIRS and drops responsive WebP variants
+ * Reads every image under ROOT_DIRS and drops responsive WebP variants
  * into `public/optimized/<same-subpath>/<name>-<width>.webp`, plus a
  * high-quality `-full.webp` at native resolution for the progressive HD
  * upgrade in BaseLayout.
@@ -31,11 +31,12 @@ const PUB       = path.join(ROOT, "public");
 const OUT       = path.join(PUB, "optimized");
 const MANIFEST  = path.join(OUT, "manifest.json");
 
-// Scan the entire images tree — anything wider than MIN_WIDTH picks up
-// variants. Small favicons/thumbnails don't benefit from srcset (a 156px
+// Scan every image folder under public/ — anything wider than MIN_WIDTH
+// picks up variants. images/ holds CMS uploads; assets/ holds the site's
+// own screenshots and illustrations. Small favicons/thumbnails don't benefit from srcset (a 156px
 // icon has nothing meaningful to downscale) and would just bloat the
 // build, so they stay as raw <img src>.
-const ROOT_DIR   = "images";
+const ROOT_DIRS  = ["images", "assets"];
 const MIN_WIDTH  = 400;
 
 // Responsive widths shipped in every srcset. Order matters — the first is
@@ -131,7 +132,7 @@ async function main() {
 
   const stillPresent = new Set();
   let tooSmall = 0;
-  const files = await walk(ROOT_DIR);
+  const files = (await Promise.all(ROOT_DIRS.map(walk))).flat();
   for (const f of files) {
     stillPresent.add("/" + path.relative(PUB, f).replaceAll(path.sep, "/"));
     const res = await optimizeOne(f, manifest);

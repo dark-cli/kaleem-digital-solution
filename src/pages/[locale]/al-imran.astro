@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WindowWidget from "../../components/WindowWidget.astro";
+import { imageVariants } from "../../lib/image";
 import { currentLocale } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -202,6 +203,8 @@ const T = isAr ? {
 };
 // Slides for the rotating design window, each with a note for the aside.
 const SITE = `https://alimran.clinic/${locale}`;
+// The rotating window is the page column on phones, ~60% of it beside the notes.
+const ROT_SIZES = "(min-width: 1056px) 720px, 100vw";
 const SLIDES = (isAr ? [
   { label: "الصفحة الرئيسية", note: "الرسالة والطبيب الاستشاري وأربعة أرقام تبني الثقة، كلها في أول الصفحة." },
   { label: "الوضع الفاتح", note: "كل صفحة بوضعين فاتح وداكن، والموقع يتذكّر اختيار الزائر." },
@@ -305,9 +308,29 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
               <div class="window-chrome" data-sky></div>
               <div class="rot-stage">
                 <a class="rot-open" href={SLIDES[0].href} target="_blank" rel="noopener" aria-label={T.openLabel}>
-                  {SLIDES.map((s, i) => (
-                    <img src={s.src} alt={s.label} class:list={["rot-img", { active: i === 0 }]} data-href={s.href} data-label={s.label} data-note={s.note} loading={i === 0 ? "eager" : "lazy"} />
-                  ))}
+                  {SLIDES.map((s, i) => {
+                    // Optimized WebP variants. Only the first slide loads with
+                    // the page; the script fetches each next one just before
+                    // it is shown (data-src / data-srcset).
+                    const v = imageVariants(s.src)!;
+                    const first = i === 0;
+                    return (
+                      <img
+                        src={first ? v.src : undefined}
+                        srcset={first ? v.srcset || undefined : undefined}
+                        data-src={first ? undefined : v.src}
+                        data-srcset={first ? undefined : v.srcset || undefined}
+                        sizes={v.srcset ? ROT_SIZES : undefined}
+                        width={v.width}
+                        height={v.height}
+                        alt={s.label}
+                        class:list={["rot-img", { active: first }]}
+                        data-href={s.href} data-label={s.label} data-note={s.note}
+                        fetchpriority={first ? "high" : undefined}
+                        decoding="async"
+                      />
+                    );
+                  })}
                 </a>
                 <div class="rot-overlay">
                   <button type="button" class="rot-nav flip-rtl" data-step="-1" aria-label={T.prevLabel}>
@@ -513,8 +536,17 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
       var count = root.querySelector(".rot-count");
       var note = root.querySelector(".rot-note");
       var i = 0, paused = false;
+      // Swap in a slide's real source the first time it's needed.
+      function load(img) {
+        if (!img || !img.dataset.src) return;
+        if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+        img.src = img.dataset.src;
+        delete img.dataset.src; delete img.dataset.srcset;
+      }
       function show(n) {
         i = (n + imgs.length) % imgs.length;
+        load(imgs[i]);
+        load(imgs[(i + 1) % imgs.length]);
         imgs.forEach(function (img, k) { img.classList.toggle("active", k === i); });
         notes.forEach(function (b) {
           var on = Number(b.getAttribute("data-slide")) === i;
@@ -546,6 +578,9 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
       root.addEventListener("mouseleave", function () { paused = false; });
       root.addEventListener("focusin", function () { paused = true; });
       root.addEventListener("focusout", function () { paused = false; });
+      // Next slide loads once the page itself has finished loading.
+      if (document.readyState === "complete") load(imgs[1]);
+      else window.addEventListener("load", function () { load(imgs[1]); }, { once: true });
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       timer = setInterval(function () { if (!paused) show(i + 1); }, 5000);
     }
