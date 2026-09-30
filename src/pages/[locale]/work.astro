@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
 import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -50,13 +51,9 @@ const cases = isAr ? [
 ---
 
 <BaseLayout title={T.title} description={T.description}>
-  <section class="work-hero bg-sky">
-    <div class="container">
-      <span class="eyebrow">{T.eyebrow}</span>
-      <h1 class="work-h1">{T.h1}</h1>
-      <p class="work-lede">{T.lede}</p>
-    </div>
-  </section>
+  <PageHero eyebrow={T.eyebrow} title={T.h1} bg="bg-sky">
+    <p>{T.lede}</p>
+  </PageHero>
 
   <section class="work-list">
     <div class="container">
@@ -88,38 +85,9 @@ const cases = isAr ? [
     padding: 0 var(--k-gutter-desktop);
   }
 
-  .work-hero {
-    padding: var(--k-space-10) 0 var(--k-space-11);
-    text-align: center;
-  }
 
-  .eyebrow {
-    display: inline-block;
-    font-family: var(--k-font-mono);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--k-ink-muted);
-    margin-bottom: var(--k-space-4);
-  }
 
-  .work-h1 {
-    margin: 0 auto var(--k-space-5);
-    max-width: 20ch;
-    font-size: clamp(36px, 6vw, 64px);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: var(--k-ink);
-    font-weight: 700;
-  }
 
-  .work-lede {
-    margin: 0 auto;
-    max-width: 56ch;
-    font-size: 19px;
-    line-height: 1.65;
-    color: var(--k-ink-muted);
-  }
 
   .work-list {
     padding: var(--k-space-10) 0 var(--k-space-11);
@@ -184,7 +152,6 @@ const cases = isAr ? [
 
   @media (max-width: 672px) {
     .container { padding: 0 var(--k-gutter-mobile); }
-    .work-hero,
     .work-list { padding: var(--k-space-8) 0; }
   }
 </style>

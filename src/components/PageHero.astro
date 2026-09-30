@@ -1,0 +1,96 @@
+---
+/**
+ * Page hero for inner pages (Work, About, case studies): the title on one
+ * side, the description on the other, stacked on narrow screens.
+ *
+ * The description is the slot, so a page can pass one paragraph or a
+ * lead line plus a paragraph (give the lead line class="lead").
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Background utility class from global.css, e.g. "bg-sky". */
+  bg?: string;
+}
+
+const { eyebrow, title, bg = "bg-sky" } = Astro.props;
+---
+
+<section class:list={["page-hero", bg]}>
+  <div class="page-hero-grid">
+    <div class="page-hero-title">
+      <span class="eyebrow">{eyebrow}</span>
+      <h1>{title}</h1>
+    </div>
+    <div class="page-hero-desc">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding: 80px 0 88px;
+    border-bottom: 2px solid var(--k-ink);
+  }
+  /* Same width and gutters as the pages' own .container, so the hero's
+     edges line up with the content below it. */
+  .page-hero-grid {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 64px;
+    align-items: end;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--k-ink-muted);
+  }
+  h1 {
+    margin: 0;
+    max-width: 16ch;
+    font-size: clamp(40px, 5.2vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--k-ink);
+  }
+
+  /* A ruled column, so the description reads as its own side. */
+  .page-hero-desc {
+    padding-top: 20px;
+    border-top: 2px solid var(--k-ink);
+  }
+  .page-hero-desc :global(p) {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--k-ink);
+  }
+  .page-hero-desc :global(p + p) { margin-top: 14px; }
+  .page-hero-desc :global(p.lead) {
+    font-size: 21px;
+    line-height: 1.45;
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .page-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    h1 { max-width: 20ch; }
+  }
+  @media (max-width: 672px) {
+    .page-hero { padding: 48px 0 56px; }
+    .page-hero-grid { padding: 0 var(--k-gutter-mobile); }
+    h1 { font-size: clamp(32px, 8.5vw, 44px); }
+    .page-hero-desc :global(p) { font-size: 17px; }
+    .page-hero-desc :global(p.lead) { font-size: 19px; }
+  }
+</style>
