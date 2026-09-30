@@ -93,7 +93,7 @@ const values = [
         <p>{T.lede}</p>
       </div>
       <div class="ab-card sk">
-        <LogoLockup size={150} class="ab-lockup" />
+        <LogoLockup class="ab-lockup" />
         <p class="ab-meaning">{T.meaning}</p>
         <dl class="ab-facts">
           <div><dt>{T.officesLabel}</dt><dd>{T.offices}</dd></div>
@@ -171,11 +171,9 @@ const values = [
     gap: 22px;
     rotate: 1.5deg;
     min-width: 0;
-    container-type: inline-size;
   }
-  /* The lockup is 2.618 squares wide (+ its lines): size the square from
-     the card's own width so it always fits, up to 150px. */
-  .ab-card :global(.ab-lockup) { --u: min(150px, calc((100cqi - 4px) / 2.618)) !important; }
+  /* The lockup scales as one piece: fill the card, up to its full size. */
+  .ab-card :global(.ab-lockup) { width: 100%; max-width: 396px; }
   .ab-meaning { margin: 0; font-size: 17px; line-height: 1.6; }
   .ab-facts {
     margin: 0;

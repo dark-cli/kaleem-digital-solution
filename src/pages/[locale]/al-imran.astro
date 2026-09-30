@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WindowWidget from "../../components/WindowWidget.astro";
-import Image from "../../components/Image.astro";
+import PageHero from "../../components/PageHero.astro";
 import { imageVariants } from "../../lib/image";
 import { currentLocale } from "../../lib/i18n";
 
@@ -268,45 +268,17 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
 
 <BaseLayout title={T.title} description={T.description}>
   <!-- ─── HERO ─────────────────────────────────────────────── -->
-  <!-- ─── HERO: title row, then the old site and the new one side by side;
-       the transformation is the picture. The windows run off the bottom
-       edge of the section. ─── -->
-  <section class="ba-hero bg-sky">
-    <div class="container">
-      <div class="ba-top">
-        <div class="ba-title">
-          <span class="ba-eyebrow">{T.eyebrow}</span>
-          <h1>{T.h1}</h1>
-        </div>
-        <div class="ba-text">
-          <p class="ba-lead">{T.subtitle}</p>
-          <p>{T.lede}</p>
-          <a class="skb skb-mint ba-cta" href={`https://alimran.clinic/${locale}/`} target="_blank" rel="noopener">
-            {T.openLive}
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="ba-shots">
-        <figure class="ba-before">
-          <figcaption>{T.oldLabel} · alimranmed.com</figcaption>
-          <a class="ba-win sk window window-link" href="https://alimranmed.com/" target="_blank" rel="noopener">
-            <span class="ba-chrome ba-chrome-old" aria-hidden="true"><i></i><i></i><i></i></span>
-            <Image src="/assets/illustrations/old-homepage.png" alt={isAr ? "الصفحة الرئيسية القديمة" : "The old homepage"} sizes="(min-width: 900px) 40vw, 100vw" loading="eager" />
-          </a>
-        </figure>
-        <svg class="ba-arrow" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true"><path d="M14 70C36 40 70 36 98 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 9"></path><path d="M86 44l14 12l-17 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-        <figure class="ba-after">
-          <figcaption>{T.newLabel} · alimran.clinic</figcaption>
-          <a class="ba-win sk window window-link" href={`https://alimran.clinic/${locale}/`} target="_blank" rel="noopener">
-            <span class="ba-chrome" data-sky aria-hidden="true"><i></i><i></i><i></i></span>
-            <Image src="/assets/illustrations/new-homepage.png" alt={isAr ? "الصفحة الرئيسية الجديدة" : "The new homepage"} sizes="(min-width: 900px) 55vw, 100vw" loading="eager" fetchpriority="high" />
-          </a>
-        </figure>
-      </div>
-    </div>
-  </section>
+  <!-- ─── HERO: compact; the rotating design window follows right after.
+       (The before/after screenshots live in "Every page transformed"
+       further down, so the hero doesn't repeat them.) ─── -->
+  <PageHero eyebrow={T.eyebrow} title={T.h1}>
+    <p class="lead">{T.subtitle}</p>
+    <p>{T.lede}</p>
+    <a class="skb skb-mint ba-cta" href={`https://alimran.clinic/${locale}/`} target="_blank" rel="noopener">
+      {T.openLive}
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </PageHero>
 
   <!-- ─── THE NEW DESIGN: one rotating window as the body, with the
        design notes in a side aside (the article-layout art-aside
@@ -635,90 +607,8 @@ const OWNERSHIP = [T.o1, T.o2, T.o3, T.o4];
 
 
 
-  /* ─── Hero: before / after ─── */
-  .ba-hero {
-    padding: 64px 0 0;
-    border-bottom: 2px solid var(--k-ink);
-    overflow: hidden;
-  }
-  .ba-top {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 64px;
-    align-items: end;
-  }
-  .ba-eyebrow {
-    display: block;
-    margin-bottom: 16px;
-    font-family: var(--k-font-mono);
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #33404a;
-  }
-  .ba-title h1 {
-    margin: 0;
-    font-size: clamp(44px, 5.4vw, 76px);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-  }
-  .ba-text p { margin: 0 0 12px; font-size: 17px; line-height: 1.65; }
-  .ba-text .ba-lead { font-size: 20px; line-height: 1.45; font-weight: 600; }
-  .ba-cta { margin-top: 8px; }
-
-  .ba-shots {
-    margin-top: 48px;
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) 120px minmax(0, 7fr);
-    align-items: start;
-  }
-  .ba-shots figure { margin: 0; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-  .ba-shots figcaption {
-    font-family: var(--k-font-mono);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #33404a;
-  }
-  .ba-before { padding-top: 48px; }
-  .ba-before .ba-win { rotate: -2deg; filter: saturate(0.55); }
-  .ba-arrow { margin-top: 230px; color: var(--k-ink); }
-  /* Arabic reads right to left: the arrows point the other way. */
-  :global(html[dir="rtl"]) .ba-arrow,
+  /* Hero button arrow points the reading direction. */
   :global(html[dir="rtl"]) .ba-cta svg { transform: scaleX(-1); }
-
-  .ba-win { display: block; background: #fff; overflow: hidden; }
-  .ba-chrome {
-    height: 34px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 14px;
-    border-bottom: 2px solid var(--k-ink);
-    background: var(--k-board);
-  }
-  .ba-chrome i { width: 11px; height: 11px; border-radius: 50%; background: var(--k-peach); }
-  .ba-chrome i:nth-child(2) { background: var(--k-butter); }
-  .ba-chrome i:nth-child(3) { background: var(--k-mint); }
-  .ba-chrome-old { background: #d9d6cf; }
-  .ba-chrome-old i, .ba-chrome-old i:nth-child(n) { background: #9a968e; }
-  /* Crop each screenshot to its top part; the section edge cuts the rest. */
-  .ba-win :global(img) { display: block; width: 100%; height: 420px; object-fit: cover; object-position: top; }
-  .ba-after .ba-win :global(img) { height: 560px; }
-
-  @media (max-width: 900px) {
-    .ba-top { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-    .ba-shots { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-    .ba-before { padding-top: 0; }
-    .ba-before .ba-win :global(img) { height: 260px; }
-    .ba-after .ba-win :global(img) { height: 380px; }
-    .ba-arrow,
-    :global(html[dir="rtl"]) .ba-arrow { margin: 0 auto; width: 72px; height: 72px; transform: rotate(90deg); }
-  }
-  @media (max-width: 672px) {
-    .ba-hero { padding-top: 40px; }
-    .ba-shots { margin-top: 32px; }
-  }
 
   /* The new design: rotating window + design-notes aside */
   .showcase { padding: var(--k-space-10) 0; }
