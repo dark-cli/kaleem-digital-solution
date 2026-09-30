@@ -1,6 +1,6 @@
 # Image optimization pipeline
 
-Every image on the site is served in **four sizes as WebP** — 480w, 800w, 1200w,
+Every image on the site is served in **four sizes as WebP**, lazy-loaded unless marked `loading="eager"` — 480w, 800w, 1200w,
 and a full-resolution version — via `<img srcset>`. Images are generated at
 build time; the CMS never sees them; authors never hand-write srcset strings.
 
@@ -39,7 +39,7 @@ Every <Image src="/images/doctors/name.jpg" /> component
 The build-time optimizer. Runs as an npm `prebuild` script — automatic before
 every `npm run build`.
 
-- Walks `public/images/` recursively.
+- Walks `public/images/` (CMS uploads) and `public/assets/` (site screenshots and illustrations) recursively.
 - Skips any image narrower than 400 px (icons, avatars, small thumbnails).
 - For every other JPG or PNG: emits 480w/800w/1200w/full WebP variants into `public/optimized/images/<same-subpath>/<name>-{w}.webp`.
 - Uses `sharp` with quality 78 for responsive sizes, quality 92 for `-full`.
@@ -156,12 +156,15 @@ Things worth remembering:
 
 ## Adding a new folder for optimization
 
-By default the optimizer walks all of `public/images/`. If you add a new
+By default the optimizer walks all of `public/images/` and `public/assets/`.
+Any image shown on a page must go through `<Image>` (or `WindowWidget`, which
+uses it) — a raw `<img src="/assets/...png">` skips the variants entirely.
+If you add a new
 subfolder (e.g. `public/images/testimonies/`), any images ≥ 400 px inside it
 are picked up automatically on next build. No config change.
 
 To **exclude** a folder from optimization, edit `scripts/optimize-images.mjs`
-and add a check in `walk()` — currently it uses the `ROOT_DIR = "images"`
+and add a check in `walk()` — currently it uses the `ROOT_DIRS = ["images", "assets"]`
 constant and a simple recursive walk.
 
 ---

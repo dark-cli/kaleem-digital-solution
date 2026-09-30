@@ -1,18 +1,34 @@
 ---
+/**
+ * Screenshot in a window frame. The image goes through <Image>, so it gets
+ * WebP variants + srcset and loads lazily unless `loading="eager"` (use that
+ * only for a window visible on first paint).
+ */
+import Image from './Image.astro';
+
 interface Props {
   src: string;
   alt: string;
   chromeColor?: 'sky-shader';
+  /** Layout hint for srcset; the default fits a window in a two-column row. */
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
 }
 
-const { src, alt, chromeColor } = Astro.props;
+const {
+  src,
+  alt,
+  chromeColor,
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  loading = 'lazy',
+} = Astro.props;
 const hasShader = chromeColor === 'sky-shader';
 ---
 
 <div class="sk window widget">
   <div class="window-chrome" {...(hasShader ? { 'data-sky': true } : {})}></div>
   <div class="window-body widget-content">
-    <img {src} {alt} class="widget-image" />
+    <Image {src} {alt} {sizes} {loading} class="widget-image" />
   </div>
 </div>
 
@@ -32,7 +48,7 @@ const hasShader = chromeColor === 'sky-shader';
     align-items: stretch;
   }
 
-  .widget-image {
+  .widget-content :global(.widget-image) {
     width: 100%;
     height: 100%;
     object-fit: contain;

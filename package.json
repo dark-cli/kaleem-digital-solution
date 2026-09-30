@@ -27,6 +27,7 @@
     "cf-typegen": "wrangler types",
     "check": "npm run prebuild && astro build && tsc && wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
+    "predev": "node scripts/optimize-images.mjs",
     "dev": "astro dev --host",
     "preview": "astro build && wrangler dev",
     "redirects": "node --experimental-strip-types --no-warnings scripts/generate-redirects.mjs",
