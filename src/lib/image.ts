@@ -16,15 +16,20 @@
  * the raw source path so the page still renders — just without a srcset.
  */
 
-import manifestData from "../../public/optimized/manifest.json" with { type: "json" };
-
 interface ManifestEntry {
   mtime: number;
   width: number;
   height: number;
   variants: string[];
 }
-const manifest = manifestData as Record<string, ManifestEntry>;
+
+let manifest: Record<string, ManifestEntry> = {};
+try {
+  const { default: data } = await import("../../public/optimized/manifest.json", { with: { type: "json" } });
+  manifest = data as Record<string, ManifestEntry>;
+} catch {
+  // manifest hasn't been generated yet — optimize-images.mjs runs as a pre-build step
+}
 
 // The optimizer emits these widths — keep them in sync.
 const WIDTHS = [480, 800, 1200] as const;
