@@ -40,7 +40,7 @@ const T = isAr ? {
   archOfflineHead: "مشكلة العمل بدون إنترنت",
   archOfflineBody: "التطبيق يجب أن يعمل بدون إشارة ويزامن حين يعود الاتصال. المقاربة البديهية — اكتب منطق العمل مرتين، مرة في الخادم ومرة في التطبيق — هي المكان الذي تعيش فيه الأخطاء الخفية. قاعدتا كود تتباعدان تدريجياً.",
   archOfflineBody2: "كتبنا طبقة القواعد كاملة مرة واحدة بـ Rust، كمكتبات مشتركة. الخادم والتطبيق يستوردان نفس الكود. الخادم هو المرجع النهائي؛ فحوصات الصلاحية المحلية في التطبيق مجرد تلميحات للواجهة فقط — لكن القواعد مكتوبة في ملف مصدر واحد.",
-  archRustNote: "اخترنا Rust لهذا المشروع — وهو خيار أثار تحفّظ العميل في البداية. استجبنا بالطريقة الوحيدة المنطقية: كتبنا اختبارات لكل سيناريو أثاروه، وكل حالة حافة، وكل اختبار حمل، حتى أثبت النظام نفسه بدلاً من أن يُطلب الثقة به. 110 اختبارات.",
+  archRustNote: "اخترنا Rust لهذا المشروع — وهو خيار أثار تحفّظ العميل في البداية. استجبنا بالطريقة الوحيدة المنطقية: كتبنا اختبارات لكل سيناريو أثاروه، وكل حالة حافة، وكل اختبار حمل، حتى أثبت النظام نفسه بدلاً من أن يُطلب الثقة به. 230 اختباراً آلياً، منها 206 سيناريوهات كاملة يتصرف فيها عدة أشخاص في الوقت نفسه، إلى جانب اختبارات الضغط.",
 
   securityHead:  "الأمان — ما وراء السجل",
   securityBody:  "النظام الذي سلّمناه يتضمن طبقة إضافية: خوادم متعددة تتحقق من تاريخ الأحداث لدى بعضها بمقارنة البصمات التشفيرية. لتزوير سجل بصمت، يحتاج المهاجم إلى إعادة كتابة البيانات في كل خادم وكل جهاز عميل في آنٍ واحد — وحتى لو نجح، كل خادم وكل تطبيق يُطلق تحذيراً فورياً، يوقف إرسال الأحداث الجديدة، ويُنبّه المسؤولين. تطبيقات العملاء تبقى تعمل في وضع عدم الاتصال حتى يتوصل الخوادم إلى اتفاق. هذه الميزة متاحة في بناءاتنا المخصصة.",
@@ -90,7 +90,6 @@ const T = isAr ? {
     { t: "محافظ متعددة", d: "كل محفظة بفريقها وعملائها وقواعد صلاحياتها — معزولة تماماً." },
     { t: "تطبيق جوال", d: "يعمل بدون إنترنت ويزامن حين يعود الاتصال." },
     { t: "صلاحيات دقيقة", d: "قائد الفريق يدير فريقه فقط، ولا يلمس شيئاً آخر." },
-    { t: "تراجع سريع", d: "تراجع عن أي إجراء خلال 5 ثوانٍ دون فقدان سجل التدقيق." },
   ],
 
   ctaNote:      "إذا كانت مؤسستك تحتاج نظاماً مشابهاً — صلاحيات مخصصة، محافظ متعددة، استضافة ذاتية — يمكننا بناؤه.",
@@ -125,7 +124,7 @@ const T = isAr ? {
   archOfflineHead: "The offline problem",
   archOfflineBody: "The mobile app needed to work without signal and sync when reconnected. The obvious approach — write the business rules twice, once on the server and once in the app — is where subtle bugs live. Two codebases drift apart. Rules get out of sync.",
   archOfflineBody2: "We wrote the entire rule layer once, in Rust, as shared code. The server and the mobile app import the same logic. The server is authoritative; the app's local permission checks are UX hints only — but the rules are written in one place.",
-  archRustNote: "We built this in Rust — a choice the client wasn't immediately confident in. We responded the only way that makes sense: we wrote tests for every scenario they raised, every edge case, every load condition, until the system had proven itself rather than asked to be trusted. 110 tests.",
+  archRustNote: "We built this in Rust — a choice the client wasn't immediately confident in. We responded the only way that makes sense: we wrote tests for every scenario they raised, every edge case, every load condition, until the system had proven itself rather than asked to be trusted. 230 automated tests, 206 of them full scenarios with several people acting at once, plus stress tests.",
 
   securityHead:  "Security — beyond the audit log",
   securityBody:  "The system we delivered includes an additional layer: multiple servers that cross-verify each other's event history by comparing cryptographic hashes. To forge a record silently, an attacker would need to rewrite data on every server and every client device simultaneously — and even then, every node fires an alert, halts new event submissions, and notifies administrators. Client apps stay operational in offline mode until the servers reach agreement. This feature is available in our custom builds.",
@@ -175,7 +174,6 @@ const T = isAr ? {
     { t: "Multiple wallets", d: "Each with its own teams, contacts, and permission rules — fully isolated." },
     { t: "Mobile app", d: "Works offline. Queues work and syncs when reconnected." },
     { t: "Fine permissions", d: "A team lead can manage their own team and nothing else." },
-    { t: "5-second undo", d: "On any operation, without losing the audit trail." },
   ],
 
   ctaNote:      "If your organisation needs a similar system — custom permissions, multi-wallet, self-hosted — we can build it.",
