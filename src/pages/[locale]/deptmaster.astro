@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageHero from "../../components/PageHero.astro";
-import { currentLocale, localizedHref } from "../../lib/i18n";
+import WindowWidget from "../../components/WindowWidget.astro";
+import PhoneFrame from "../../components/PhoneFrame.astro";
+import { currentLocale } from "../../lib/i18n";
 
 export async function getStaticPaths() {
   return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
@@ -9,316 +10,562 @@ export async function getStaticPaths() {
 
 const locale = currentLocale(Astro);
 const isAr = locale === "ar";
-const L = (href: string) => localizedHref(href, locale);
+
+/* ─── Screenshots ──────────────────────────────────────────────────────
+   Put the files in public/assets/deptmaster/ and list them here. Each
+   section that shows screenshots appears only once its list has items:
+     • DASHBOARD[0] is the large window (and the hero window).
+     • PHONE[0] is also the hero phone.
+   Captions are optional; give both languages.
+   Example:
+     { src: "/assets/deptmaster/wallet-overview.png",
+       alt: { en: "Wallet overview", ar: "نظرة عامة على المحفظة" },
+       caption: { en: "Every balance links to its history.", ar: "…" } },
+*/
+type Shot = { src: string; alt: { en: string; ar: string }; caption?: { en: string; ar: string } };
+const DASHBOARD: Shot[] = [];
+const PHONE: Shot[] = [];
+const tx = (v: { en: string; ar: string }) => (isAr ? v.ar : v.en);
+const heroShots = DASHBOARD.length > 0 || PHONE.length > 0;
 
 const T = isAr ? {
   title:       "برنامج المحصل — كليم",
   description: "كيف بنينا منصة تحصيل ديون مبنية على Rust لشركة خدمات تحتاج إلى تدقيق كامل وصلاحيات دقيقة وتطبيق يعمل بدون إنترنت.",
-  eyebrow:     "دراسة حالة",
+
+  eyebrow:     "دراسة حالة · برمجيات تشغيل",
   h1:          "برنامج المحصل",
-  lede:        "شركة خدمات تدير عشرات المحصّلين الميدانيين ومحافظ متعددة وآلاف حسابات العملاء احتاجت إلى نظام لا يستطيع فيه أحد — حتى المسؤولون — تغيير الأرقام بصمت. بنيناه.",
+  lead:        "منصة لتحصيل الديون لا يستطيع فيها أحد — ولا حتى المسؤولون — تغيير الأرقام بصمت.",
+  sub:         "عشرات المحصّلين الميدانيين، ومحافظ متعددة، وآلاف حسابات العملاء. كل إجراء محفوظ للأبد، وتطبيق جوال يعمل بلا إنترنت، وكود يملكه العميل.",
+  chips:       ["Rust", "Flutter", "بنية الأحداث", "يعمل بلا إنترنت"],
 
-  problemHead:  "المشكلة",
-  problemBody:  "جاءتنا الشركة بمشكلة تشغيلية واضحة: فريق كبير، ومال يتحرك بسرعة عبر أيدٍ متعددة، وقلق متزايد من أن الأرقام لا تتطابق دائماً. المحصّلون يعملون في الميدان — بعضهم يتعامل مع النقد، وبعضهم يدير حسابات العملاء، وبعضهم يفعل الأمرين معاً. المحافظ مشتركة بين الفرق. الموافقات شفهية. وحين يبدو شيء غير صحيح، لا توجد طريقة للإجابة على سؤال: من غيّر هذا، ومتى، ومن ماذا؟",
+  facts: [
+    { label: "اختبارات آلية",        value: "230",                    note: "منها 206 سيناريوهات كاملة: عدة أشخاص يسجّلون أحداثاً في الوقت نفسه، إضافة إلى اختبارات الضغط." },
+    { label: "من البداية إلى التشغيل", value: "3 أشهر",                 note: "من أول لقاء معنا حتى صار النظام يدير أعمالهم." },
+    { label: "في الميدان",            value: "بلا حاجة إلى إشارة",      note: "يسجّل المحصّلون الدفعات في أي مكان، ويزامن التطبيق حين يعود الاتصال." },
+    { label: "منذ الإطلاق",           value: "لا أخطاء جسيمة مُبلَّغ عنها", note: "بحسب العميل. لم يطلبوا سوى تحسينات في الواجهة، وأجريناها." },
+  ],
 
-  requireHead:  "ما طلبوه",
-  req1:         "سجل تام ودائم لكل معاملة — لا يمكن تعديله بعد الكتابة.",
-  req2:         "صلاحيات دقيقة: ليس فقط \"مدير\" أو \"مشاهد\"، بل \"هذا الفريق يستطيع إضافة معاملات لعملائه فقط، ولا يستطيع الحذف، ولا يرى محفظة الفريق الآخر\".",
-  req3:         "تطبيق جوال يعمل في الميدان بدون إنترنت ويزامن حين يعود الاتصال.",
-  req4:         "ملكية كاملة للكود المصدري — بلا اشتراكات، بلا اعتماد على مزوّد.",
+  problemHead: "المشكلة",
+  problemLead: "مال يتحرك بسرعة، عبر أيدٍ كثيرة، بلا ذاكرة.",
+  problemBody: "المحصّلون يتعاملون مع النقد، وبعضهم يدير الحسابات، وبعضهم يفعل الأمرين معاً. المحافظ مشتركة والموافقات شفهية. وحين يبدو شيء غير صحيح، لا أحد يستطيع الإجابة:",
+  problemQ:    "من غيّر هذا، ومتى، ومن أي قيمة؟",
+  askedLabel:  "ما طلبوه منا",
+  asks: [
+    { t: "سجل دائم",       d: "كل معاملة محفوظة للأبد، ولا يمكن تعديل شيء بعد وقوعه.", bg: "bg-butter", icon: "log" },
+    { t: "صلاحيات دقيقة",   d: "يسجّل الفريق لعملائه فقط، ولا يرى حتى محفظة فريق آخر.", bg: "bg-lilac", icon: "key" },
+    { t: "يعمل بلا إشارة",  d: "تطبيق ميداني يزامن حين يعود الاتصال.",                  bg: "bg-sky",   icon: "offline" },
+    { t: "ملكية كاملة",     d: "الكود المصدري كاملاً، بلا اشتراكات ولا اعتماد على مزوّد.", bg: "bg-peach", icon: "home" },
+  ],
 
-  discoveryHead: "قبل أن نكتب سطراً واحداً",
-  discoveryBody: "طلبنا رؤية النظام القائم. أعطونا وصولاً إلى الخادم. ما وجدناه كان قاعدة بيانات مسطّحة — أرصدة حالية فقط، بلا تاريخ. إذا تغيّرت قيمة، اختفت القيمة القديمة. ليس لأن أحداً كان يخفي شيئاً، بل لأن النظام لم يُصمَّم أصلاً ليتذكّر.",
-  discoveryQuote: "جاؤونا يطلبون سجلات في كل مكان. قلنا لهم: اجعل هيكل البيانات نفسه هو السجل.",
-  discoveryBody2: "هذا التحوّل — من \"أضف تسجيلاً فوق النظام\" إلى \"ابنِ التوثيق في الأساس\" — غيّر كل شيء في البنية. بدأوا يطلبون نظاماً واحداً؛ حين شرحنا كيف تجعل البنية المعيارية الإضافات سهلة، وسّعوا النطاق من تلقاء أنفسهم.",
+  discoveryEyebrow: "قبل أن نكتب سطراً واحداً",
+  quote:       "جاؤونا يطلبون سجلات في كل مكان. قلنا لهم: اجعل هيكل البيانات نفسه هو السجل.",
+  foundLabel:  "ما وجدناه · أرصدة فقط (مثال)",
+  foundCols:   ["العميل", "الرصيد"],
+  foundNote:   "غيّر رقماً فيختفي القديم. من ومتى ولماذا: مجهول.",
+  builtLabel:  "ما بنيناه · كل إجراء محفوظ (مثال)",
+  builtRows: [
+    { when: "الثلاثاء 14:32", who: "المحصّل أ",  amt: "+250,000", client: "#4821" },
+    { when: "الثلاثاء 16:05", who: "المالية",    amt: "−500,000", client: "#4821" },
+    { when: "الأربعاء 09:10", who: "المحصّل ج",  amt: "+120,000", client: "#3307" },
+  ],
+  builtNote:   "الأرصدة تُحسب من هذه القائمة. لا شيء يُكتب فوق شيء، أبداً.",
 
-  migrationHead: "الانتقال",
-  migrationBody: "كتبنا سكريبت ترحيل استخرج بياناتهم الحالية وأعاد تشكيلها لتناسب النظام الجديد. لكننا لم نُجرِ تحويلاً مباشراً — شغّلنا النظامَين معاً في الأيام الأولى من الإنتاج. إذا ظهر أي شيء — خطأ، تعارض، حالة حافة لم نرها — يستطيعون العودة للنظام القديم بينما نُصلح. لم يحتاجوا للعودة. لكن وجود الخيار جعل الانتقال حدثاً عادياً لا رهاناً.",
+  howEyebrow:  "كيف يعمل",
+  howHead:     "التاريخ هو مصدر الحقيقة.",
+  evTitle:     "أحداث تدخل، ورصيد يخرج",
+  evItems:     ["+250,000 · المحصّل أ", "−500,000 · المالية", "+1,450,000 · رصيد افتتاحي"],
+  evBalance:   "رصيد #4821",
+  evBalanceNote: "محسوب · مخزّن مؤقتاً",
+  evText:      "رصيد مخزّن يبدو خاطئاً؟ أعد تشغيل الأحداث وأعد بناءه. التصحيحات أحداث جديدة، لا تعديلات.",
+  coreTitle:   "القواعد تُكتب مرة وتعمل في كل مكان",
+  core:        { t: "نواة Rust مشتركة", d: "كل قواعد العمل في ملف مصدر واحد" },
+  server:      { t: "الخادم", d: "Axum · Postgres · الكلمة الأخيرة" },
+  app:         { t: "تطبيق الجوال", d: "Flutter · SQLite · يعمل بلا إنترنت" },
+  coreText:    "قاعدتا كود تتباعدان؛ قاعدة واحدة لا تستطيع. شكّك العميل في Rust أولاً، فأثبتناه:",
+  coreTests:   "230 اختباراً، معظمها سيناريوهات كاملة يتصرف فيها عدة أشخاص معاً، إلى جانب اختبارات الضغط.",
 
-  archHead:     "كيف يعمل",
-  archBody:     "بدلاً من تخزين الأرصدة الحالية، يخزّن النظام كل إجراء أنتجها. \"المحصّل أ سجّل 250,000 دينار على حساب العميل 4821 في الساعة 2:32 مساءً الثلاثاء\" — بشكل دائم، غير قابل للتعديل، مفهرس. الرصيد الحالي يُحسب من هذا التاريخ ويُخزَّن مؤقتاً للاستعلام السريع. إذا بدت قيمة مخزّنة خاطئة، تُعيد بناءها بإعادة تشغيل الأحداث. التاريخ هو مصدر الحقيقة.",
-  archOfflineHead: "مشكلة العمل بدون إنترنت",
-  archOfflineBody: "التطبيق يجب أن يعمل بدون إشارة ويزامن حين يعود الاتصال. المقاربة البديهية — اكتب منطق العمل مرتين، مرة في الخادم ومرة في التطبيق — هي المكان الذي تعيش فيه الأخطاء الخفية. قاعدتا كود تتباعدان تدريجياً.",
-  archOfflineBody2: "كتبنا طبقة القواعد كاملة مرة واحدة بـ Rust، كمكتبات مشتركة. الخادم والتطبيق يستوردان نفس الكود. الخادم هو المرجع النهائي؛ فحوصات الصلاحية المحلية في التطبيق مجرد تلميحات للواجهة فقط — لكن القواعد مكتوبة في ملف مصدر واحد.",
-  archRustNote: "اخترنا Rust لهذا المشروع — وهو خيار أثار تحفّظ العميل في البداية. استجبنا بالطريقة الوحيدة المنطقية: كتبنا اختبارات لكل سيناريو أثاروه، وكل حالة حافة، وكل اختبار حمل، حتى أثبت النظام نفسه بدلاً من أن يُطلب الثقة به. 230 اختباراً آلياً، منها 206 سيناريوهات كاملة يتصرف فيها عدة أشخاص في الوقت نفسه، إلى جانب اختبارات الضغط.",
+  dashEyebrow: "في المكتب",
+  dashHead:    "لوحة التحكم",
+  dashText:    "المحافظ والفرق والعملاء في مكان واحد، وكل رقم يعود إلى الإجراءات التي أنتجته.",
+  fieldEyebrow: "في الميدان",
+  fieldHead:   "تطبيق المحصّل",
+  fieldText:   "يسجّل المحصّلون الدفعات حيث يقفون، بإشارة أو بدونها. يُحفظ العمل على الهاتف ويُزامن لحظة عودة الاتصال.",
 
-  securityHead:  "الأمان — ما وراء السجل",
-  securityBody:  "النظام الذي سلّمناه يتضمن طبقة إضافية: خوادم متعددة تتحقق من تاريخ الأحداث لدى بعضها بمقارنة البصمات التشفيرية. لتزوير سجل بصمت، يحتاج المهاجم إلى إعادة كتابة البيانات في كل خادم وكل جهاز عميل في آنٍ واحد — وحتى لو نجح، كل خادم وكل تطبيق يُطلق تحذيراً فورياً، يوقف إرسال الأحداث الجديدة، ويُنبّه المسؤولين. تطبيقات العملاء تبقى تعمل في وضع عدم الاتصال حتى يتوصل الخوادم إلى اتفاق. هذه الميزة متاحة في بناءاتنا المخصصة.",
-
-  permHead:     "الصلاحيات",
-  permBody:     "نموذج الصلاحيات هو الجزء الذي نادراً ما تفكر فيه المنظمات حتى تحتاجه بشدة.",
+  permEyebrow: "الصلاحيات",
+  permHead:    "الجزء الذي لا يفكر فيه أحد حتى يحتاجه.",
+  nest:        { wallet: "محفظة", team: "فريق · مثل المبيعات", group: "مجموعة عملاء · مثل منطقة الشمال" },
+  actions:     [["قراءة", true], ["إنشاء", true], ["تعديل", false], ["حذف", null], ["إغلاق", true]],
+  actionsNote: "مثال: هذا الفريق يقرأ وينشئ ويغلق، ولا يستطيع الحذف.",
   permLayers: [
-    { t: "على مستوى المحفظة", d: "من يستطيع إضافة أعضاء، وإعادة التسمية، وتعديل قواعد الصلاحيات." },
-    { t: "بين الفرق", d: "\"مدير فريق المبيعات\" يدير عضوية فريقه فقط، لا فريق المالية." },
-    { t: "مجموعات الاتصال", d: "أي الفرق تستطيع تصنيف العملاء أو إزالة تصنيفهم." },
-    { t: "على مستوى الإجراء", d: "لكل فريق ولكل مجموعة عملاء: هل يستطيع القراءة؟ الإنشاء؟ التعديل؟ الحذف؟ إغلاق المعاملة؟" },
+    { t: "على مستوى المحفظة", d: "من يضيف الأعضاء، ويعيد التسمية، ويعدّل القواعد." },
+    { t: "بين الفرق", d: "\"مدير فريق المبيعات\" يدير فريقه فقط، لا فريق المالية." },
+    { t: "مجموعات العملاء", d: "أي الفرق تستطيع تصنيف العملاء أو إزالة تصنيفهم." },
+    { t: "على مستوى الإجراء", d: "قراءة، إنشاء، تعديل، حذف، إغلاق: لكل فريق ولكل مجموعة." },
   ],
-  permFooter:   "كل تغيير في الصلاحيات هو نفسه حدث مسجّل. تاريخ الصلاحيات قابل للتدقيق أيضاً.",
+  permFooter:  "كل تغيير في الصلاحيات هو نفسه حدث مسجّل.",
 
-  scopeHead:    "نطاق العمل",
-  scopeBody:    "الطلب الأولي كان النظام الأساسي فقط. لأن البنية معيارية، الخدمات الإضافية تعمل بجانبه دون أن تمسّه:",
-  scopeItems: [
-    "تذكيرات آلية لتواريخ الاستحقاق",
-    "إشعارات SMS وواتساب للعملاء — تذكيرات وفواتير وكشف حساب — آلية أو بتأكيد الموظف",
-    "أدوات إدارة داخلية للمكتب",
+  secEyebrow:  "ما وراء سجل التدقيق",
+  secHead:     "خوادم تتحقق من بعضها.",
+  secBody:     "عدة خوادم تقارن البصمات التشفيرية لتاريخ أحداثها. لتزوير سجل عليك إعادة كتابة كل خادم وكل جهاز في آن واحد، وحتى حينها يُطلق كل منها إنذاراً، ويوقف استقبال الأحداث الجديدة، ويُنبّه المسؤولين. وتبقى التطبيقات تعمل دون اتصال حتى تتفق الخوادم.",
+  secNote:     "متاحة في بناءاتنا المخصصة.",
+  secAria:     "ثلاثة خوادم ببصمات متطابقة لتاريخ الأحداث، مرتبطة ببعضها",
+
+  liveEyebrow: "الإطلاق",
+  liveHead:    "كيف انتقلنا دون أن نعرّض أعمالهم للخطر.",
+  whyTitle:    "لماذا لا ننتقل مباشرة؟",
+  whyBody:     "الانتقال في يوم واحد رهان: إن تعطّل شيء في اليوم الأول، يتوقف التحصيل. تشغيل النظامين معاً أزال الرهان وجعل يوم الإطلاق يوماً عادياً.",
+  steps: [
+    { t: "انقل البيانات", d: "سكربت ترحيل نسخ كل شيء من قاعدة البيانات القديمة وأعاد تشكيله للنظام الجديد." },
+    { t: "شغّل النظامين معاً", d: "في الأيام الأولى من التشغيل بقي النظام القديم يعمل. إن بدا أي شيء خاطئاً (خطأ، أو عدم تطابق، أو حالة لم نرها) يعود الموظفون إليه فوراً ريثما نُصلح." },
+    { t: "أطفئ القديم", d: "لم يحتج أحد إلى العودة. أُوقف النظام القديم، وصار برنامج المحصل يدير العمل." },
   ],
-  scopeFooter:  "التسليم عبر SMS وواتساب عبر مزوّد طرف ثالث يختاره العميل ويدير حسابه مباشرة.",
-
-  deliveryHead: "التسليم",
+  trackOld:    "النظام القديم",
+  trackRetired: "أُوقف",
+  trackFallback: "عودة احتياطية عند الحاجة",
+  trackNew:    "برنامج المحصل",
+  timelineLabel: "من أول تواصل إلى التسليم",
   timeline: [
     { t: "اليوم الأول",    d: "الاتصال الأول" },
     { t: "الأسبوع الأول", d: "التدقيق الأول على النظام القائم" },
     { t: "الشهر الأول",   d: "وصول جزئي للعميل للمراجعة وتبادل الملاحظات" },
     { t: "الشهر الثالث",  d: "التسليم الكامل والنشر في الإنتاج" },
   ],
-  deliveryOutcome: "منذ الإطلاق، لم يُبلَّغ عن خطأ جسيم أو توقف في النظام. طلبوا تحسينات في الواجهة وأجريناها. في برامج العمليات، هذا هو أفضل تقييم ممكن.",
 
-  techHead:     "للمطوّرين",
-  techItems: [
+  outEyebrow:  "ما حصل عليه العميل",
+  outHead:     "ستة أشياء لم تكن لديهم من قبل.",
+  outcomes: [
+    { t: "ملكية كاملة", d: "ملف تنفيذي واحد يعمل على خادمه الخاص. بلا سحابة خارجية، بلا اشتراك، بلا مزوّد.", icon: "home" },
+    { t: "سجل دائم", d: "كل إجراء موثّق بشكل دائم. الأرصدة قابلة للتحقق بإعادة تشغيل التاريخ. النزاعات لها إجابة.", icon: "log" },
+    { t: "محافظ متعددة", d: "كل محفظة بفريقها وعملائها وقواعد صلاحياتها — معزولة تماماً.", icon: "wallet" },
+    { t: "تطبيق جوال", d: "يعمل بدون إنترنت ويزامن حين يعود الاتصال.", icon: "phone" },
+    { t: "صلاحيات دقيقة", d: "قائد الفريق يدير فريقه فقط، ولا يلمس شيئاً آخر.", icon: "key" },
+    { t: "خدمات إضافية", d: "تذكيرات بمواعيد الاستحقاق، وكشوف حساب عبر SMS وواتساب، وأدوات للمكتب: بجانب النواة لا داخلها.", icon: "list" },
+  ],
+
+  devLabel:    "للمطوّرين",
+  tech: [
     "Rust — خادم (Postgres + Axum) وطبقة منطق العميل",
     "Flutter — واجهة التطبيق عبر Flutter Rust Bridge",
     "SQLite — قاعدة بيانات التطبيق المحلية",
-    "بنية الأحداث (Event Sourcing) — كل إجراء مسجّل، الأرصدة محسوبة وليست مخزّنة",
+    "بنية الأحداث — كل إجراء مسجّل، الأرصدة محسوبة وليست مخزّنة",
     "مكتبات Rust مشتركة — منطق العمل مكتوب مرة واحدة، يعمل على الخادم والتطبيق",
   ],
-  openSourceNote: "النسخة مفتوحة المصدر من هذا النظام متاحة على GitHub تحت اسم Debitum.",
-
-  outcomeHead:  "ما حصل عليه العميل",
-  outcomes: [
-    { t: "ملكية كاملة", d: "ملف تنفيذي واحد يعمل على خادمه الخاص. بلا سحابة خارجية، بلا اشتراك، بلا مزوّد." },
-    { t: "سجل دائم", d: "كل إجراء موثّق بشكل دائم. الأرصدة قابلة للتحقق بإعادة تشغيل التاريخ. النزاعات لها إجابة." },
-    { t: "محافظ متعددة", d: "كل محفظة بفريقها وعملائها وقواعد صلاحياتها — معزولة تماماً." },
-    { t: "تطبيق جوال", d: "يعمل بدون إنترنت ويزامن حين يعود الاتصال." },
-    { t: "صلاحيات دقيقة", d: "قائد الفريق يدير فريقه فقط، ولا يلمس شيئاً آخر." },
-  ],
-
-  ctaNote:      "إذا كانت مؤسستك تحتاج نظاماً مشابهاً — صلاحيات مخصصة، محافظ متعددة، استضافة ذاتية — يمكننا بناؤه.",
-  cta:          "احجز تقييماً مجانياً ←",
-
+  osTitle:     "مفتوح المصدر باسم Debitum",
+  osText:      "النسخة مفتوحة المصدر من هذا النظام متاحة على GitHub.",
 } : {
   title:       "Deptmaster — Kaleem",
   description: "How we built a Rust-based debt-collection platform for a utility company that needed full auditability, fine-grained permissions, and offline-capable mobile.",
-  eyebrow:     "Case study",
+
+  eyebrow:     "Case study · Operations software",
   h1:          "Deptmaster",
-  lede:        "A utility company managing dozens of field collectors, multiple wallets, and thousands of client accounts needed a system where no one — not even the administrators — could quietly change the numbers. We built it.",
+  lead:        "A debt-collection platform where no one — not even the administrators — can quietly change the numbers.",
+  sub:         "Dozens of field collectors, multiple wallets, thousands of client accounts. Every action recorded for good, a mobile app that works with no signal, and code the client owns.",
+  chips:       ["Rust", "Flutter", "Event sourcing", "Offline mobile"],
 
-  problemHead:  "The problem",
-  problemBody:  "The client came to us with a familiar operations problem: a large team, money moving fast through multiple hands, and growing unease that the numbers weren't always adding up. Field collectors handled cash. Some managed client accounts. Some did both. Wallets were shared across teams. Approvals were verbal. When something looked off, there was no way to answer: who changed that, when, and from what?",
+  facts: [
+    { label: "Automated tests",   value: "230",                    note: "206 are full scenarios: several people posting events at once, plus stress tests." },
+    { label: "Built and live in", value: "3 months",               note: "From our first meeting to the system running their business." },
+    { label: "In the field",      value: "No signal needed",       note: "Collectors post payments anywhere; the app syncs when it's back online." },
+    { label: "Since go-live",     value: "No major bugs reported", note: "By the client. They've asked only for interface tweaks, which we made." },
+  ],
 
-  requireHead:  "Their requirements",
-  req1:         "A complete, permanent history of every transaction — one that cannot be edited after the fact.",
-  req2:         "Permissions fine-grained enough that one team can post transactions for their clients but cannot see another team's wallet, let alone delete from it.",
-  req3:         "A mobile app that works in the field with no signal and syncs when reconnected.",
-  req4:         "Full ownership of the source code. No SaaS, no vendor dependency.",
+  problemHead: "The problem",
+  problemLead: "Money moving fast, through many hands, with no memory.",
+  problemBody: "Collectors handled cash; some managed accounts; some did both. Wallets were shared, approvals were verbal. When something looked off, nobody could answer:",
+  problemQ:    "who changed that, when, and from what?",
+  askedLabel:  "What they asked us for",
+  asks: [
+    { t: "A permanent history",       d: "Every transaction, kept for good. Nothing editable after the fact.",           bg: "bg-butter", icon: "log" },
+    { t: "Fine-grained permissions",  d: "A team posts for its own clients and can't even see another team's wallet.",  bg: "bg-lilac",  icon: "key" },
+    { t: "Works with no signal",      d: "A mobile app for the field that syncs when it reconnects.",                    bg: "bg-sky",    icon: "offline" },
+    { t: "Owned outright",            d: "Full source code. No SaaS, no vendor to depend on.",                           bg: "bg-peach",  icon: "home" },
+  ],
 
-  discoveryHead: "Before we wrote a line of code",
-  discoveryBody: "We asked to see the existing system. They gave us access to the server. What we found was a flat database — current balances only, no history. If a number changed, the previous value was gone. Not because anyone was hiding it — the system was simply never designed to remember.",
-  discoveryQuote: "They came in asking for logs everywhere. We told them: make the data structure the log.",
-  discoveryBody2: "That shift — from \"add logging on top\" to \"build the record-keeping into the foundation\" — changed everything about the architecture. They came asking for one system; once we explained how the modular design makes additions straightforward, they expanded scope on their own.",
+  discoveryEyebrow: "Before we wrote a line of code",
+  quote:       "They came in asking for logs everywhere. We told them: make the data structure the log.",
+  foundLabel:  "What we found · balances only (example)",
+  foundCols:   ["Client", "Balance"],
+  foundNote:   "Change a number and the old one is gone. Who, when, why: unknown.",
+  builtLabel:  "What we built · every action, kept (example)",
+  builtRows: [
+    { when: "Tue 14:32", who: "Collector A", amt: "+250,000", client: "#4821" },
+    { when: "Tue 16:05", who: "Finance",     amt: "−500,000", client: "#4821" },
+    { when: "Wed 09:10", who: "Collector C", amt: "+120,000", client: "#3307" },
+  ],
+  builtNote:   "Balances are computed from this list. Nothing is overwritten, ever.",
 
-  migrationHead: "The migration",
-  migrationBody: "We wrote a migration script that extracted their existing data and reshaped it for the new system. But we didn't do a hard cutover — we ran both systems in parallel for the first days of production. If anything surfaced — a bug, a mismatch, an edge case we hadn't seen — they could fall back to the old system while we resolved it. Nothing required a fallback. But the option existing made the deployment a non-event rather than a bet.",
+  howEyebrow:  "How it works",
+  howHead:     "The history is the ground truth.",
+  evTitle:     "Events in, balance out",
+  evItems:     ["+250,000 · Collector A", "−500,000 · Finance", "+1,450,000 · opening"],
+  evBalance:   "Balance #4821",
+  evBalanceNote: "computed · cached",
+  evText:      "A cached balance looks wrong? Replay the events and rebuild it. Corrections are new events, never edits.",
+  coreTitle:   "Rules written once, run everywhere",
+  core:        { t: "Shared Rust core", d: "every business rule, one source file" },
+  server:      { t: "Server", d: "Axum · Postgres · the final word" },
+  app:         { t: "Mobile app", d: "Flutter · SQLite · works offline" },
+  coreText:    "Two codebases drift apart; one can't. The client doubted Rust at first, so we proved it:",
+  coreTests:   "230 tests, most of them full scenarios with several people acting at once, plus stress tests.",
 
-  archHead:     "How it works",
-  archBody:     "Instead of storing current balances, the system stores every action that produced them. \"Collector A posted 250,000 IQD against client #4821 at 14:32 on Tuesday\" — permanently, immutably, indexed. The current balance is computed from that history and cached for fast lookup. If a cached value ever looks wrong, you rebuild it by replaying the events. The history is the ground truth.",
-  archOfflineHead: "The offline problem",
-  archOfflineBody: "The mobile app needed to work without signal and sync when reconnected. The obvious approach — write the business rules twice, once on the server and once in the app — is where subtle bugs live. Two codebases drift apart. Rules get out of sync.",
-  archOfflineBody2: "We wrote the entire rule layer once, in Rust, as shared code. The server and the mobile app import the same logic. The server is authoritative; the app's local permission checks are UX hints only — but the rules are written in one place.",
-  archRustNote: "We built this in Rust — a choice the client wasn't immediately confident in. We responded the only way that makes sense: we wrote tests for every scenario they raised, every edge case, every load condition, until the system had proven itself rather than asked to be trusted. 230 automated tests, 206 of them full scenarios with several people acting at once, plus stress tests.",
+  dashEyebrow: "In the office",
+  dashHead:    "The dashboard",
+  dashText:    "Wallets, teams and clients in one place, every number traceable back to the actions that produced it.",
+  fieldEyebrow: "In the field",
+  fieldHead:   "The collector's app",
+  fieldText:   "Collectors post payments where they stand, signal or not. Work queues on the phone and syncs the moment it reconnects.",
 
-  securityHead:  "Security — beyond the audit log",
-  securityBody:  "The system we delivered includes an additional layer: multiple servers that cross-verify each other's event history by comparing cryptographic hashes. To forge a record silently, an attacker would need to rewrite data on every server and every client device simultaneously — and even then, every node fires an alert, halts new event submissions, and notifies administrators. Client apps stay operational in offline mode until the servers reach agreement. This feature is available in our custom builds.",
-
-  permHead:     "Permissions",
-  permBody:     "The permission model is the part organisations rarely think about until they urgently need it.",
+  permEyebrow: "Permissions",
+  permHead:    "The part nobody thinks about until they need it.",
+  nest:        { wallet: "Wallet", team: "Team · e.g. Sellers", group: "Contact group · e.g. North district" },
+  actions:     [["read", true], ["create", true], ["update", false], ["delete", null], ["close", true]],
+  actionsNote: "Example: this team can read, create and close, but not delete.",
   permLayers: [
-    { t: "Wallet-wide", d: "Who can add members, rename the wallet, edit permission rules." },
-    { t: "Team-to-team", d: "\"Sellers Admin\" manages the Sellers team's roster — not Finance's." },
-    { t: "Contact groups", d: "Which teams can assign or remove clients from a contact category." },
-    { t: "Action-level", d: "Per team, per group of clients: can they read? create? update? delete? close a transaction?" },
+    { t: "Wallet-wide", d: "who adds members, renames, edits the rules." },
+    { t: "Team to team", d: "\"Sellers Admin\" runs Sellers, not Finance." },
+    { t: "Contact groups", d: "which teams can file clients where." },
+    { t: "Action-level", d: "read, create, update, delete, close: per team, per group." },
   ],
-  permFooter:   "Every permission change is itself a recorded event. The permission history is auditable too.",
+  permFooter:  "Every permission change is itself a recorded event.",
 
-  scopeHead:    "Scope",
-  scopeBody:    "The initial ask was the core system. Because the architecture is modular, additional services run alongside it without touching the core:",
-  scopeItems: [
-    "Automated due-date reminders",
-    "SMS and WhatsApp notifications for clients — reminders, invoices, account statements — sent automatically or held for staff confirmation",
-    "In-office management tools",
+  secEyebrow:  "Beyond the audit log",
+  secHead:     "Servers that check each other.",
+  secBody:     "Several servers compare cryptographic fingerprints of their event history. To forge a record you'd have to rewrite every server and every device at once, and even then every node raises the alarm, stops taking new events and alerts the admins. The apps keep working offline until the servers agree.",
+  secNote:     "Available in our custom builds.",
+  secAria:     "Three servers with matching history fingerprints, linked to each other",
+
+  liveEyebrow: "Going live",
+  liveHead:    "How we switched without putting their business at risk.",
+  whyTitle:    "Why not just switch over?",
+  whyBody:     "A one-day switch is a bet: if anything breaks on day one, collections stop. Running both systems took the bet off the table and made launch day a non-event.",
+  steps: [
+    { t: "Move the data", d: "A migration script copied everything out of the old database and reshaped it for the new system." },
+    { t: "Run both, side by side", d: "For the first days in production the old system stayed on. If anything looked wrong (a bug, a mismatch, a case we hadn't seen), staff could go straight back to it while we fixed it." },
+    { t: "Switch the old one off", d: "Nobody ever needed to fall back. The old system was retired, and Deptmaster runs the business." },
   ],
-  scopeFooter:  "SMS and WhatsApp delivery runs through a third-party provider the client manages directly.",
-
-  deliveryHead: "Delivery",
+  trackOld:    "Old system",
+  trackRetired: "retired",
+  trackFallback: "fallback, if ever needed",
+  trackNew:    "Deptmaster",
+  timelineLabel: "From first contact to delivery",
   timeline: [
-    { t: "Day one",        d: "First contact" },
-    { t: "Week one",       d: "First audit of the existing system" },
-    { t: "Month one",      d: "Partial access for client review and feedback" },
-    { t: "Month three",    d: "Full delivery and production deployment" },
+    { t: "Day one",     d: "First contact" },
+    { t: "Week one",    d: "Audit of the existing system" },
+    { t: "Month one",   d: "Client reviews a working build" },
+    { t: "Month three", d: "Full delivery, in production" },
   ],
-  deliveryOutcome: "Since go-live, they have not reported a major bug or system failure. They have asked for UI improvements and we made them. In operations software, that is a good outcome.",
 
-  techHead:     "For developers",
-  techItems: [
+  outEyebrow:  "What the client got",
+  outHead:     "Six things they didn't have before.",
+  outcomes: [
+    { t: "Full ownership", d: "One binary on their own server. No cloud, no subscription, no vendor.", icon: "home" },
+    { t: "Permanent record", d: "Every action recorded for good. Disputes have an answer: replay the history.", icon: "log" },
+    { t: "Multiple wallets", d: "Each with its own teams, contacts and rules, fully isolated.", icon: "wallet" },
+    { t: "Offline mobile app", d: "Queues work and syncs when reconnected.", icon: "phone" },
+    { t: "Fine permissions", d: "A team lead runs their own team and nothing else.", icon: "key" },
+    { t: "Add-on services", d: "Due-date reminders, SMS and WhatsApp statements, office tools: beside the core, not inside it.", icon: "list" },
+  ],
+
+  devLabel:    "For developers",
+  tech: [
     "Rust — server (Postgres + Axum) and client logic layer",
     "Flutter — mobile UI via Flutter Rust Bridge (FFI)",
     "SQLite — local client database",
     "Event sourcing — every action recorded; balances computed, not stored",
     "Shared Rust crates — business logic written once, compiled into both server and app",
   ],
-  openSourceNote: "The open-source version of this system is available on GitHub as Debitum.",
+  osTitle:     "Open source as Debitum",
+  osText:      "The open version of this system is on GitHub.",
+};
 
-  outcomeHead:  "What the client got",
-  outcomes: [
-    { t: "Full ownership", d: "A single binary that runs on their own server. No third-party cloud, no subscription, no vendor." },
-    { t: "Permanent record", d: "Every action recorded permanently. Balances can be verified by replaying history. Disputes have an answer." },
-    { t: "Multiple wallets", d: "Each with its own teams, contacts, and permission rules — fully isolated." },
-    { t: "Mobile app", d: "Works offline. Queues work and syncs when reconnected." },
-    { t: "Fine permissions", d: "A team lead can manage their own team and nothing else." },
-  ],
-
-  ctaNote:      "If your organisation needs a similar system — custom permissions, multi-wallet, self-hosted — we can build it.",
-  cta:          "Book a free audit →",
+// Small stroke icons shared by the requirement cards and the outcomes.
+const ICONS: Record<string, string> = {
+  log: '<rect x="6" y="4" width="20" height="24" rx="2"/><path d="M11 10h10M11 15h10M11 20h6"/>',
+  key: '<circle cx="11" cy="16" r="6"/><path d="M17 16h12M25 16v5M29 16v3"/>',
+  offline: '<rect x="10" y="3" width="12" height="26" rx="3"/><path d="M14 25h4M3 9l26 16"/>',
+  home: '<path d="M4 15L16 5l12 10"/><path d="M7 13v14h18V13"/><path d="M13 27v-8h6v8"/>',
+  wallet: '<rect x="4" y="9" width="24" height="17" rx="2"/><path d="M8 9V6h16v3"/>',
+  phone: '<rect x="10" y="3" width="12" height="26" rx="3"/><path d="M14 25h4"/>',
+  list: '<path d="M6 8h20M6 16h20M6 24h12"/><circle cx="24" cy="24" r="3"/>',
 };
 ---
 
 <BaseLayout title={T.title} description={T.description}>
 
-  <PageHero eyebrow={T.eyebrow} title={T.h1}>
-    <p>{T.lede}</p>
-  </PageHero>
+  <!-- ─── HERO + FACTS: one mint block; the facts are the hero's summary ─── -->
+  <section class="dm-hero bg-mint dust">
+    <div class:list={["container", "dm-hero-grid", { "has-stage": heroShots }]}>
+      <div class="dm-hero-text">
+        <span class="eyebrow">{T.eyebrow}</span>
+        <h1>{T.h1}</h1>
+        <p class="dm-lead">{T.lead}</p>
+        <p class="dm-sub">{T.sub}</p>
+        <div class="chips">{T.chips.map((c) => <span class="chip">{c}</span>)}</div>
+      </div>
+      {heroShots && (
+        <div class="dm-stage">
+          {DASHBOARD[0] && (
+            <div class="dm-stage-win">
+              <WindowWidget src={DASHBOARD[0].src} alt={tx(DASHBOARD[0].alt)} chromeColor="sky-shader" loading="eager" sizes="(min-width: 900px) 50vw, 100vw" />
+            </div>
+          )}
+          {PHONE[0] && (
+            <PhoneFrame src={PHONE[0].src} alt={tx(PHONE[0].alt)} class="dm-stage-phone" loading="eager" sizes="200px" />
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+  <dl class="dm-facts bg-mint dust">
+    {T.facts.map((f) => (
+      <div>
+        <dt>{f.label}</dt>
+        <dd><span class="fact-value">{f.value}</span><span class="fact-note">{f.note}</span></dd>
+      </div>
+    ))}
+  </dl>
 
   <!-- ─── THE PROBLEM ─── -->
-  <section class="story-section">
-    <div class="container">
-      <div class="prose-col">
-        <h2 class="sec-h2">{T.problemHead}</h2>
-        <p>{T.problemBody}</p>
-        <ul class="req-list">
-          <li>{T.req1}</li>
-          <li>{T.req2}</li>
-          <li>{T.req3}</li>
-          <li>{T.req4}</li>
-        </ul>
+  <section class="dm-sec bg-paper-2 dust">
+    <div class="container dm-problem">
+      <div class="dm-problem-text">
+        <h2 class="big-h2">{T.problemHead}</h2>
+        <p class="dm-lead">{T.problemLead}</p>
+        <p>{T.problemBody} <b>{T.problemQ}</b></p>
       </div>
-    </div>
-  </section>
-
-  <!-- ─── DISCOVERY ─── -->
-  <section class="story-section bg-paper-2">
-    <div class="container">
-      <div class="prose-col">
-        <h2 class="sec-h2">{T.discoveryHead}</h2>
-        <p>{T.discoveryBody}</p>
-        <blockquote class="pullquote">{T.discoveryQuote}</blockquote>
-        <p>{T.discoveryBody2}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── MIGRATION ─── -->
-  <section class="story-section">
-    <div class="container">
-      <div class="prose-col">
-        <h2 class="sec-h2">{T.migrationHead}</h2>
-        <p>{T.migrationBody}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── ARCHITECTURE ─── -->
-  <section class="story-section bg-paper-2">
-    <div class="container">
-      <div class="arch-grid">
-        <div class="prose-col">
-          <h2 class="sec-h2">{T.archHead}</h2>
-          <p>{T.archBody}</p>
-          <h3 class="sec-h3">{T.archOfflineHead}</h3>
-          <p>{T.archOfflineBody}</p>
-          <p>{T.archOfflineBody2}</p>
-          <p class="margin-note">{T.archRustNote}</p>
+      <div class="dm-asks">
+        <span class="eyebrow">{T.askedLabel}</span>
+        <div class="ask-grid">
+          {T.asks.map((a) => (
+            <div class={`sk ask ${a.bg}`}>
+              <svg class="ico" width="40" height="40" viewBox="0 0 32 32" aria-hidden="true" set:html={ICONS[a.icon]}></svg>
+              <b>{a.t}</b>
+              <span>{a.d}</span>
+            </div>
+          ))}
         </div>
-        <!-- Security: inline callout beside the arch text -->
-        <aside class="security-card sk bg-apricot">
-          <h3 class="sec-h3">{T.securityHead}</h3>
-          <p>{T.securityBody}</p>
-        </aside>
       </div>
     </div>
   </section>
 
-  <!-- ─── PERMISSIONS ─── -->
-  <section class="story-section">
+  <!-- ─── DISCOVERY: the quote, and what it means for the data ─── -->
+  <section class="dm-sec board dm-dark">
     <div class="container">
-      <div class="prose-col">
-        <h2 class="sec-h2">{T.permHead}</h2>
-        <p>{T.permBody}</p>
-        <ol class="perm-list">
-          {T.permLayers.map((l) => (
-            <li>
-              <strong>{l.t}</strong>
-              <span>{l.d}</span>
-            </li>
-          ))}
-        </ol>
-        <p class="margin-note">{T.permFooter}</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── OUTCOMES ─── -->
-  <section class="outcomes-section bg-paper-2">
-    <div class="container">
-      <h2 class="section-heading">{T.outcomeHead}</h2>
-      <dl class="outcomes-grid">
-        {T.outcomes.map((o) => (
-          <div class="outcome-item">
-            <dt>{o.t}</dt>
-            <dd>{o.d}</dd>
+      <span class="eyebrow">{T.discoveryEyebrow}</span>
+      <blockquote class="dm-quote">“{T.quote}”</blockquote>
+      <div class="data-compare">
+        <figure>
+          <figcaption class="eyebrow">{T.foundLabel}</figcaption>
+          <div class="data-box">
+            <div class="data-row data-head"><span>{T.foundCols[0]}</span><span>{T.foundCols[1]}</span></div>
+            <div class="data-row"><span dir="ltr">#4821</span><span dir="ltr"><s>1,450,000</s> 1,200,000</span></div>
+            <div class="data-row"><span dir="ltr">#3307</span><span dir="ltr">860,000</span></div>
           </div>
-        ))}
-      </dl>
+          <p>{T.foundNote}</p>
+        </figure>
+        <svg class="data-arrow" width="90" height="40" viewBox="0 0 90 40" aria-hidden="true"><path d="M8 20h66M64 10l12 10l-12 10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 8"></path></svg>
+        <figure>
+          <figcaption class="eyebrow">{T.builtLabel}</figcaption>
+          <ol class="data-box">
+            {T.builtRows.map((r) => (
+              <li class="data-row data-event"><span>{r.when} · {r.who}</span><span dir="ltr" class:list={["amt", r.amt.startsWith("+") ? "plus" : "minus"]}>{r.amt}</span><span dir="ltr">{r.client}</span></li>
+            ))}
+          </ol>
+          <p>{T.builtNote}</p>
+        </figure>
+      </div>
     </div>
   </section>
 
-  <!-- ─── SCOPE + DELIVERY ─── -->
-  <section class="story-section">
-    <div class="container two-col">
-      <div>
-        <h2 class="sec-h2">{T.scopeHead}</h2>
-        <p>{T.scopeBody}</p>
-        <ul class="scope-list">
-          {T.scopeItems.map((s) => <li>{s}</li>)}
-        </ul>
-        <p class="margin-note">{T.scopeFooter}</p>
+  <!-- ─── HOW IT WORKS: two small diagrams ─── -->
+  <section class="dm-sec">
+    <div class="container">
+      <span class="eyebrow">{T.howEyebrow}</span>
+      <h2 class="sec-h2">{T.howHead}</h2>
+      <div class="how-grid">
+        <figure class="sk how-fig">
+          <figcaption>{T.evTitle}</figcaption>
+          <div class="ev-flow">
+            <div class="ev-list">{T.evItems.map((e) => <span class="ev-item">{e}</span>)}</div>
+            <svg class="ev-arrow" width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 20h40M38 12l10 8l-10 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <div class="sk ev-balance bg-mint">
+              <span class="eyebrow">{T.evBalance}</span>
+              <b dir="ltr">1,200,000</b>
+              <span>{T.evBalanceNote}</span>
+            </div>
+          </div>
+          <p>{T.evText}</p>
+        </figure>
+        <figure class="sk how-fig">
+          <figcaption>{T.coreTitle}</figcaption>
+          <div class="core-flow">
+            <div class="sk core-box bg-apricot"><b>{T.core.t}</b><span>{T.core.d}</span></div>
+            <div class="sk core-node"><b>{T.server.t}</b><span>{T.server.d}</span></div>
+            <div class="sk core-node"><b>{T.app.t}</b><span>{T.app.d}</span></div>
+          </div>
+          <p>{T.coreText} <b>{T.coreTests}</b></p>
+        </figure>
       </div>
-      <div>
-        <h2 class="sec-h2">{T.deliveryHead}</h2>
-        <ol class="timeline">
-          {T.timeline.map((t) => (
-            <li>
-              <strong>{t.t}</strong>
-              <span>{t.d}</span>
-            </li>
+    </div>
+  </section>
+
+  <!-- ─── THE DASHBOARD (shown once screenshots are listed above) ─── -->
+  {DASHBOARD.length > 0 && (
+    <section class="dm-sec bg-paper-2 dust">
+      <div class="container">
+        <div class="sec-head-row">
+          <div><span class="eyebrow">{T.dashEyebrow}</span><h2 class="sec-h2">{T.dashHead}</h2></div>
+          <p>{T.dashText}</p>
+        </div>
+        <figure class="shot-main">
+          <WindowWidget src={DASHBOARD[0].src} alt={tx(DASHBOARD[0].alt)} chromeColor="sky-shader" sizes="(min-width: 1280px) 1120px, 100vw" />
+          {DASHBOARD[0].caption && <figcaption>{tx(DASHBOARD[0].caption)}</figcaption>}
+        </figure>
+        {DASHBOARD.length > 1 && (
+          <div class="shot-grid">
+            {DASHBOARD.slice(1).map((s) => (
+              <figure>
+                <WindowWidget src={s.src} alt={tx(s.alt)} chromeColor="sky-shader" />
+                {s.caption && <figcaption>{tx(s.caption)}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- ─── IN THE FIELD (shown once phone screenshots are listed above) ─── -->
+  {PHONE.length > 0 && (
+    <section class="dm-sec bg-sky dust">
+      <div class="container field-grid">
+        <div class="field-text">
+          <span class="eyebrow">{T.fieldEyebrow}</span>
+          <h2 class="sec-h2">{T.fieldHead}</h2>
+          <p>{T.fieldText}</p>
+        </div>
+        <div class="phone-row">
+          {PHONE.map((s) => (
+            <figure>
+              <PhoneFrame src={s.src} alt={tx(s.alt)} />
+              {s.caption && <figcaption>{tx(s.caption)}</figcaption>}
+            </figure>
           ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ─── PERMISSIONS: the four layers as nested boxes ─── -->
+  <section class="dm-sec">
+    <div class="container perm-grid">
+      <figure class="nest">
+        <div class="sk nest-box bg-lilac">
+          <span class="eyebrow">{T.nest.wallet}</span>
+          <div class="sk nest-box nest-inner bg-paper">
+            <span class="eyebrow">{T.nest.team}</span>
+            <div class="sk nest-box nest-inner bg-butter">
+              <span class="eyebrow">{T.nest.group}</span>
+              <div class="chips">
+                {T.actions.map(([label, state]) => (
+                  <span class:list={["chip", { "chip-on": state === true, "chip-off": state === null }]}>{label}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>{T.actionsNote}</figcaption>
+      </figure>
+      <div class="perm-text">
+        <span class="eyebrow">{T.permEyebrow}</span>
+        <h2 class="sec-h2">{T.permHead}</h2>
+        <ol class="perm-list">
+          {T.permLayers.map((l) => <li><b>{l.t}</b> — {l.d}</li>)}
         </ol>
-        <p class="delivery-outcome">{T.deliveryOutcome}</p>
+        <p class="muted">{T.permFooter}</p>
       </div>
     </div>
   </section>
 
-  <!-- ─── TECH ASIDE + CTA ─── -->
-  <section class="closing-section bg-paper-2">
-    <div class="container closing-grid">
-      <div class="tech-aside">
-        <h3 class="tech-label">{T.techHead}</h3>
-        <ul class="tech-list">
-          {T.techItems.map((t) => <li>{t}</li>)}
-        </ul>
-        <p class="open-source-note">{T.openSourceNote}</p>
+  <!-- ─── SECURITY: servers that check each other ─── -->
+  <section class="dm-sec board dm-dark">
+    <div class="container sec-grid">
+      <div>
+        <span class="eyebrow">{T.secEyebrow}</span>
+        <h2 class="sec-h2">{T.secHead}</h2>
+        <p>{T.secBody}</p>
+        <p class="mono-note">{T.secNote}</p>
       </div>
-      <div class="cta-block">
-        <p class="cta-note">{T.ctaNote}</p>
-        <a class="skb skb-sky" href={L("/audit/")}>{T.cta}</a>
+      <svg class="servers" viewBox="0 0 560 360" role="img" aria-label={T.secAria}>
+        <path d="M140 90L420 90M140 90L280 280M420 90L280 280" fill="none" stroke="#a8b4ac" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"></path>
+        {[[80, 40], [360, 40], [220, 200]].map(([x, y]) => (
+          <g>
+            <rect x={x} y={y} width="120" height="100" rx="8" fill="#1d2320" stroke="#eceee6" stroke-width="2.5"></rect>
+            <path d={`M${x + 20} ${y + 32}h80M${x + 20} ${y + 52}h80M${x + 20} ${y + 72}h50`} stroke="#46524c" stroke-width="6" stroke-linecap="round"></path>
+            <rect x={x - 6} y={y + 108} width="132" height="30" rx="15" fill="#bfe6d6"></rect>
+            <text x={x + 60} y={y + 128} text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" fill="#1f1f1f">a3f9…c2</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  </section>
+
+  <!-- ─── GOING LIVE: what happened, step by step, and why; then delivery ─── -->
+  <section class="dm-sec">
+    <div class="container">
+      <div class="live-head">
+        <div><span class="eyebrow">{T.liveEyebrow}</span><h2 class="sec-h2">{T.liveHead}</h2></div>
+        <div class="sk why bg-butter"><b>{T.whyTitle}</b><span>{T.whyBody}</span></div>
+      </div>
+      <ol class="steps">
+        {T.steps.map((s, i) => (
+          <li><span class="step-n">{i + 1}</span><b>{s.t}</b><span>{s.d}</span></li>
+        ))}
+      </ol>
+      <div class="tracks" aria-hidden="true">
+        <div class="track track-old"><span>{T.trackOld}</span></div>
+        <div class="track-retired"><span>{T.trackRetired}</span></div>
+        <div class="track-fallback">
+          <svg width="40" height="44" viewBox="0 0 40 44"><path d="M20 40V8M12 16l8-8l8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 6"></path></svg>
+          <span>{T.trackFallback}</span>
+        </div>
+        <div class="track track-new"><span>{T.trackNew}</span></div>
+      </div>
+      <span class="eyebrow timeline-label">{T.timelineLabel}</span>
+      <ol class="timeline">
+        {T.timeline.map((t, i) => (
+          <li><span class:list={["dot", `dot-${i}`]}></span><b>{t.t}</b><span>{t.d}</span></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ─── WHAT THE CLIENT GOT ─── -->
+  <section class="dm-sec bg-paper-2 dust">
+    <div class="container">
+      <span class="eyebrow">{T.outEyebrow}</span>
+      <h2 class="sec-h2">{T.outHead}</h2>
+      <ul class="outcomes">
+        {T.outcomes.map((o) => (
+          <li>
+            <svg class="ico" width="36" height="36" viewBox="0 0 32 32" aria-hidden="true" set:html={ICONS[o.icon]}></svg>
+            <span><b>{o.t}</b><span>{o.d}</span></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─── FOR DEVELOPERS (the footer below is the call to action) ─── -->
+  <section class="dm-sec dm-dev">
+    <div class="container dev-grid">
+      <div>
+        <span class="eyebrow">{T.devLabel}</span>
+        <ul class="tech">{T.tech.map((t) => <li>{t}</li>)}</ul>
+      </div>
+      <div class="sk os-card">
+        <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.7s.8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z" fill="currentColor"></path></svg>
+        <span><b>{T.osTitle}</b><span>{T.osText}</span></span>
       </div>
     </div>
   </section>
@@ -332,286 +579,253 @@ const T = isAr ? {
     padding: 0 var(--k-gutter-desktop);
   }
 
-  /* ── Sections ── */
-  .story-section   { padding: var(--k-space-10) 0; border-top: 2px solid var(--k-ink); }
-  .outcomes-section { padding: var(--k-space-10) 0; border-top: 2px solid var(--k-ink); }
-  .closing-section  { padding: var(--k-space-10) 0; border-top: 2px solid var(--k-ink); }
-
-  /* ── Prose column: max ~70ch for comfortable reading ── */
-  .prose-col { max-width: 720px; }
-
-  .sec-h2 {
-    margin: 0 0 var(--k-space-6);
-    font-size: clamp(26px, 3.4vw, 36px);
-    font-weight: 700;
-    color: var(--k-ink);
-  }
-  .sec-h3 {
-    margin: var(--k-space-7) 0 var(--k-space-4);
-    font-size: clamp(20px, 2.4vw, 26px);
-    font-weight: 700;
-    color: var(--k-ink);
-  }
-  .story-section p,
-  .story-section li { font-size: 17px; line-height: 1.8; color: var(--k-ink); }
-  .story-section p + p { margin-top: var(--k-space-5); }
-
-  /* ── Requirements list ── */
-  .req-list {
-    margin: var(--k-space-6) 0 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--k-space-4);
-    border-top: 2px solid var(--k-ink);
-  }
-  .req-list li {
-    padding: var(--k-space-4) 0;
-    border-bottom: 1px solid var(--k-ink);
-    padding-inline-start: var(--k-space-6);
-    position: relative;
-  }
-  .req-list li::before {
-    content: "—";
-    position: absolute;
-    inset-inline-start: 0;
-    color: var(--k-ink-muted);
-    font-family: var(--k-font-mono);
-  }
-
-  /* ── Pullquote ── */
-  .pullquote {
-    margin: var(--k-space-7) 0;
-    padding: var(--k-space-5) var(--k-space-7);
-    border-inline-start: 4px solid var(--k-ink);
-    font-size: clamp(20px, 2.6vw, 26px);
-    font-family: var(--k-font-serif);
-    font-weight: 700;
-    line-height: 1.4;
-    color: var(--k-ink);
-  }
-
-  /* ── Architecture: prose + security card side by side ── */
-  .arch-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-    gap: 56px;
-    align-items: start;
-  }
-  .security-card {
-    padding: var(--k-space-7);
-    position: sticky;
-    top: 96px;
-  }
-  .security-card .sec-h3 { margin-top: 0; }
-  .security-card p { font-size: 16px; line-height: 1.7; color: var(--k-ink); margin: 0; }
-
-  /* ── Margin note: mono, muted, small ── */
-  .margin-note {
-    margin-top: var(--k-space-6) !important;
+  /* ─── Shared pieces ─── */
+  .eyebrow {
+    display: block;
     font-family: var(--k-font-mono);
     font-size: 13px;
-    line-height: 1.6;
-    color: var(--k-ink-muted);
-  }
-
-  /* ── Permissions list ── */
-  .perm-list {
-    margin: var(--k-space-6) 0 0;
-    padding: 0;
-    list-style: none;
-    counter-reset: perm;
-    display: flex;
-    flex-direction: column;
-  }
-  .perm-list li {
-    counter-increment: perm;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: var(--k-space-5);
-    padding: var(--k-space-4) 0;
-    border-bottom: 1px solid var(--k-ink);
-    font-size: 17px;
-    line-height: 1.6;
-    color: var(--k-ink);
-  }
-  .perm-list li::before {
-    content: counter(perm);
-    font-family: var(--k-font-mono);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--k-ink-muted);
-    padding-top: 3px;
-  }
-  .perm-list strong { font-weight: 700; display: block; }
-  .perm-list span { display: block; color: var(--k-ink-muted); }
-
-  /* ── Outcomes grid ── */
-  .section-heading {
-    margin: 0 0 var(--k-space-8);
-    font-size: clamp(32px, 5vw, 48px);
-    font-weight: 700;
-    color: var(--k-ink);
-  }
-  .outcomes-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0;
-    border-top: 2px solid var(--k-ink);
-    margin: 0;
-  }
-  .outcome-item {
-    padding: var(--k-space-6) var(--k-space-5) var(--k-space-6) 0;
-    border-bottom: 2px solid var(--k-ink);
-    border-inline-end: 1px solid var(--k-ink);
-  }
-  .outcome-item:nth-child(3n) { border-inline-end: none; }
-  .outcomes-grid dt {
-    font-family: var(--k-font-mono);
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--k-ink-muted);
-    margin-bottom: var(--k-space-3);
-  }
-  .outcomes-grid dd {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: var(--k-ink);
-  }
-
-  /* ── Scope + Delivery two-col ── */
-  .two-col {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 64px;
-  }
-  .scope-list {
-    margin: var(--k-space-5) 0 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--k-space-4);
-  }
-  .scope-list li {
-    padding: var(--k-space-3) 0 var(--k-space-3) var(--k-space-6);
-    border-bottom: 1px solid var(--k-ink);
-    font-size: 17px;
-    line-height: 1.6;
-    position: relative;
-    color: var(--k-ink);
-  }
-  .scope-list li::before {
-    content: "→";
-    position: absolute;
-    inset-inline-start: 0;
-    color: var(--k-ink-muted);
-  }
-  :global(html[dir="rtl"]) .scope-list li::before { content: "←"; }
-
-  /* ── Delivery timeline ── */
-  .timeline {
-    margin: var(--k-space-5) 0 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-  .timeline li {
-    display: flex;
-    gap: var(--k-space-5);
-    padding: var(--k-space-4) 0;
-    border-bottom: 1px solid var(--k-ink);
-    font-size: 17px;
-    line-height: 1.5;
-    color: var(--k-ink);
-  }
-  .timeline strong {
-    flex: 0 0 120px;
-    font-family: var(--k-font-mono);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--k-ink-muted);
-    padding-top: 3px;
-  }
-  .delivery-outcome {
-    margin-top: var(--k-space-6);
-    font-size: 17px;
-    line-height: 1.8;
-    color: var(--k-ink);
-  }
-
-  /* ── Closing: tech aside + CTA ── */
-  .closing-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
-    gap: 64px;
-    align-items: start;
-  }
-  .tech-label {
-    margin: 0 0 var(--k-space-5);
-    font-family: var(--k-font-mono);
-    font-size: 12px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--k-ink-muted);
+    color: #4a4a4a;
   }
-  .tech-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--k-ink);
+  .sec-h2 { margin: 14px 0 0; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.15; }
+  .big-h2 { margin: 0; font-size: clamp(44px, 5vw, 64px); line-height: 1.04; letter-spacing: -0.02em; }
+  .dm-lead { margin: 0; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.4; font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    border: 2px solid var(--k-ink);
+    border-radius: 999px;
+    background: var(--k-paper);
+    font-size: 14px;
+    font-weight: 600;
   }
-  .tech-list li {
-    padding: var(--k-space-3) 0;
-    border-bottom: 1px solid var(--k-ink);
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--k-ink);
-  }
-  .open-source-note {
-    margin-top: var(--k-space-5);
-    font-family: var(--k-font-mono);
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--k-ink-muted);
-  }
-  .cta-block {
-    display: flex;
-    flex-direction: column;
-    gap: var(--k-space-6);
-    padding-top: var(--k-space-2);
-  }
-  .cta-note { margin: 0; font-size: 18px; line-height: 1.7; color: var(--k-ink); }
-  .skb { display: inline-flex; align-self: flex-start; }
+  .ico { fill: none; stroke: var(--k-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .muted { color: var(--k-ink-muted); }
+  .dm-sec { padding: 96px 0; border-top: 2px solid var(--k-ink); }
+  .dm-dark { color: var(--k-chalk); }
+  .dm-dark .eyebrow { color: #a8b4ac; }
+  .dm-dark .sec-h2 { color: var(--k-chalk); }
 
-  /* ── Responsive ── */
-  @media (max-width: 1055px) {
-    .arch-grid { grid-template-columns: minmax(0, 1fr); }
-    .security-card { position: static; }
+  /* ─── Hero + facts ─── */
+  .dm-hero { padding: 64px 0 72px; }
+  .dm-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .dm-hero-grid.has-stage { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
+  .dm-hero-text { display: flex; flex-direction: column; gap: 20px; max-width: 760px; }
+  .dm-hero h1 { margin: 0; font-size: clamp(48px, 6vw, 80px); line-height: 1; letter-spacing: -0.03em; }
+  .dm-sub { margin: 0; font-size: 17px; line-height: 1.65; color: #2b3238; }
+  .dm-stage { position: relative; min-height: 460px; }
+  .dm-stage-win { width: 88%; }
+  .dm-stage :global(.dm-stage-phone) { position: absolute; inset-inline-end: 0; bottom: 0; width: 30%; max-width: 200px; }
+
+  /* Four equal columns inside the page width; the strip's own background
+     and top/bottom lines still run edge to edge. */
+  .dm-facts {
+    margin: 0;
+    padding-inline: calc(max(0px, (100vw - var(--k-max)) / 2) + var(--k-gutter-desktop));
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 2px solid var(--k-ink);
+  }
+  .dm-facts > div {
+    padding: 28px 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dm-facts > div:first-child { padding-inline-start: 0; }
+  .dm-facts > div:last-child { padding-inline-end: 0; }
+  .dm-facts > div + div { border-inline-start: 2px solid var(--k-ink); }
+  .dm-facts dt { font-family: var(--k-font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #33404a; }
+  .dm-facts dd { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .fact-value { font-family: var(--k-font-serif); font-size: clamp(28px, 2.6vw, 38px); line-height: 1.1; font-weight: 700; }
+  .fact-note { font-size: 15px; line-height: 1.5; color: #2b3238; }
+
+  /* ─── Problem ─── */
+  .dm-problem { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; }
+  .dm-problem-text { display: flex; flex-direction: column; gap: 20px; }
+  .dm-problem-text p:not(.dm-lead) { margin: 0; font-size: 17px; line-height: 1.7; }
+  .dm-asks { display: flex; flex-direction: column; gap: 16px; }
+  .ask-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .ask { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+  .ask b { font-size: 19px; }
+  .ask span { font-size: 15px; line-height: 1.55; }
+
+  /* ─── Discovery ─── */
+  .dm-quote {
+    margin: 18px 0 48px;
+    max-width: 980px;
+    font-family: var(--k-font-serif);
+    font-size: clamp(30px, 3.6vw, 50px);
+    line-height: 1.16;
+    font-weight: 600;
+    color: var(--k-butter);
+  }
+  .data-compare { display: grid; grid-template-columns: minmax(0, 1fr) 90px minmax(0, 1fr); align-items: center; }
+  .data-compare figure { margin: 0; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .data-compare p { margin: 0; font-size: 15px; color: #a8b4ac; }
+  .data-arrow { color: var(--k-butter); }
+  :global(html[dir="rtl"]) .data-arrow { transform: scaleX(-1); }
+  .data-box { margin: 0; padding: 0; list-style: none; border: 2px solid var(--k-chalk); border-radius: 8px; overflow: hidden; font-family: var(--k-font-mono); font-size: 14px; }
+  .data-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px 18px; }
+  .data-row + .data-row { border-top: 1px solid #46524c; }
+  .data-head { color: #a8b4ac; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 2px solid var(--k-chalk); }
+  .data-row s { color: #a8b4ac; }
+  .data-event { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .amt.plus { color: var(--k-mint); }
+  .amt.minus { color: var(--k-peach); }
+
+  /* ─── How it works ─── */
+  .how-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .how-fig { margin: 0; padding: 32px; background: var(--k-paper); display: flex; flex-direction: column; gap: 22px; }
+  .how-fig figcaption { font-size: 20px; font-weight: 700; }
+  .how-fig p { margin: 0; font-size: 16px; line-height: 1.6; }
+  .ev-flow { display: grid; grid-template-columns: minmax(0, 1fr) 60px minmax(0, 170px); align-items: center; }
+  .ev-list { display: flex; flex-direction: column; gap: 8px; }
+  .ev-item { padding: 8px 12px; border: 2px solid var(--k-ink); border-radius: 6px; background: #fff; font-family: var(--k-font-mono); font-size: 13px; }
+  :global(html[dir="rtl"]) .ev-arrow { transform: scaleX(-1); }
+  .ev-balance { padding: 16px; display: flex; flex-direction: column; gap: 4px; text-align: center; }
+  .ev-balance .eyebrow { font-size: 11px; }
+  .ev-balance b { font-family: var(--k-font-serif); font-size: 28px; }
+  .ev-balance span:last-child { font-size: 12px; }
+  .core-flow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; }
+  .core-box { grid-column: 1 / 3; justify-self: center; padding: 14px 22px; text-align: center; display: flex; flex-direction: column; }
+  .core-node { padding: 14px; background: #fff; box-shadow: none; text-align: center; display: flex; flex-direction: column; }
+  .core-flow span { font-size: 13px; }
+
+  /* ─── Screenshots ─── */
+  .sec-head-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 36px; }
+  .sec-head-row p { margin: 0; max-width: 460px; font-size: 16px; line-height: 1.6; }
+  .shot-main { margin: 0; }
+  .shot-grid { margin-top: 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+  .shot-grid figure { margin: 0; }
+  figcaption { font-size: 15px; }
+  .shot-main figcaption, .shot-grid figcaption { margin-top: 12px; }
+  .field-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 56px; align-items: center; }
+  .field-text p { margin: 18px 0 0; font-size: 17px; line-height: 1.65; }
+  .phone-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; align-items: end; }
+  .phone-row figure { margin: 0; display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; }
+  .phone-row figure:nth-child(2) { margin-bottom: 40px; }
+  .phone-row :global(.phone-frame) { width: 100%; max-width: 230px; }
+
+  /* ─── Permissions ─── */
+  .perm-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: center; }
+  .nest { margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  .nest-box { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .nest-inner { box-shadow: none; padding: 20px; }
+  .chip-on { background: var(--k-mint); }
+  .chip-off { text-decoration: line-through; }
+  .nest figcaption { font-size: 14px; color: var(--k-ink-muted); }
+  .perm-list { margin: 20px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 1.55; }
+  .perm-text .muted { margin: 16px 0 0; font-size: 15px; }
+
+  /* ─── Security ─── */
+  .sec-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 72px; align-items: center; }
+  .sec-grid p { margin: 20px 0 0; font-size: 17px; line-height: 1.65; color: #d5dad2; }
+  .mono-note { font-family: var(--k-font-mono); font-size: 13px !important; color: #a8b4ac !important; }
+  .servers { width: 100%; height: auto; max-width: 560px; }
+
+  /* ─── Going live ─── */
+  .live-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: end; margin-bottom: 48px; }
+  .why { padding: 22px 24px; display: flex; flex-direction: column; gap: 8px; }
+  .why b { font-size: 18px; }
+  .why span { font-size: 16px; line-height: 1.55; }
+  .steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .steps li { padding: 0 32px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .steps li:first-child { padding-inline-start: 0; }
+  .steps li:last-child { padding-inline-end: 0; }
+  .steps li + li { border-inline-start: 2px dashed var(--k-ink); }
+  .step-n { font-family: var(--k-font-serif); font-size: 40px; line-height: 1; font-weight: 700; }
+  .steps b { font-size: 20px; }
+  .steps span:last-child { font-size: 16px; line-height: 1.6; }
+  .tracks { margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
+  .track { height: 40px; border: 2px solid var(--k-ink); border-radius: 6px; display: flex; align-items: center; padding: 0 14px; font-family: var(--k-font-mono); font-size: 13px; }
+  .track-old { grid-column: 1 / 3; background: repeating-linear-gradient(90deg, #d9d6cf 0 14px, #e8e5de 14px 28px); }
+  .track-retired { grid-column: 3; display: flex; align-items: center; padding-inline-start: 16px; font-family: var(--k-font-mono); font-size: 13px; color: #4a4a4a; }
+  .track-fallback { grid-column: 2; display: flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--k-font-mono); font-size: 12px; }
+  .track-new { grid-column: 2 / 4; background: var(--k-mint); }
+  .timeline-label { margin-top: 64px; }
+  .timeline { margin: 16px 0 0; padding: 26px 0 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; border-top: 2px solid var(--k-ink); }
+  .timeline li { display: flex; flex-direction: column; gap: 6px; }
+  .timeline b { font-size: 18px; }
+  .timeline span:last-child { font-size: 15px; line-height: 1.5; }
+  .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--k-ink); background: var(--k-paper); }
+  .dot-1 { background: var(--k-butter); }
+  .dot-2 { background: var(--k-sky); }
+  .dot-3 { background: var(--k-mint); }
+
+  /* ─── Outcomes ─── */
+  .outcomes { margin: 40px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 2px solid var(--k-ink); }
+  .outcomes li { padding: 26px 28px 28px; display: flex; gap: 16px; border-bottom: 2px solid var(--k-ink); }
+  .outcomes li:nth-child(3n + 1) { padding-inline-start: 0; }
+  .outcomes li:nth-child(3n) { padding-inline-end: 0; }
+  .outcomes li:nth-last-child(-n + 3) { border-bottom: 0; }
+  .outcomes li > span { display: flex; flex-direction: column; gap: 4px; }
+  .outcomes li > span > span { font-size: 15px; line-height: 1.5; }
+
+  /* ─── Developers ─── */
+  .dm-dev { padding: 72px 0; }
+  .dev-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: start; }
+  .tech { margin: 16px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 16px; line-height: 1.5; }
+  .tech li { padding-inline-start: 18px; position: relative; }
+  .tech li::before { content: ""; position: absolute; inset-inline-start: 0; top: 0.6em; width: 8px; height: 8px; border-radius: 50%; background: var(--k-ink); }
+  .os-card { background: var(--k-paper); padding: 22px 24px; display: flex; align-items: center; gap: 16px; }
+  .os-card > span { display: flex; flex-direction: column; gap: 4px; }
+  .os-card b { font-size: 18px; }
+  .os-card > span > span { font-size: 15px; }
+
+  /* ─── Tablet ─── */
+  @media (max-width: 1100px) {
+    .dm-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-inline: 0; }
+    .dm-facts > div, .dm-facts > div:first-child, .dm-facts > div:last-child { padding: 24px var(--k-gutter-desktop) 28px; }
+    .dm-facts > div:nth-child(odd) { border-inline-start: 0; }
+    .dm-facts > div:nth-child(n + 3) { border-top: 2px solid var(--k-ink); }
+    .how-grid, .live-head { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+    .outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .outcomes li, .outcomes li:nth-child(n) { padding: 24px; padding-inline-start: 0; border-bottom: 2px solid var(--k-ink); }
+    .outcomes li:nth-child(even) { padding-inline: 24px 0; }
+    .outcomes li:nth-last-child(-n + 2) { border-bottom: 0; }
   }
   @media (max-width: 900px) {
-    .outcomes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .outcome-item:nth-child(3n) { border-inline-end: 1px solid var(--k-ink); }
-    .outcome-item:nth-child(2n) { border-inline-end: none; }
-    .two-col { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-    .closing-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+    .dm-hero-grid.has-stage, .dm-problem, .perm-grid, .sec-grid, .field-grid, .dev-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .data-compare { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .data-arrow, :global(html[dir="rtl"]) .data-arrow { justify-self: center; transform: rotate(90deg); }
+    .steps { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .steps li, .steps li:first-child, .steps li:last-child { padding: 0; padding-inline-start: 20px; border-inline-start: 2px dashed var(--k-ink); }
+    .tracks { display: none; }
+    .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sec-head-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .shot-grid { grid-template-columns: minmax(0, 1fr); }
   }
+
+  /* ─── Phones ─── */
   @media (max-width: 672px) {
     .container { padding: 0 var(--k-gutter-mobile); }
-    .story-section,
-    .outcomes-section,
-    .closing-section { padding: var(--k-space-8) 0; }
-    .outcomes-grid { grid-template-columns: minmax(0, 1fr); }
-    .outcome-item { border-inline-end: none; }
-    .pullquote { padding-inline: var(--k-space-5); font-size: 20px; }
-    .timeline strong { flex: 0 0 90px; }
+    .dm-sec { padding: 56px 0; }
+    .dm-hero { padding: 40px 0 44px; }
+    .dm-facts { grid-template-columns: minmax(0, 1fr); }
+    .dm-facts > div, .dm-facts > div:first-child, .dm-facts > div:last-child { padding: 20px var(--k-gutter-mobile); border-inline-start: 0; }
+    .dm-facts > div + div { border-top: 2px solid var(--k-ink); }
+    .ask-grid { grid-template-columns: minmax(0, 1fr); }
+    .ask { padding: 18px; }
+    .ev-flow { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .ev-arrow, :global(html[dir="rtl"]) .ev-arrow { justify-self: center; transform: rotate(90deg); }
+    .how-fig { padding: 22px 18px; }
+    .core-flow { grid-template-columns: minmax(0, 1fr); }
+    .core-box { grid-column: auto; justify-self: stretch; }
+    .data-event { grid-template-columns: minmax(0, 1fr) auto; }
+    .data-event span:last-child { display: none; }
+    .nest-box { padding: 16px; }
+    .nest-inner { padding: 14px; }
+    .outcomes { grid-template-columns: minmax(0, 1fr); }
+    .outcomes li, .outcomes li:nth-child(n), .outcomes li:nth-child(even) { padding: 20px 0; border-bottom: 2px solid var(--k-ink); }
+    .outcomes li:last-child { border-bottom: 0; }
+    .timeline { grid-template-columns: minmax(0, 1fr); }
+    .phone-row { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+    .phone-row figure { flex: 0 0 62%; scroll-snap-align: start; }
+    .phone-row figure:nth-child(2) { margin-bottom: 0; }
   }
 </style>

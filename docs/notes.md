@@ -74,3 +74,22 @@ would show the same work twice.
 The same rule applies to case-study pages: the hero stays compact, and
 before/after screenshots live in their own section ("Every page
 transformed"), not in the hero.
+
+## Deptmaster: adding screenshots
+
+The Deptmaster page (`src/pages/[locale]/deptmaster.astro`) has two
+screenshot lists at the top, `DASHBOARD` and `PHONE`, empty for now.
+
+1. Put the files in `public/assets/deptmaster/` (PNG or JPG; the build
+   makes the WebP versions).
+2. Add one entry per image, with alt text (and an optional caption) in
+   both languages.
+
+What appears:
+
+- `DASHBOARD[0]` becomes the hero window and the large window in
+  "The dashboard"; the rest go in a two-column grid under it.
+- `PHONE[0]` becomes the hero phone; all phone shots go in "In the field",
+  each in a `PhoneFrame` (the phone version of `WindowWidget`).
+- A section with an empty list doesn't render, so nothing half-finished
+  ever goes live.

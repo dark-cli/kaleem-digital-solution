@@ -1,0 +1,86 @@
+---
+/**
+ * Phone screenshot in a phone frame: the mobile counterpart of
+ * WindowWidget. Same hand-drawn outline and offset shadow; the bezel is a
+ * sky-shader surface like the window's top bar (or paper, for dark
+ * sections). The screenshot keeps its own aspect ratio; nothing is cropped.
+ *
+ *   <PhoneFrame src="/assets/deptmaster/phone-1.png" alt="…" />
+ *
+ * Inside an <a class="window-link"> it lifts on hover like a window.
+ */
+import Image from "./Image.astro";
+
+interface Props {
+  src: string;
+  alt: string;
+  /** "sky" (default) or "paper" — use paper on dark backgrounds. */
+  bezel?: "sky" | "paper";
+  /** Layout hint for srcset. */
+  sizes?: string;
+  loading?: "lazy" | "eager";
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  bezel = "sky",
+  sizes = "(min-width: 900px) 240px, 60vw",
+  loading = "lazy",
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={["phone-frame", `bezel-${bezel}`, className]} {...(bezel === "sky" ? { "data-sky": true } : {})}>
+  <span class="pf-speaker" aria-hidden="true"></span>
+  <div class="pf-screen">
+    <Image {src} {alt} {sizes} {loading} class="pf-image" />
+  </div>
+</div>
+
+<style>
+  .phone-frame {
+    --pf-pad: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 var(--pf-pad) var(--pf-pad);
+    border: 2px solid var(--k-ink);
+    border-radius: 36px;
+    box-shadow: 4px 4px 0 -2px var(--k-paper), 4px 4px 0 0 var(--k-ink);
+    overflow: hidden;
+  }
+  .bezel-paper { background: var(--k-paper); }
+
+  /* A speaker pill in a thin top strip: reads as a phone without faking
+     a status bar. */
+  .pf-speaker {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    width: 54px;
+    height: 6px;
+    margin: 5px 0;
+    border-radius: 3px;
+    background: #46524c;
+  }
+  .bezel-paper .pf-speaker { background: var(--k-ink); }
+
+  .pf-screen {
+    position: relative;
+    z-index: 1;
+    border: 2px solid var(--k-ink);
+    border-radius: 24px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .pf-screen :global(.pf-image) { display: block; width: 100%; height: auto; }
+
+  @media (max-width: 672px) {
+    .phone-frame { --pf-pad: 7px; border-radius: 28px; }
+    .pf-speaker { width: 36px; height: 5px; margin: 4px 0; }
+    .pf-screen { border-radius: 20px; }
+  }
+</style>
