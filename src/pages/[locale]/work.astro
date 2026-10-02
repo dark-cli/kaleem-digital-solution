@@ -45,6 +45,16 @@ const cases = isAr ? [
     imageAlt: "الموقع الجديد لمركز العمران الطبي",
     accent: "bg-lilac",
   },
+  {
+    title: "برنامج المحصل — شركة خدمات",
+    summary: "شركة خدمات تدير عشرات المحصّلين الميدانيين ومحافظ متعددة احتاجت إلى تتبع كامل وصلاحيات دقيقة وتطبيق يعمل بدون إنترنت. بنينا نظاماً مبنياً على الأحداث بـ Rust — كل معاملة دائمة، كل تغيير في الصلاحيات موثّق، ولا يمكن تعديل السجل بصمت. سُلِّم خلال ثلاثة أشهر.",
+    tags: ["Rust", "بنية الأحداث", "Flutter", "استضافة ذاتية"],
+    tagBg: ["tag-butter", "tag-sky", "tag-mint", "tag-apricot"],
+    href: "/ar/deptmaster/",
+    image: "",
+    imageAlt: "",
+    accent: "bg-apricot",
+  },
 ] : [
   {
     title: "Alimran Medical Center, Basra",
@@ -55,6 +65,16 @@ const cases = isAr ? [
     image: "/assets/illustrations/alimran-clinic-homepage.png",
     imageAlt: "The new Alimran Medical Center website",
     accent: "bg-lilac",
+  },
+  {
+    title: "Debt-Collection Platform, Utility Company",
+    summary: "A utility company with dozens of field collectors and multiple client wallets needed full auditability, fine-grained permissions, and a mobile app that works offline. We built an event-sourced system in Rust — every transaction is permanent, every permission change is logged, and the record cannot be silently altered. Delivered in three months.",
+    tags: ["Rust", "Event sourcing", "Flutter", "Self-hosted"],
+    tagBg: ["tag-butter", "tag-sky", "tag-mint", "tag-apricot"],
+    href: "/en/deptmaster/",
+    image: "",
+    imageAlt: "",
+    accent: "bg-apricot",
   },
 ];
 ---
@@ -74,7 +94,8 @@ const cases = isAr ? [
         {cases.map((c) => (
           <a class="sk case-card window-link" href={c.href}>
             <span class="case-chrome" data-sky aria-hidden="true"><i></i><i></i><i></i></span>
-            <Image src={c.image} alt={c.imageAlt} class="case-shot" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" fetchpriority="high" />
+            {c.image && <Image src={c.image} alt={c.imageAlt} class="case-shot" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" fetchpriority="high" />}
+            {!c.image && <span class={`case-shot-placeholder ${c.accent}`} aria-hidden="true"></span>}
             <span class="case-body">
               <h2>{c.title}</h2>
               <p>{c.summary}</p>
@@ -149,9 +170,18 @@ const cases = isAr ? [
   .case-body p { margin: 0; font-size: 16px; line-height: 1.6; }
   .case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
   .k-tag { background: var(--k-paper); }
-  .tag-butter { background: var(--k-butter); }
-  .tag-sky    { background: var(--k-sky); }
-  .tag-mint   { background: var(--k-mint); }
+  .tag-butter  { background: var(--k-butter); }
+  .tag-sky     { background: var(--k-sky); }
+  .tag-mint    { background: var(--k-mint); }
+  .tag-apricot { background: var(--k-apricot); }
+
+  .case-shot-placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-bottom: 2px solid var(--k-ink);
+    opacity: 0.35;
+  }
   .case-more {
     margin-top: 4px;
     font-weight: 600;
