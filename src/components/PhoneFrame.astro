@@ -18,12 +18,15 @@
  * come without one). Every size is a fraction of the phone's own width
  * (container units), so the proportions hold at any size. The screenshot
  * keeps its own aspect ratio; nothing is cropped.
+ *
+ * Pass children to replace the single screenshot (e.g. a stack of
+ * screens that cross-fade); src/alt are then ignored.
  */
 import Image from "./Image.astro";
 
 interface Props {
-  src: string;
-  alt: string;
+  src?: string;
+  alt?: string;
   finish?: string;
   /** Layout hint for srcset. */
   sizes?: string;
@@ -61,7 +64,7 @@ const rail = isSky ? "var(--k-board)" : PALETTE.has(finish) ? `var(--k-${finish}
               <rect x="21.2" y="3.2" width="7.6" height="5.6" rx="1" fill="currentColor" />
             </svg>
           </div>
-          <Image {src} {alt} {sizes} {loading} class="pf-image" />
+          {Astro.slots.has("default") ? <slot /> : src && <Image {src} alt={alt ?? ""} {sizes} {loading} class="pf-image" />}
         </div>
       </div>
     </div>
@@ -96,6 +99,7 @@ const rail = isSky ? "var(--k-board)" : PALETTE.has(finish) ? `var(--k-${finish}
     border: var(--k-line) solid var(--k-ink);
     overflow: hidden;
     background: var(--pf-rail);
+    transition: background-color 400ms ease;
   }
 
   /* Slim black bezel, same width all round. */

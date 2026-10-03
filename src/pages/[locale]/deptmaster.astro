@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WindowWidget from "../../components/WindowWidget.astro";
 import PhoneFrame from "../../components/PhoneFrame.astro";
+import Image from "../../components/Image.astro";
 import { currentLocale } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -15,14 +16,16 @@ const isAr = locale === "ar";
    Put the files in public/assets/deptmaster/ and list them here. Each
    section that shows screenshots appears only once its list has items:
      • DASHBOARD[0] is the large window (and the hero window).
-     • PHONE[0] is also the hero phone.
+     • PHONE[0] is also the hero phone. Each phone shot has a short
+       label and a note for "The collector's app" (both languages).
    Captions are optional; give both languages.
    Example:
      { src: "/assets/deptmaster/wallet-overview.png",
        alt: { en: "Wallet overview", ar: "نظرة عامة على المحفظة" },
        caption: { en: "Every balance links to its history.", ar: "…" } },
 */
-type Shot = { src: string; alt: { en: string; ar: string }; caption?: { en: string; ar: string } };
+type Text = { en: string; ar: string };
+type Shot = { src: string; alt: Text; caption?: Text; label?: Text; note?: Text };
 const DASHBOARD: Shot[] = [
   { src: "/assets/deptmaster/admin-panel.png",
     alt: { en: "Admin panel: totals, debt over time and the events log", ar: "لوحة الإدارة: الإجماليات، والدين عبر الزمن، وسجل الأحداث" },
@@ -31,16 +34,20 @@ const DASHBOARD: Shot[] = [
 const PHONE: Shot[] = [
   { src: "/assets/deptmaster/app-home.jpg",
     alt: { en: "App home: total balance, chart and outstanding balances", ar: "الشاشة الرئيسية: الرصيد الكلي والرسم البياني والأرصدة المستحقة" },
-    caption: { en: "Home: the balance at a glance", ar: "الرئيسية: الرصيد بنظرة واحدة" } },
+    label: { en: "Home", ar: "الرئيسية" },
+    note: { en: "The balance at a glance.", ar: "الرصيد بنظرة واحدة." } },
   { src: "/assets/deptmaster/app-contacts.jpg",
     alt: { en: "Contacts list with what each one gave or received", ar: "قائمة جهات الاتصال مع ما أعطاه أو استلمه كل منها" },
-    caption: { en: "Contacts: who owes and who is owed", ar: "جهات الاتصال: من عليه ومن له" } },
+    label: { en: "Contacts", ar: "جهات الاتصال" },
+    note: { en: "Who owes and who is owed.", ar: "من عليه ومن له." } },
   { src: "/assets/deptmaster/app-client-history.jpg",
     alt: { en: "One client's balance and transaction history", ar: "رصيد عميل واحد وسجل معاملاته" },
-    caption: { en: "One client's full history", ar: "سجل العميل كاملاً" } },
+    label: { en: "Client history", ar: "سجل العميل" },
+    note: { en: "One client's full history.", ar: "سجل العميل كاملاً." } },
   { src: "/assets/deptmaster/app-add-payment.jpg",
     alt: { en: "Adding a transaction with amount, date and due date", ar: "إضافة معاملة بالمبلغ والتاريخ وتاريخ الاستحقاق" },
-    caption: { en: "Posting a payment, signal or not", ar: "تسجيل دفعة، بإشارة أو بدونها" } },
+    label: { en: "Posting a payment", ar: "تسجيل دفعة" },
+    note: { en: "Signal or not.", ar: "بإشارة أو بدونها." } },
 ];
 // The hero shows the top of the admin panel (header, totals and chart);
 // the full screenshot is in "The dashboard" section.
@@ -48,7 +55,7 @@ const HERO_DASH: Shot | undefined = {
   src: "/assets/deptmaster/admin-panel-overview.png",
   alt: { en: "Admin panel overview: totals and debt over time", ar: "نظرة عامة على لوحة الإدارة: الإجماليات والدين عبر الزمن" },
 };
-// Rail colours for the "In the field" phones, one pastel each (the
+// Rail colour per screen in "The collector's app", one pastel each (the
 // section itself is bg-sky, so sky is left out).
 const RAILS = ["peach", "mint", "lilac", "butter"];
 const tx = (v: { en: string; ar: string }) => (isAr ? v.ar : v.en);
@@ -115,6 +122,9 @@ const T = isAr ? {
   dashText:    "المحافظ والفرق والعملاء في مكان واحد، وكل رقم يعود إلى الإجراءات التي أنتجته.",
   fieldEyebrow: "في الميدان",
   fieldHead:   "تطبيق المحصّل",
+  screensLabel: "الشاشات",
+  prevLabel:   "الشاشة السابقة",
+  nextLabel:   "الشاشة التالية",
   fieldText:   "يسجّل المحصّلون الدفعات حيث يقفون، بإشارة أو بدونها. يُحفظ العمل على الهاتف ويُزامن لحظة عودة الاتصال.",
 
   permEyebrow: "الصلاحيات",
@@ -239,6 +249,9 @@ const T = isAr ? {
   dashText:    "Wallets, teams and clients in one place, every number traceable back to the actions that produced it.",
   fieldEyebrow: "In the field",
   fieldHead:   "The collector's app",
+  screensLabel: "Screens",
+  prevLabel:   "Previous screen",
+  nextLabel:   "Next screen",
   fieldText:   "Collectors post payments where they stand, signal or not. Work queues on the phone and syncs the moment it reconnects.",
 
   permEyebrow: "Permissions",
@@ -464,19 +477,55 @@ const ICONS: Record<string, string> = {
   <!-- ─── IN THE FIELD (shown once phone screenshots are listed above) ─── -->
   {PHONE.length > 0 && (
     <section class="dm-sec bg-sky dust">
-      <div class="container field-stack">
+      <div class="container field-layout">
         <div class="field-text">
           <span class="eyebrow">{T.fieldEyebrow}</span>
           <h2 class="sec-h2">{T.fieldHead}</h2>
           <p>{T.fieldText}</p>
         </div>
-        <div class="phone-row" style={`--n: ${Math.min(PHONE.length, 4)}`}>
-          {PHONE.map((s, i) => (
-            <figure>
-              <PhoneFrame src={s.src} alt={tx(s.alt)} finish={RAILS[i % RAILS.length]} />
-              {s.caption && <figcaption>{tx(s.caption)}</figcaption>}
-            </figure>
-          ))}
+        <div class="app-grid" data-app-rotator>
+          <!-- Like the al-imran "new design" showcase: a notes list beside
+               one phone whose screen cross-fades every 5s (paused on
+               hover/focus, no autoplay for reduced motion). Below 900px
+               the list gives way to a bar under the phone with the
+               screen's name, its note and prev/next; the screen swipes. -->
+          <aside class="app-notes">
+            <p class="notes-label">{T.screensLabel}</p>
+            <span class="notes-rule" aria-hidden="true"></span>
+            <ol>
+              {PHONE.map((s, i) => (
+                <li>
+                  <button type="button" class:list={["note", { active: i === 0 }]} data-slide={i} aria-pressed={i === 0 ? "true" : "false"}>
+                    <strong>{s.label && tx(s.label)}</strong>
+                    <span>{s.note && tx(s.note)}</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </aside>
+          <div class="app-phone">
+            <PhoneFrame class="app-frame" finish={RAILS[0]}>
+              <div class="app-stack">
+                {PHONE.map((s, i) => (
+                  <span class:list={["app-shot", { active: i === 0 }]} data-rail={RAILS[i % RAILS.length]} data-label={s.label && tx(s.label)} data-note={s.note && tx(s.note)}>
+                    <Image src={s.src} alt={tx(s.alt)} sizes="(min-width: 900px) 320px, 70vw" />
+                  </span>
+                ))}
+              </div>
+            </PhoneFrame>
+            <div class="app-bar">
+              <button type="button" class="app-nav flip-rtl" data-step="-1" aria-label={T.prevLabel}>
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7l7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </button>
+              <div class="app-text" aria-live="polite">
+                <strong><span class="app-label">{PHONE[0].label && tx(PHONE[0].label)}</span> <bdi class="app-count">1 / {PHONE.length}</bdi></strong>
+                <span class="app-note">{PHONE[0].note && tx(PHONE[0].note)}</span>
+              </div>
+              <button type="button" class="app-nav flip-rtl" data-step="1" aria-label={T.nextLabel}>
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7l-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -597,6 +646,68 @@ const ICONS: Record<string, string> = {
   </section>
 
 </BaseLayout>
+
+<script is:inline>
+  // The collector's app: cross-fade the phone's screens, keep the notes
+  // list, the small-screen bar and the rail colour in sync. Pauses on
+  // hover/focus; no autoplay for reduced motion.
+  (function () {
+    var timer = 0;
+    function init() {
+      clearInterval(timer);
+      var root = document.querySelector("[data-app-rotator]");
+      if (!root) return;
+      var shots = root.querySelectorAll(".app-shot");
+      var notes = root.querySelectorAll(".note");
+      var frame = root.querySelector(".phone-frame");
+      var label = root.querySelector(".app-label");
+      var count = root.querySelector(".app-count");
+      var note = root.querySelector(".app-note");
+      var i = 0, paused = false;
+      function show(n) {
+        i = (n + shots.length) % shots.length;
+        shots.forEach(function (s, k) {
+          s.classList.toggle("active", k === i);
+          s.setAttribute("aria-hidden", k === i ? "false" : "true");
+        });
+        notes.forEach(function (b) {
+          var on = Number(b.getAttribute("data-slide")) === i;
+          b.classList.toggle("active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        frame.style.setProperty("--pf-rail", "var(--k-" + shots[i].getAttribute("data-rail") + ")");
+        label.textContent = shots[i].getAttribute("data-label");
+        count.textContent = (i + 1) + " / " + shots.length;
+        note.textContent = shots[i].getAttribute("data-note");
+      }
+      notes.forEach(function (b) { b.addEventListener("click", function () { show(Number(b.getAttribute("data-slide"))); }); });
+      root.querySelectorAll(".app-nav").forEach(function (b) {
+        b.addEventListener("click", function () { show(i + Number(b.getAttribute("data-step"))); });
+      });
+      // Swipe the screen to change it (right-to-left = next; mirrored in Arabic).
+      var x0 = null;
+      var stage = root.querySelector(".app-stack");
+      stage.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      stage.addEventListener("touchend", function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0; x0 = null;
+        if (Math.abs(dx) < 40) return;
+        var rtl = document.documentElement.dir === "rtl";
+        show(i + ((dx < 0) !== rtl ? 1 : -1));
+      });
+      root.addEventListener("mouseenter", function () { paused = true; });
+      root.addEventListener("mouseleave", function () { paused = false; });
+      root.addEventListener("focusin", function () { paused = true; });
+      root.addEventListener("focusout", function () { paused = false; });
+      show(0);
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      timer = setInterval(function () { if (!paused) show(i + 1); }, 5000);
+    }
+    document.addEventListener("astro:page-load", init);
+    document.addEventListener("astro:before-swap", function () { clearInterval(timer); });
+    init();
+  })();
+</script>
 
 <style>
   .container {
@@ -730,14 +841,89 @@ const ICONS: Record<string, string> = {
   .shot-grid figure { margin: 0; }
   figcaption { font-size: 15px; }
   .shot-main figcaption, .shot-grid figcaption { margin-top: 12px; }
-  .field-stack { display: flex; flex-direction: column; gap: 48px; }
-  .field-text { max-width: 640px; }
+  /* The collector's app: text and the screens list on one side, one
+     phone on the other (the al-imran "new design" pattern). */
+  .field-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+    grid-template-areas: "text phone" "notes phone";
+    grid-template-rows: auto 1fr;
+    column-gap: 96px;
+    row-gap: 40px;
+    align-items: start;
+  }
+  .field-text { grid-area: text; max-width: 640px; }
   .field-text p { margin: 18px 0 0; font-size: 17px; line-height: 1.65; }
-  .phone-row { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 32px; align-items: start; }
-  .phone-row figure { margin: 0; display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; }
-  /* A gentle stagger so the row reads as a set of phones, not a grid. */
-  .phone-row figure:nth-child(even) { margin-top: 40px; }
-  .phone-row :global(.phone-frame) { width: 100%; max-width: 240px; }
+  /* The rotator's parts sit straight in the layout grid. */
+  .app-grid { display: contents; }
+  .app-notes { grid-area: notes; max-width: 420px; position: sticky; top: 112px; min-width: 0; }
+  .app-phone { grid-area: phone; }
+  .notes-label { margin: 0 0 14px; font-family: var(--k-font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--k-ink-muted); }
+  .notes-rule { display: block; border-top: 2px solid var(--k-ink); }
+  .app-notes ol { margin: 0; padding: 0; list-style: none; }
+  .note {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 11px 12px;
+    border: 0;
+    border-bottom: 1px solid var(--k-ink);
+    border-inline-start: 3px solid transparent;
+    background: transparent;
+    font: inherit;
+    text-align: start;
+    color: var(--k-ink-muted);
+    cursor: pointer;
+    transition: background-color 200ms ease, border-color 200ms ease;
+  }
+  .note strong { font-size: 15px; font-weight: 600; }
+  .note span { display: none; font-size: 14px; line-height: 1.5; }
+  .note:hover { color: var(--k-ink); }
+  .note.active { border-inline-start-color: var(--k-ink); background: var(--k-butter); color: var(--k-ink); }
+  .note.active strong { font-weight: 700; }
+  .note.active span { display: block; }
+
+  .app-phone { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .app-phone :global(.app-frame) { width: 100%; max-width: 320px; }
+  .app-stack { position: relative; }
+  .app-shot { display: block; opacity: 0; transition: opacity 600ms ease; }
+  .app-shot + .app-shot { position: absolute; inset: 0; }
+  .app-shot.active { opacity: 1; }
+  .app-shot :global(img) { display: block; width: 100%; height: auto; }
+
+  /* Small screens only: the screen's name, note and prev/next. */
+  .app-bar {
+    width: 100%;
+    max-width: 360px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--k-board);
+    color: var(--k-chalk);
+  }
+  .app-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; text-align: center; }
+  .app-text strong { font-size: 15px; color: var(--k-butter); }
+  .app-count { margin-inline-start: 6px; font-family: var(--k-font-mono); font-size: 12px; font-weight: 500; color: var(--k-chalk-muted); }
+  .app-note { font-size: 14px; line-height: 1.45; }
+  .app-nav {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--k-chalk);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--k-chalk);
+    cursor: pointer;
+  }
+  .app-nav:hover, .app-nav:focus-visible { background: rgba(236, 238, 230, 0.15); }
+  :global(html[dir="rtl"]) .flip-rtl svg { transform: scaleX(-1); }
+  @media (prefers-reduced-motion: reduce) { .app-shot, .note { transition: none; } }
 
   /* ─── Permissions ─── */
   .perm-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 72px; align-items: center; }
@@ -831,7 +1017,9 @@ const ICONS: Record<string, string> = {
     .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .sec-head-row { flex-direction: column; align-items: flex-start; gap: 16px; }
     .shot-grid { grid-template-columns: minmax(0, 1fr); }
-    .phone-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .field-layout { display: flex; flex-direction: column; align-items: stretch; gap: 40px; }
+    .app-notes { display: none; }
+    .app-bar { display: flex; }
   }
 
   /* ─── Phones ─── */
@@ -857,8 +1045,6 @@ const ICONS: Record<string, string> = {
     .outcomes li, .outcomes li:nth-child(n), .outcomes li:nth-child(even) { padding: 20px 0; border-bottom: 2px solid var(--k-ink); }
     .outcomes li:last-child { border-bottom: 0; }
     .timeline { grid-template-columns: minmax(0, 1fr); }
-    .phone-row { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 8px; scroll-snap-type: x mandatory; }
-    .phone-row figure { flex: 0 0 62%; scroll-snap-align: start; }
-    .phone-row figure:nth-child(even) { margin-top: 0; }
+    .app-phone :global(.app-frame) { max-width: 260px; }
   }
 </style>
