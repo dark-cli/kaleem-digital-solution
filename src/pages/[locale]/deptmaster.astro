@@ -48,6 +48,9 @@ const HERO_DASH: Shot | undefined = {
   src: "/assets/deptmaster/admin-panel-overview.png",
   alt: { en: "Admin panel overview: totals and debt over time", ar: "نظرة عامة على لوحة الإدارة: الإجماليات والدين عبر الزمن" },
 };
+// Rail colours for the "In the field" phones, one pastel each (the
+// section itself is bg-sky, so sky is left out).
+const RAILS = ["peach", "mint", "lilac", "butter"];
 const tx = (v: { en: string; ar: string }) => (isAr ? v.ar : v.en);
 const heroShots = Boolean(HERO_DASH) || PHONE.length > 0;
 
@@ -372,7 +375,7 @@ const ICONS: Record<string, string> = {
   </section>
 
   <!-- ─── DISCOVERY: the quote, and what it means for the data ─── -->
-  <section class="dm-sec board dm-dark">
+  <section class="dm-sec board dm-dark" data-sky>
     <div class="container">
       <span class="eyebrow">{T.discoveryEyebrow}</span>
       <blockquote class="dm-quote">“{T.quote}”</blockquote>
@@ -468,9 +471,9 @@ const ICONS: Record<string, string> = {
           <p>{T.fieldText}</p>
         </div>
         <div class="phone-row" style={`--n: ${Math.min(PHONE.length, 4)}`}>
-          {PHONE.map((s) => (
+          {PHONE.map((s, i) => (
             <figure>
-              <PhoneFrame src={s.src} alt={tx(s.alt)} />
+              <PhoneFrame src={s.src} alt={tx(s.alt)} finish={RAILS[i % RAILS.length]} />
               {s.caption && <figcaption>{tx(s.caption)}</figcaption>}
             </figure>
           ))}
@@ -511,7 +514,7 @@ const ICONS: Record<string, string> = {
   </section>
 
   <!-- ─── SECURITY: servers that check each other ─── -->
-  <section class="dm-sec board dm-dark">
+  <section class="dm-sec board dm-dark" data-sky>
     <div class="container sec-grid">
       <div>
         <span class="eyebrow">{T.secEyebrow}</span>
