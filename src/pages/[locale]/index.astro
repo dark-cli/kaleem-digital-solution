@@ -190,7 +190,7 @@ const KEEP_ICONS = [
       </div>
       <a href={L("/deptmaster/")} class="work-shot work-stage window-link" aria-label={T.workCTA}>
         <span class="stage-win">
-          <WindowWidget src="/assets/deptmaster/admin-panel-overview.png" alt={T.dmDashAlt} chromeColor="sky-shader" sizes="(min-width: 1056px) 50vw, 100vw" />
+          <WindowWidget src="/assets/deptmaster/admin-panel-card.png" alt={T.dmDashAlt} chromeColor="sky-shader" sizes="(min-width: 1056px) 50vw, 100vw" />
         </span>
         <PhoneFrame src="/assets/deptmaster/app-home.jpg" alt={T.dmPhoneAlt} class="stage-phone" finish="paper" sizes="180px" />
       </a>
@@ -368,11 +368,11 @@ const KEEP_ICONS = [
   .work-grid + .work-grid { margin-top: 88px; }
   .work-flip { grid-template-columns: 7fr 5fr; }
   .work-flip .work-text { order: 2; }
-  /* Dashboard window with the phone over its lower corner, as in the
-     case study's hero. */
-  .work-stage { position: relative; display: block; padding-bottom: 12%; }
-  .stage-win { display: block; width: 86%; }
-  .work-stage :global(.stage-phone) { position: absolute; inset-inline-end: 0; bottom: 0; width: 28%; max-width: 200px; }
+  /* Dashboard window at the same size as the first case's, with the
+     phone hanging over its lower corner. */
+  .work-stage { position: relative; display: block; }
+  .stage-win { display: block; }
+  .work-stage :global(.stage-phone) { position: absolute; inset-inline-end: -4%; bottom: -6%; width: 26%; max-width: 200px; }
   .eyebrow-k { font-size: 15px; font-weight: 600; color: var(--k-ink-muted); }
   .work-text p { margin: 0; font-size: 18px; line-height: 30px; color: var(--k-ink); }
   .stats {

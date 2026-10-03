@@ -55,7 +55,7 @@ const cases = isAr ? [
     image: "",
     imageAlt: "",
     stage: {
-      dash: "/assets/deptmaster/admin-panel-overview.png",
+      dash: "/assets/deptmaster/admin-panel-card.png",
       dashAlt: "لوحة الإدارة: الإجماليات والدين عبر الزمن",
       phone: "/assets/deptmaster/app-home.jpg",
       phoneAlt: "الشاشة الرئيسية للتطبيق: الرصيد الكلي والأرصدة المستحقة",
@@ -82,7 +82,7 @@ const cases = isAr ? [
     image: "",
     imageAlt: "",
     stage: {
-      dash: "/assets/deptmaster/admin-panel-overview.png",
+      dash: "/assets/deptmaster/admin-panel-card.png",
       dashAlt: "Admin panel: totals and debt over time",
       phone: "/assets/deptmaster/app-home.jpg",
       phoneAlt: "App home screen: total balance and outstanding balances",
@@ -109,7 +109,7 @@ const cases = isAr ? [
             <span class="case-chrome" data-sky aria-hidden="true"><i></i><i></i><i></i></span>
             {c.image && <Image src={c.image} alt={c.imageAlt} class="case-shot" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" fetchpriority="high" />}
             {c.stage && (
-              <span class={`case-stage ${c.accent} dust`}>
+              <span class="case-stage">
                 <Image src={c.stage.dash} alt={c.stage.dashAlt} class="case-stage-dash" sizes="(min-width: 900px) 30vw, 75vw" loading="eager" />
                 <PhoneFrame src={c.stage.phone} alt={c.stage.phoneAlt} class="case-stage-phone" finish="paper" sizes="140px" loading="eager" />
               </span>
@@ -194,8 +194,8 @@ const cases = isAr ? [
   .tag-mint    { background: var(--k-mint); }
   .tag-apricot { background: var(--k-apricot); }
 
-  /* Dashboard + phone, the way the case study's hero shows them. Same
-     shape as the other tiles' screenshot (1200×1252) so the tiles match. */
+  /* The dashboard fills the tile like the other tiles' screenshot (same
+     1200×1252 shape), with the phone over its lower corner. */
   .case-stage {
     position: relative;
     display: block;
@@ -204,18 +204,17 @@ const cases = isAr ? [
   }
   .case-stage :global(.case-stage-dash) {
     position: absolute;
-    top: 14%;
-    inset-inline-start: 6%;
-    width: 76%;
-    height: auto;
-    border: 2px solid var(--k-ink);
-    border-radius: 6px;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
   }
   .case-stage :global(.case-stage-phone) {
     position: absolute;
-    top: 30%;
-    inset-inline-end: 6%;
-    width: 30%;
+    bottom: 5%;
+    inset-inline-end: 5%;
+    width: 27%;
   }
 
   .case-shot-placeholder {
