@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WindowWidget from "../../components/WindowWidget.astro";
+import PhoneFrame from "../../components/PhoneFrame.astro";
 import { currentLocale, localizedHref } from "../../lib/i18n";
 import { SERVICE_BG, SERVICE_ICON, type ServiceId } from "../../data/services";
 
@@ -38,6 +39,15 @@ const T = isAr ? {
     { value: "عربي + EN", label: "بلغتين" },
   ],
   workCTA: "اقرأ دراسة الحالة",
+  dmTitle: "برنامج المحصل — شركة خدمات",
+  dmText: "منصة لتحصيل الديون لا يستطيع فيها أحد — ولا حتى المسؤولون — تغيير الأرقام بصمت. سُلِّمت خلال ثلاثة أشهر.",
+  dmStats: [
+    { value: "230", label: "اختباراً آلياً" },
+    { value: "3 أشهر", label: "حتى التشغيل" },
+    { value: "بلا إنترنت", label: "تطبيق ميداني" },
+  ],
+  dmDashAlt: "لوحة الإدارة: الإجماليات والدين عبر الزمن",
+  dmPhoneAlt: "الشاشة الرئيسية للتطبيق: الرصيد الكلي والأرصدة المستحقة",
   flowHeading: "من عالق إلى حرّ",
   stuckHead: "عالق مع…",
   stuck: ["نظام قديم لا تستطيع مغادرته", "بيانات لا تصل إليها", "موقع بطيء ومعطّل"],
@@ -74,6 +84,15 @@ const T = isAr ? {
     { value: "AR + EN", label: "bilingual" },
   ],
   workCTA: "Read the case study",
+  dmTitle: "Debt-collection platform, utility company",
+  dmText: "A debt-collection platform where no one — not even the administrators — can quietly change the numbers. Delivered in three months.",
+  dmStats: [
+    { value: "230", label: "automated tests" },
+    { value: "3 months", label: "to go live" },
+    { value: "Offline", label: "field app" },
+  ],
+  dmDashAlt: "Admin panel: totals and debt over time",
+  dmPhoneAlt: "App home screen: total balance and outstanding balances",
   flowHeading: "From stuck to free",
   stuckHead: "Stuck with…",
   stuck: ["An old system you can't leave", "Data you can't reach", "A slow, broken website"],
@@ -151,6 +170,29 @@ const KEEP_ICONS = [
       </div>
       <a href={L("/al-imran/")} class="work-shot window-link" aria-label={T.workCTA}>
         <WindowWidget src="/assets/illustrations/alimran-clinic-homepage.png" alt={isAr ? "الموقع الجديد لمركز العمران الطبي" : "The new Alimran Medical Center website"} chromeColor="sky-shader" />
+      </a>
+    </div>
+
+    <!-- Second case, mirrored: the screenshots lead, the text follows. -->
+    <div class="container work-grid work-flip">
+      <div class="work-text">
+        <h2 class="sec-h2">{T.dmTitle}</h2>
+        <p>{T.dmText}</p>
+        <dl class="stats">
+          {T.dmStats.map((s) => (
+            <div>
+              <dt><bdi>{s.value}</bdi></dt>
+              <dd>{s.label}</dd>
+            </div>
+          ))}
+        </dl>
+        <a class="skb skb-apricot" href={L("/deptmaster/")}>{T.workCTA}</a>
+      </div>
+      <a href={L("/deptmaster/")} class="work-shot work-stage window-link" aria-label={T.workCTA}>
+        <span class="stage-win">
+          <WindowWidget src="/assets/deptmaster/admin-panel-overview.png" alt={T.dmDashAlt} chromeColor="sky-shader" sizes="(min-width: 1056px) 50vw, 100vw" />
+        </span>
+        <PhoneFrame src="/assets/deptmaster/app-home.jpg" alt={T.dmPhoneAlt} class="stage-phone" finish="paper" sizes="180px" />
       </a>
     </div>
   </section>
@@ -322,6 +364,15 @@ const KEEP_ICONS = [
     align-items: center;
   }
   .work-text { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  /* Each further case sits below, mirrored, so the section alternates. */
+  .work-grid + .work-grid { margin-top: 88px; }
+  .work-flip { grid-template-columns: 7fr 5fr; }
+  .work-flip .work-text { order: 2; }
+  /* Dashboard window with the phone over its lower corner, as in the
+     case study's hero. */
+  .work-stage { position: relative; display: block; padding-bottom: 12%; }
+  .stage-win { display: block; width: 86%; }
+  .work-stage :global(.stage-phone) { position: absolute; inset-inline-end: 0; bottom: 0; width: 28%; max-width: 200px; }
   .eyebrow-k { font-size: 15px; font-weight: 600; color: var(--k-ink-muted); }
   .work-text p { margin: 0; font-size: 18px; line-height: 30px; color: var(--k-ink); }
   .stats {
@@ -453,6 +504,8 @@ const KEEP_ICONS = [
     .hero-illustration { order: -1; max-width: 380px; }
     .svc-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .work-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .work-flip .work-text { order: 0; }
+    .work-grid + .work-grid { margin-top: 64px; }
     .flow-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   }
 
