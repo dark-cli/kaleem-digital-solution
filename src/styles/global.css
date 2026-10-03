@@ -131,12 +131,19 @@
   overflow: hidden;
   background-color: var(--k-board) !important;
   isolation: isolate;
+  /* WebKit (iOS Safari) composites a WebGL canvas on its own layer and
+     ignores overflow:hidden + border-radius for it, so the stars spill
+     past the rounded corners as a sharp rectangle. A mask forces the
+     clip on every engine. */
+  -webkit-mask-image: linear-gradient(#000, #000);
+  mask-image: linear-gradient(#000, #000);
 }
 [data-sky] > canvas.sky-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   pointer-events: none;
   z-index: 0;
   display: block;
