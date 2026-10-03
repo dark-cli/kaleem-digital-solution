@@ -1,22 +1,30 @@
 ---
 /**
- * Phone screenshot in a modern flagship phone (think S25 Ultra / recent
- * iPhone): a thin titanium edge, a slim even bezel, a punch-hole camera,
- * side buttons and a faint glass sheen over the screen. A slim status
- * bar sits above the screenshot (app screenshots usually come without
- * one), so the camera never lands on the app's own header.
+ * Phone screenshot in a Galaxy S25 Ultra-style frame, drawn in the site's
+ * pen: flat display, slim even bezels, squared rail with the volume and
+ * power buttons on the right, a 2px ink outline with slightly uneven
+ * hand-drawn corners and the offset shadow every .sk card carries.
  *
- *   <PhoneFrame src="/assets/deptmaster/app-home.jpg" alt="…" />
+ * The rail takes a finish:
+ *   - "night-sky" (default): the rail is a [data-sky] element, so the
+ *     starfield engine paints the shared sky into it.
+ *   - a palette name ("peach", "mint", "lilac", "butter", "sky",
+ *     "apricot", "board", "paper") → var(--k-<name>).
+ *   - any other CSS colour, used as is.
  *
- * Every size is a fraction of the phone's own width (container units),
- * so the proportions hold at any size. The screenshot keeps its own
- * aspect ratio; nothing is cropped.
+ *   <PhoneFrame src="/assets/deptmaster/app-home.jpg" alt="…" finish="mint" />
+ *
+ * A slim status bar sits above the screenshot (app screenshots usually
+ * come without one). Every size is a fraction of the phone's own width
+ * (container units), so the proportions hold at any size. The screenshot
+ * keeps its own aspect ratio; nothing is cropped.
  */
 import Image from "./Image.astro";
 
 interface Props {
   src: string;
   alt: string;
+  finish?: string;
   /** Layout hint for srcset. */
   sizes?: string;
   loading?: "lazy" | "eager";
@@ -26,32 +34,37 @@ interface Props {
 const {
   src,
   alt,
+  finish = "night-sky",
   sizes = "(min-width: 900px) 240px, 60vw",
   loading = "lazy",
   class: className,
 } = Astro.props;
+
+const PALETTE = new Set(["peach", "mint", "lilac", "butter", "sky", "apricot", "board", "paper"]);
+const isSky = finish === "night-sky";
+const rail = isSky ? "var(--k-board)" : PALETTE.has(finish) ? `var(--k-${finish})` : finish;
 ---
 
-<div class:list={["phone-frame", className]}>
+<div class:list={["phone-frame", className]} style={`--pf-rail: ${rail}`}>
   <div class="pf-device">
-    <span class="pf-btn pf-power" aria-hidden="true"></span>
     <span class="pf-btn pf-vol" aria-hidden="true"></span>
-    <div class="pf-body">
+    <span class="pf-btn pf-power" aria-hidden="true"></span>
+    <div class="pf-shell">
+    <div class="pf-body" {...(isSky ? { "data-sky": true } : {})}>
       <div class="pf-bezel">
         <div class="pf-screen">
           <div class="pf-status" aria-hidden="true">
             <span class="pf-time">9:41</span>
-            <span class="pf-camera"></span>
             <svg class="pf-icons" viewBox="0 0 34 12">
               <path d="M1 11h2V8H1zM5 11h2V6H5zM9 11h2V4H9zM13 11h2V2h-2z" fill="currentColor" />
               <rect x="19.5" y="1.5" width="12" height="9" rx="2.2" fill="none" stroke="currentColor" />
               <rect x="21.2" y="3.2" width="7.6" height="5.6" rx="1" fill="currentColor" />
-              <rect x="32.3" y="4.5" width="1.2" height="3" rx=".5" fill="currentColor" />
             </svg>
           </div>
           <Image {src} {alt} {sizes} {loading} class="pf-image" />
         </div>
       </div>
+    </div>
     </div>
   </div>
 </div>
@@ -62,80 +75,73 @@ const {
   .phone-frame { container-type: inline-size; }
   .pf-device { position: relative; }
 
-  /* Titanium edge: a brushed-metal gradient band around the bezel. */
+  /* The shell carries the sketch-card shadow. It sits outside the rail
+     because a [data-sky] rail is masked, and the mask would clip it. */
+  .pf-shell,
+  .pf-body {
+    border-radius: 13.85cqw 13.08cqw 14.23cqw 13.46cqw / 13.46cqw 14.23cqw 13.08cqw 13.85cqw;
+  }
+  .pf-shell {
+    position: relative;
+    z-index: 1;
+    box-shadow:
+      1.73cqw 1.73cqw 0 -2px var(--k-paper),
+      1.73cqw 1.73cqw 0 0 var(--k-ink);
+  }
+
+  /* Rail: one flat finish (or the sky) inside the ink outline. */
   .pf-body {
     position: relative;
-    padding: 1.3cqw;
-    border-radius: 13cqw;
-    background: linear-gradient(135deg, #8a8f94 0%, #d9dcdf 22%, #6f7479 48%, #c5c9cc 72%, #7d8186 100%);
-    box-shadow:
-      0 1.5cqw 3cqw -1cqw rgba(29, 35, 32, 0.35),
-      0 6cqw 12cqw -6cqw rgba(29, 35, 32, 0.45);
+    padding: 2.3cqw;
+    border: var(--k-line) solid var(--k-ink);
+    overflow: hidden;
+    background: var(--pf-rail);
   }
 
   /* Slim black bezel, same width all round. */
   .pf-bezel {
-    padding: 2.2cqw;
-    border-radius: 11.7cqw;
-    background: #0b0d0f;
-    box-shadow: inset 0 0 0 0.35cqw rgba(255, 255, 255, 0.06);
+    position: relative;
+    z-index: 1;
+    padding: 1.73cqw;
+    border-radius: 11.15cqw;
+    background: #0b0c0d;
   }
 
   .pf-screen {
     position: relative;
     overflow: hidden;
-    border-radius: 9.5cqw;
-    background: #000;
+    border-radius: 9.42cqw;
+    background: #141318;
   }
   .pf-screen :global(.pf-image) { display: block; width: 100%; height: auto; }
 
-  /* Glass: a soft diagonal sheen over the top half of the screen. */
-  .pf-screen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border-radius: inherit;
-    background: linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 28%, rgba(255, 255, 255, 0) 42%);
-  }
-
-  /* Status bar: time, punch-hole camera, signal and battery. Its colour
-     matches the app's dark background; override with --pf-status. */
+  /* Status bar: time, signal and battery. Its colour matches the app's
+     dark background; override with --pf-status. */
   .pf-status {
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 8.5cqw;
-    padding: 0 7cqw;
+    height: 8.85cqw;
+    padding: 0 7.7cqw;
     direction: ltr;
     background: var(--pf-status, #141318);
     color: #f2f2f4;
   }
-  .pf-time { font: 600 3.6cqw/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0.02em; }
-  .pf-icons { width: 9cqw; height: auto; }
+  .pf-time { font: 600 3.65cqw/1 var(--k-font-sans); letter-spacing: 0.02em; }
+  .pf-icons { width: 9.2cqw; height: auto; }
 
-  /* Punch-hole front camera, centred in the status bar. */
-  .pf-camera {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 3.6cqw;
-    height: 3.6cqw;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #2b3440 0 18%, #05070a 45%);
-    box-shadow: 0 0 0 0.5cqw rgba(0, 0, 0, 0.55);
-  }
-
-  /* Side buttons, on the right edge as on most phones. */
+  /* Side buttons on the right rail, tucked behind the body so only
+     their outlined tips show. Volume above power, as on the S25 Ultra. */
   .pf-btn {
     position: absolute;
-    right: -0.9cqw;
-    width: 1.2cqw;
-    border-radius: 0 0.8cqw 0.8cqw 0;
-    background: linear-gradient(90deg, #6f7479, #c5c9cc);
+    right: -3.08cqw;
+    width: 4.6cqw;
+    box-sizing: border-box;
+    border: var(--k-line) solid var(--k-ink);
+    border-left: 0;
+    border-radius: 0 1.73cqw 1.73cqw 0;
+    background: var(--pf-rail);
   }
-  .pf-power { top: 26%; height: 9%; }
-  .pf-vol { top: 40%; height: 14%; }
+  .pf-vol { top: 20%; height: 12%; }
+  .pf-power { top: 35.8%; height: 7.3%; }
 </style>
