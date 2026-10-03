@@ -149,7 +149,7 @@ const cases = isAr ? [
 
   .cases-grid {
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 40px;
     align-items: stretch;
   }
@@ -194,27 +194,28 @@ const cases = isAr ? [
   .tag-mint    { background: var(--k-mint); }
   .tag-apricot { background: var(--k-apricot); }
 
-  /* Dashboard + phone, the way the case study's hero shows them. */
+  /* Dashboard + phone, the way the case study's hero shows them. Same
+     shape as the other tiles' screenshot (1200×1252) so the tiles match. */
   .case-stage {
     position: relative;
     display: block;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 1200 / 1252;
     border-bottom: 2px solid var(--k-ink);
   }
   .case-stage :global(.case-stage-dash) {
     position: absolute;
-    top: 9%;
-    inset-inline-start: 5%;
-    width: 72%;
+    top: 14%;
+    inset-inline-start: 6%;
+    width: 76%;
     height: auto;
     border: 2px solid var(--k-ink);
     border-radius: 6px;
   }
   .case-stage :global(.case-stage-phone) {
     position: absolute;
-    top: 7%;
-    inset-inline-end: 7%;
-    width: 24%;
+    top: 30%;
+    inset-inline-end: 6%;
+    width: 30%;
   }
 
   .case-shot-placeholder {
