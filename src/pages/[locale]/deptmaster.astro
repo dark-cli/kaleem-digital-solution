@@ -186,8 +186,9 @@ const T = isAr ? {
     "بنية الأحداث — كل إجراء مسجّل، الأرصدة محسوبة وليست مخزّنة",
     "مكتبات Rust مشتركة — منطق العمل مكتوب مرة واحدة، يعمل على الخادم والتطبيق",
   ],
-  osTitle:     "مفتوح المصدر باسم Debitum",
-  osText:      "النسخة مفتوحة المصدر من هذا النظام متاحة على GitHub.",
+  osTitle:     "مفتوح المصدر على GitHub",
+  osText:      "النسخة مفتوحة المصدر من هذا النظام: الشيفرة كاملة، اقرأها أو شغّلها بنفسك.",
+  licenseLabel: "الرخصة",
 } : {
   title:       "Deptmaster — Kaleem",
   description: "How we built a Rust-based debt-collection platform for a utility company that needed full auditability, fine-grained permissions, and offline-capable mobile.",
@@ -313,9 +314,15 @@ const T = isAr ? {
     "Event sourcing — every action recorded; balances computed, not stored",
     "Shared Rust crates — business logic written once, compiled into both server and app",
   ],
-  osTitle:     "Open source as Debitum",
-  osText:      "The open version of this system is on GitHub.",
+  osTitle:     "Open source on GitHub",
+  osText:      "The open version of this system: the full code, to read or run yourself.",
+  licenseLabel: "License",
 };
+
+const REPO_URL = "https://github.com/dark-cli/deptmaster";
+// As in the repo's LICENSE file (free for non-commercial use; commercial
+// use needs a separate licence).
+const LICENSE_NAME = "PolyForm Noncommercial 1.0.0";
 
 // Small stroke icons shared by the requirement cards and the outcomes.
 const ICONS: Record<string, string> = {
@@ -638,10 +645,10 @@ const ICONS: Record<string, string> = {
         <span class="eyebrow">{T.devLabel}</span>
         <ul class="tech">{T.tech.map((t) => <li>{t}</li>)}</ul>
       </div>
-      <div class="sk os-card">
+      <a class="sk os-card window-link" href={REPO_URL} target="_blank" rel="noopener">
         <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.7s.8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z" fill="currentColor"></path></svg>
-        <span><b>{T.osTitle}</b><span>{T.osText}</span></span>
-      </div>
+        <span><b>{T.osTitle}</b><span>{T.osText}</span><span class="os-url" dir="ltr">github.com/dark-cli/deptmaster</span><span class="os-badge"><span>{T.licenseLabel}</span><span dir="ltr">{LICENSE_NAME}</span></span></span>
+      </a>
     </div>
   </section>
 
@@ -989,7 +996,26 @@ const ICONS: Record<string, string> = {
   .os-card { background: var(--k-paper); padding: 22px 24px; display: flex; align-items: center; gap: 16px; }
   .os-card > span { display: flex; flex-direction: column; gap: 4px; }
   .os-card b { font-size: 18px; }
+  .os-card { color: var(--k-ink); text-decoration: none; }
   .os-card > span > span { font-size: 15px; }
+  .os-card .os-url { font-family: var(--k-font-mono); font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
+  /* Licence badge: a two-part pill, label on board, name on butter. */
+  .os-card > span > .os-badge {
+    width: fit-content;
+    align-self: flex-start;
+    margin-top: 6px;
+    display: inline-flex;
+    flex-direction: row;
+    border: 2px solid var(--k-ink);
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: var(--k-font-mono);
+    font-size: 12px;
+    line-height: 1;
+  }
+  .os-badge > span { padding: 5px 8px; white-space: nowrap; }
+  .os-badge > span:first-child { background: var(--k-board); color: var(--k-chalk); }
+  .os-badge > span:last-child { background: var(--k-butter); color: var(--k-ink); }
 
   /* ─── Tablet ─── */
   @media (max-width: 1100px) {
