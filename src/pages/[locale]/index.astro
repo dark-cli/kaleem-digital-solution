@@ -372,7 +372,7 @@ const KEEP_ICONS = [
      phone hanging over its lower corner. */
   .work-stage { position: relative; display: block; }
   .stage-win { display: block; }
-  .work-stage :global(.stage-phone) { position: absolute; inset-inline-end: -4%; bottom: -6%; width: 26%; max-width: 200px; }
+  .work-stage :global(.stage-phone) { position: absolute; inset-inline-end: -5%; bottom: -8%; width: 34%; max-width: 260px; }
   .eyebrow-k { font-size: 15px; font-weight: 600; color: var(--k-ink-muted); }
   .work-text p { margin: 0; font-size: 18px; line-height: 30px; color: var(--k-ink); }
   .stats {
@@ -506,6 +506,8 @@ const KEEP_ICONS = [
     .work-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
     .work-flip .work-text { order: 0; }
     .work-grid + .work-grid { margin-top: 64px; }
+    /* Keep the phone inside the page edge (no sideways scroll). */
+    .work-stage :global(.stage-phone) { inset-inline-end: -2%; }
     .flow-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   }
 
