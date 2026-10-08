@@ -58,7 +58,6 @@ Everything else — deploys, CMS features, content authoring guidelines, the 14 
 | [`docs/tokens.md`](docs/tokens.md) | Design-system tokens (colours, type, spacing) |
 | [`docs/ai/SKILL.md`](docs/ai/SKILL.md) | Brief for AI collaborators — how to work on this project |
 | [`design/`](design/README.md) | The brand and design source: logo standard and master files, design system, website page designs |
-| [`docs/archive/`](docs/archive/) | Old build-planning notes (block audits, checklists) |
 
 ---
 
