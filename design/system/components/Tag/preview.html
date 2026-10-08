@@ -1,0 +1,19 @@
+<!-- @dsCard group="Status" height=130 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Tag — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var K = window.Kaleem, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div', { className: 'kl-row' },
+      h(K.Tag, { tone: 'jailbreak' }, 'The Jailbreak'), h(K.Tag, { tone: 'websites' }, 'Websites'), h(K.Tag, { tone: 'mobile' }, 'Mobile apps'),
+      h(K.Tag, { tone: 'systems' }, 'Systems'), h(K.Tag, { tone: 'networks' }, 'Networks & security'), h(K.Tag, { tone: 'consulting' }, 'Consulting'),
+      h(K.Tag, null, 'Rust'), h(K.Tag, null, 'Offline mobile')),
+    h('div', { className: 'kl-row', dir: 'rtl' },
+      h(K.Tag, { tone: 'jailbreak', lang: 'ar' }, 'تحرير الأنظمة'), h(K.Tag, { tone: 'websites', lang: 'ar' }, 'المواقع'), h(K.Tag, { tone: 'mobile', lang: 'ar' }, 'تطبيقات الهاتف'),
+      h(K.Tag, { tone: 'systems', lang: 'ar' }, 'أنظمة الإدارة'), h(K.Tag, { tone: 'networks', lang: 'ar' }, 'الشبكات والأمن'), h(K.Tag, { tone: 'consulting', lang: 'ar' }, 'الاستشارات'))));
+</script>
+</body>
+</html>

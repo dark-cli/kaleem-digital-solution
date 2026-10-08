@@ -1,0 +1,18 @@
+<!-- @dsCard group="Content" height=420 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>ServiceTile — preview</title></head>
+<body>
+<div id="root" class="kl-grid"></div>
+<script>
+  var K = window.Kaleem, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h(K.ServiceTile, { service: 'jailbreak', href: '#', title: 'The Jailbreak', description: 'Your data out of locked systems, in open formats.' }),
+    h(K.ServiceTile, { service: 'websites', href: '#', title: 'Websites & web apps', description: 'From a portfolio to a management platform.' }),
+    h(K.ServiceTile, { service: 'mobile', href: '#', title: 'Mobile apps', description: 'Android and iOS, published in your name.' }),
+    h(K.ServiceTile, { service: 'systems', href: '#', title: 'Management & store systems', description: 'From one point of sale to many branches.', items: ['Inventory', 'Point of sale', 'Every branch, one dashboard'] }),
+    h(K.ServiceTile, { service: 'networks', href: '#', title: 'Networks & security', description: 'Cameras, networks and guest Wi-Fi.' }),
+    h(K.ServiceTile, { service: 'consulting', href: '#', dir: 'rtl', lang: 'ar', title: 'الاستشارات والتدريب', description: 'نساعدك على القرار وندرّب فريقك.' })));
+</script>
+</body>
+</html>

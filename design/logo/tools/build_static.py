@@ -20,7 +20,7 @@ def inline(html):
         return comp(a['name'], a)
     return re.sub(r'<dc-import([^>]*)></dc-import>', rep, html)
 idx = json.load(open(os.path.join(SRC, 'canvas.json')))
-show = [b for b in idx['order'] if b.startswith(('Main', 'Std-', 'Construction', 'Logo-lockup'))]
+show = [b for b in idx['order'] if b.startswith(('Main', 'Std-', 'Construction', 'Options'))]
 parts = []
 for b in show:
     parts.append(f'<section class="board"><h2 class="cap">{idx["boards"][b].get("title", b)}</h2>{inline(body(b))}</section>')

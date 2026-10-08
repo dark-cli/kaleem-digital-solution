@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kaleem — Services (pastel)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&amp;family=IBM+Plex+Sans+Arabic:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#faf6ee;font-family:"IBM Plex Sans","IBM Plex Sans Arabic",system-ui,sans-serif;color:#1f1f1f}
+a{color:#1f1f1f}
+a:focus-visible{outline:3px solid #3b6fa0;outline-offset:3px}
+.paper{background-color:#faf6ee;background-image:radial-gradient(circle at 78% 72%, rgba(31,31,31,0.28) 0 0.6px, transparent 1.2px),radial-gradient(circle at 63% 83%, rgba(31,31,31,0.18) 0 1.0px, transparent 2.0px),radial-gradient(circle at 4% 63%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px),radial-gradient(circle at 94% 63%, rgba(31,31,31,0.32) 0 1.0px, transparent 2.0px),radial-gradient(circle at 84% 22%, rgba(31,31,31,0.22) 0 0.6px, transparent 1.2px),radial-gradient(circle at 52% 97%, rgba(31,31,31,0.18) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 8%, rgba(31,31,31,0.18) 0 0.7px, transparent 1.4px),radial-gradient(circle at 63% 79%, rgba(31,31,31,0.32) 0 0.8px, transparent 1.6px),radial-gradient(circle at 96% 76%, rgba(31,31,31,0.22) 0 0.8px, transparent 1.6px),radial-gradient(circle at 15% 7%, rgba(31,31,31,0.32) 0 0.6px, transparent 1.2px),radial-gradient(circle at 36% 89%, rgba(31,31,31,0.28) 0 0.8px, transparent 1.6px),radial-gradient(circle at 67% 52%, rgba(31,31,31,0.28) 0 1.0px, transparent 2.0px),radial-gradient(circle at 77% 55%, rgba(31,31,31,0.22) 0 1.0px, transparent 2.0px),radial-gradient(circle at 90% 6%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px);background-size:127px 199px,139px 331px,151px 331px,163px 193px,173px 251px,181px 293px,193px 181px,199px 211px,211px 251px,223px 241px,233px 193px,241px 263px,251px 307px,263px 233px}
+.board{background-color:#1d2320;background-image:radial-gradient(circle at 81% 50%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 89% 3%, rgba(247,227,154,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 80% 13%, rgba(198,221,240,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 92% 8%, rgba(246,193,208,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 60% 95%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 33% 9%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 11%, rgba(198,221,240,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 40% 29%, rgba(246,193,208,0.55) 0 0.6px, transparent 1.2px),radial-gradient(circle at 56% 14%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 38% 46%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 3% 55%, rgba(198,221,240,0.45) 0 0.5px, transparent 1.0px),radial-gradient(circle at 20% 6%, rgba(246,193,208,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 17% 79%, rgba(236,238,230,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 77% 28%, rgba(247,227,154,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 13% 20%, rgba(198,221,240,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 13% 76%, rgba(246,193,208,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 56% 11%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 14% 92%, rgba(247,227,154,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 80% 95%, rgba(198,221,240,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 74% 90%, rgba(246,193,208,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 37% 97%, rgba(236,238,230,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 93% 54%, rgba(247,227,154,0.35) 0 0.6px, transparent 1.2px);background-size:127px 271px,139px 181px,151px 271px,163px 331px,173px 373px,181px 181px,193px 293px,199px 163px,211px 419px,223px 251px,233px 373px,241px 283px,251px 389px,263px 401px,271px 127px,283px 293px,293px 193px,307px 347px,317px 181px,331px 211px,347px 389px,359px 163px}
+.sk{border:2px solid #1f1f1f;border-radius:10px 4px 12px 5px/5px 12px 4px 10px;box-shadow:4px 4px 0 -2px #faf6ee,4px 4px 0 0 #1f1f1f}
+.skb{display:inline-flex;align-items:center;gap:12px;height:52px;padding:0 22px;border:2px solid #1f1f1f;border-radius:8px 3px 9px 4px/4px 9px 3px 8px;box-shadow:3px 3px 0 -1px #faf6ee,3px 3px 0 1px #1f1f1f;color:#1f1f1f;text-decoration:none;font-weight:600;font-size:17px}
+.ico{fill:none;stroke:#1f1f1f;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+a.sk:hover,a.skb:hover{transform:translate(-1px,-1px)}
+
+</style>
+</helmet>
+<div class="paper" style="width: 1440px; height: 5400px; display: flex; flex-direction: column; color: #1f1f1f; overflow: hidden">
+
+<header class="board" style="height: 88px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 80px">
+<a href="Home-v2-en.dc.html" aria-label="Kaleem — home" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #c6ddf0">
+<svg width="36" height="36" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"></path><rect x="48" y="6" width="18" height="18" fill="#f7e39a"></rect></svg>
+<span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 28px">kaleem</span>
+<span lang="ar" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 700; font-size: 20px; color: #a8b4ac">كليم</span>
+</a>
+<nav style="display: flex; align-items: center; gap: 36px; font-size: 17px">
+<a href="Home-v2-en.dc.html#method" style="color: #eceee6; text-decoration: none">How we work</a>
+<a href="Services-v2-en.dc.html" aria-current="page" style="color: #f7e39a; text-decoration: underline; text-underline-offset: 8px">Services</a>
+<a href="Home-v2-en.dc.html#work" style="color: #eceee6; text-decoration: none">Work</a>
+<a href="Home-v2-en.dc.html#about" style="color: #eceee6; text-decoration: none">About</a>
+<a href="Services-v2-ar.dc.html" lang="ar" style="color: #a8b4ac; font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 15px">العربية</a>
+<a href="#contact" class="skb" style="background: #d9ccf0; height: 46px">Book a free audit</a>
+</nav>
+</header>
+
+<section style="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 48px; padding: 80px 80px 88px; background: #c6ddf0">
+<div style="display: flex; flex-direction: column; gap: 24px; width: 820px">
+<h1 style="margin: 0; font-size: 64px; line-height: 72px; font-weight: 700; letter-spacing: -1px">Six services, one method</h1>
+<p style="margin: 0; font-size: 21px; line-height: 36px; max-width: 720px">Every service follows the same five steps and ends with the same handover: your data, domain and accounts in your name, and every key in your hands.</p>
+<nav aria-label="Services" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px">
+<a href="#s1" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #f7e7b0; text-decoration: none; font-size: 15px; font-weight: 600">The Jailbreak</a>
+<a href="#s2" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #faf6ee; text-decoration: none; font-size: 15px; font-weight: 600">Websites</a>
+<a href="#s3" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #f8c9b8; text-decoration: none; font-size: 15px; font-weight: 600">Mobile apps</a>
+<a href="#s4" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #bfe6d6; text-decoration: none; font-size: 15px; font-weight: 600">Systems</a>
+<a href="#s5" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #f9d2ae; text-decoration: none; font-size: 15px; font-weight: 600">Networks &amp; security</a>
+<a href="#s6" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #d9ccf0; text-decoration: none; font-size: 15px; font-weight: 600">Consulting</a>
+</nav>
+</div>
+<svg width="340" height="300" viewBox="0 0 340 300" aria-hidden="true">
+<defs><filter id="pen2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="8" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"></feDisplacementMap></filter></defs>
+<g filter="url(#pen2)" stroke="#1f1f1f" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<rect x="30" y="40" width="120" height="100" fill="#f7e7b0"></rect>
+<rect x="180" y="20" width="120" height="100" fill="#faf6ee"></rect>
+<rect x="60" y="170" width="120" height="100" fill="#bfe6d6"></rect>
+<rect x="210" y="150" width="110" height="100" fill="#f8c9b8"></rect>
+<path d="M60 70h60M60 95h40M210 50h60M210 75h40M90 200h60M90 225h40M240 180h50M240 205h30" fill="none" stroke-width="3"></path>
+<path d="M150 90c20 0 20 -20 30 -20M180 220c15 0 20 -20 30 -20" fill="none" stroke-width="2.5" stroke-dasharray="2 7"></path>
+</g>
+</svg>
+</section>
+
+<section style="flex-shrink: 0; display: flex; flex-direction: column; gap: 48px; padding: 88px 80px">
+
+<article id="s1" class="sk" style="background: #f7e7b0; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px"><svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 6H6V26H26V14"></path><rect x="20" y="3" width="9" height="9" fill="#faf6ee"></rect></svg><span style="height: 28px; padding: 0 12px; display: inline-flex; align-items: center; border: 1.5px solid #1f1f1f; border-radius: 28px; background: #faf6ee; font-size: 13px; font-weight: 600">Our signature</span></div>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">The Jailbreak</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">We get your data out of old, locked systems, convert it to open standards, and hand you the keys.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">Who it's for</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Anyone stuck with an old website, app or system: lost logins, data split between you and your provider, non-standard formats, a provider who makes leaving hard.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">What we do</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— Find where your data actually lives</li>
+<li>— Extract it: content, media, customer and product records, settings</li>
+<li>— Clean and restructure it</li>
+<li>— Convert it to open standards such as <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px">Markdown · CSV · JSON · SQL</span></li>
+<li>— Rebuild or re-host on open-source tools</li>
+<li>— Recover what's yours: old domains, Google Business profiles and social pages</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">You receive</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Your data in open formats, the new system, documentation, and every account in your name.</p>
+</div>
+</div>
+</article>
+
+<article id="s2" class="sk" style="background: #c6ddf0; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M4 11h24"></path><path d="M8 8.5h1M11 8.5h1"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">Websites &amp; web apps</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">Fast, bilingual websites your team can edit, at the lowest possible hosting cost.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">Who it's for</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Companies, shops, clinics and institutions that need a clear presence online.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">What we do</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— Arabic and English in one site</li>
+<li>— Static sites with no server to rent where possible; web apps with a backend when needed</li>
+<li>— A content editor with live preview, so your team edits pages itself</li>
+<li>— Speed, mobile layout and technical SEO</li>
+<li>— On request: contact forms, FAQ, booking, AI chat assistants, email on your own domain</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">You receive</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">The site, its domain and hosting account in your name, the code repository in your account, and editor training.</p>
+</div>
+</div>
+</article>
+
+<article id="s3" class="sk" style="background: #f8c9b8; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="3" width="12" height="26" rx="3"></rect><path d="M14 25h4"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">Mobile apps</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">Android and iOS apps for your customers or your team, published in your name.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">Who it's for</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Anyone who needs an app for customers or staff, or has an old app that needs rebuilding.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">What we do</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— Apps for ordering, bookings, catalogues, loyalty and internal use</li>
+<li>— Upgrades and rebuilds of old apps, with their data migrated</li>
+<li>— Published under your own developer accounts</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">You receive</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">The app published under your accounts, and the code repository in your account.</p>
+</div>
+</div>
+</article>
+
+<article id="s4" class="sk" style="background: #bfe6d6; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v16c0 2.2 4.5 4 10 4s10-1.8 10-4V8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">Management &amp; store systems</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">Inventory, point-of-sale and management systems, in the cloud or on-site.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">Who it's for</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Shops, offices and institutions running on paper, spreadsheets or outdated software.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">What we do</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— Inventory, point-of-sale and store systems</li>
+<li>— Office, clinic and institution management; desktop applications</li>
+<li>— Customer, patient or member records, with access rules agreed in writing</li>
+<li>— Cloud or on-site servers — your choice, with the cost and data trade-offs explained</li>
+<li>— Migration from spreadsheets, paper or old software</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">You receive</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">The system and its data, admin credentials, documentation and user training.</p>
+</div>
+</div>
+</article>
+
+<article id="s5" class="sk" style="background: #f9d2ae; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 9l18-4l2 9l-18 4z"></path><path d="M14 16v8H6"></path><circle cx="20" cy="10" r="1.5"></circle></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">Networks &amp; security</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">Surveillance cameras, security systems and organised networks, with every password in your hands.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">Who it's for</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Offices, shops, clinics and facilities that need surveillance or a well-organised network.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">What we do</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— Surveillance cameras: supply, installation and configuration</li>
+<li>— Other security systems, such as access control, and their integration</li>
+<li>— Separate staff and guest networks, Wi-Fi, routers and access points</li>
+<li>— Guest Wi-Fi portals that show visitors your website and give timed free access</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">You receive</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Admin credentials for every device, a network diagram and installation notes.</p>
+</div>
+</div>
+</article>
+
+<article id="s6" class="sk" style="background: #d9ccf0; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h22v14H14l-6 5v-5H5z"></path><path d="M10 11h12M10 15h8"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">Consulting &amp; training</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">We help you decide what to build, buy, keep or replace — and train your team.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">Who it's for</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Managers who need a clear technology decision, or a team that runs its own systems with confidence.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">What we do</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— Technology advice and planning</li>
+<li>— Search and market analysis from your Search Console and Analytics data</li>
+<li>— Staff training: your website, Google Business, reviews, social media</li>
+<li>— On request, coordinating media and branding teams for your campaigns</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">You receive</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">Written recommendations, a clear plan, and a team that knows how to run its systems.</p>
+</div>
+</div>
+</article>
+
+</section>
+
+<section style="flex-shrink: 0; display: flex; flex-direction: column; gap: 40px; padding: 88px 80px; background: #f3ecdf; border-top: 2px solid #1f1f1f; border-bottom: 2px solid #1f1f1f">
+<h2 style="margin: 0; font-size: 44px; line-height: 64px; font-weight: 700">Clear from the start</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 30px; line-height: 44px; font-weight: 700">Work order</span><p style="margin: 0; font-size: 16px; line-height: 28px">Every job starts in writing: scope, fixed price or hour cap, and timeline.</p></div>
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 30px; line-height: 44px; font-weight: 600">30–50%</span><p style="margin: 0; font-size: 16px; line-height: 28px">Paid up front before we start; the rest on delivery.</p></div>
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 30px; line-height: 44px; font-weight: 700"><span style="font-family: 'IBM Plex Mono', monospace">14</span> days</span><p style="margin: 0; font-size: 16px; line-height: 28px">Free fixes and small edits after every handover.</p></div>
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 30px; line-height: 44px; font-weight: 700"><span style="font-family: 'IBM Plex Mono', monospace">60</span> days</span><p style="margin: 0; font-size: 16px; line-height: 28px">Free advice after every handover, including a training session.</p></div>
+</div>
+<p style="margin: 0; font-size: 17px; line-height: 30px; max-width: 920px">We work by the hour or at a fixed price per work order, with an optional monthly plan. Hosting, domains, hardware and outside services are paid directly to the provider — we never mark them up.</p>
+</section>
+
+<section id="contact" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 96px 80px; background: #bfe6d6">
+<h2 style="margin: 0; font-size: 52px; line-height: 62px; font-weight: 700; max-width: 900px">Not sure which service you need? Start with a free audit.</h2>
+<a href="#contact" class="skb" style="background: #f7e7b0; align-self: flex-start">Book a free audit</a>
+</section>
+
+<footer class="board" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 40px; padding: 64px 80px 36px; color: #eceee6">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 10px"><svg width="30" height="30" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"></path><rect x="48" y="6" width="18" height="18" fill="#f7e39a"></rect></svg><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 22px; color: #c6ddf0">kaleem</span></div>
+<p style="margin: 0; font-size: 15px; line-height: 26px; color: #c9d0cb">We build it, we free it, and we hand you the keys.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 24px">
+<div style="font-weight: 700; margin-bottom: 4px">Services</div>
+<a href="#s1" style="color: #c9d0cb; text-decoration: none">The Jailbreak</a>
+<a href="#s2" style="color: #c9d0cb; text-decoration: none">Websites &amp; web apps</a>
+<a href="#s3" style="color: #c9d0cb; text-decoration: none">Mobile apps</a>
+<a href="#s4" style="color: #c9d0cb; text-decoration: none">Management &amp; store systems</a>
+<a href="#s5" style="color: #c9d0cb; text-decoration: none">Networks &amp; security</a>
+<a href="#s6" style="color: #c9d0cb; text-decoration: none">Consulting &amp; training</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 24px">
+<div style="font-weight: 700; margin-bottom: 4px">Company</div>
+<a href="Home-v2-en.dc.html#method" style="color: #c9d0cb; text-decoration: none">How we work</a>
+<a href="Home-v2-en.dc.html#work" style="color: #c9d0cb; text-decoration: none">Work</a>
+<a href="Home-v2-en.dc.html#about" style="color: #c9d0cb; text-decoration: none">About</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 24px; color: #c9d0cb">
+<div style="font-weight: 700; margin-bottom: 4px; color: #eceee6">Contact</div>
+<span>[Phone / WhatsApp]</span>
+<span>[Email]</span>
+<span>Basra, Iraq</span>
+<span style="font-family: 'IBM Plex Mono', monospace">kaleem.dev</span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid #4a5a52; font-size: 13px; color: #a8b4ac">
+<span>© 2026 Kaleem. All rights reserved.</span>
+<a href="Services-v2-ar.dc.html" lang="ar" style="color: #a8b4ac; font-family: 'IBM Plex Sans Arabic', sans-serif">العربية</a>
+</div>
+</footer>
+
+<p style="margin: 0; position: absolute; left: 193px; top: 797px">http://localhost:4321/en/services/</p><p style="margin: 0; position: absolute; left: 877px; top: 965px">http://localhost:4321/en/services/</p></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5400}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

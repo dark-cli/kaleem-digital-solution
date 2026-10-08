@@ -23,10 +23,21 @@ a 110 × 110 square, and one weight works from a 16px favicon to a sign.
 
 | Path | What |
 | --- | --- |
-| `standard.html` | The standard as one static page: the mark, lockups, colour, space and size, never, in use, the construction study and the A–E lockup study. Generated, do not edit. |
+| `standard.html` | The standard as one static page: the mark, lockups, colour, space and size, never, in use, the construction study and the open options. Generated, do not edit. |
 | `canvas/` | The source: the boards of the **Kaleem Logo** design canvas (`.dc.html` files and `canvas.json`). Edit the standard there. |
 | `masters/` | The master files. SVG with the names outlined (no font needed), plus PNG exports. |
+| `archive/` | Earlier studies kept for reference: the A–E lockup study. |
 | `tools/` | The scripts that make `masters/`, `standard.html` and the site's logo data. |
+
+## Open decisions
+
+The **Options** board (last board in `standard.html`) has three choices still to make; until then the masters use today's values:
+
+1. **Lockup E spacing:** E2 (golden outer box, recommended) or E3 (letter height = the door).
+2. **Lockup C:** today's or C2, golden-checked (same ratios, names padded like the mark).
+3. **Favicon:** the app-icon tile in a brand pastel (sky recommended; mint and lilac also work; butter and peach lose the yellow block).
+
+`tools/options.py` draws every option, so the chosen one can be copied into `masters.py`.
 
 ## Master files
 

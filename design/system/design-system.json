@@ -1,0 +1,123 @@
+{
+ "v": 3,
+ "assetGroups": {
+  "Logos": {
+   "files": {
+    "kaleem-mark.svg": {
+     "blob": "e9c1300701f5bd886eb96ad757d256fb",
+     "name": "kaleem-mark.svg",
+     "size": 236,
+     "type": "image/svg+xml"
+    },
+    "kaleem-mark-chalk.svg": {
+     "blob": "4042bd80ac140afa6e861a5edb6e7dd5",
+     "name": "kaleem-mark-chalk.svg",
+     "size": 236,
+     "type": "image/svg+xml"
+    },
+    "kaleem-mark-one-colour-ink.svg": {
+     "blob": "3cb50c4873b3903d4183f768b23fae46",
+     "name": "kaleem-mark-one-colour-ink.svg",
+     "size": 236,
+     "type": "image/svg+xml"
+    },
+    "kaleem-mark-one-colour-chalk.svg": {
+     "blob": "5f335f35285db91af640863b2c0672d2",
+     "name": "kaleem-mark-one-colour-chalk.svg",
+     "size": 236,
+     "type": "image/svg+xml"
+    },
+    "kaleem-app-icon.svg": {
+     "blob": "202c01f1c7fbdf0b47fe6596b44503bd",
+     "name": "kaleem-app-icon.svg",
+     "size": 317,
+     "type": "image/svg+xml"
+    },
+    "kaleem-app-icon-white.svg": {
+     "blob": "a9c7510b01d57bd6978e4917e159850a",
+     "name": "kaleem-app-icon-white.svg",
+     "size": 317,
+     "type": "image/svg+xml"
+    },
+    "kaleem-avatar.svg": {
+     "blob": "8d4889fedfda9775776f7409b3ae123a",
+     "name": "kaleem-avatar.svg",
+     "size": 309,
+     "type": "image/svg+xml"
+    }
+   },
+   "name": "Logos",
+   "order": [
+    "kaleem-mark.svg",
+    "kaleem-mark-chalk.svg",
+    "kaleem-mark-one-colour-ink.svg",
+    "kaleem-mark-one-colour-chalk.svg",
+    "kaleem-app-icon.svg",
+    "kaleem-app-icon-white.svg",
+    "kaleem-avatar.svg"
+   ],
+   "tile": "m"
+  },
+  "Textures": {
+   "files": {
+    "chalk-dust.svg": {
+     "blob": "3b5782228d19c7203ff0cb2ea0a10cf5",
+     "name": "chalk-dust.svg",
+     "size": 421,
+     "type": "image/svg+xml"
+    },
+    "chalk-underline.svg": {
+     "blob": "1a9d19d4c57c2071e9f17877a0687532",
+     "name": "chalk-underline.svg",
+     "size": 495,
+     "type": "image/svg+xml"
+    },
+    "chalkboard.svg": {
+     "blob": "bbbb22dc13595725c2a3dc3dfbf58f15",
+     "name": "chalkboard.svg",
+     "size": 810,
+     "type": "image/svg+xml"
+    }
+   },
+   "name": "Textures",
+   "order": [
+    "chalkboard.svg",
+    "chalk-dust.svg",
+    "chalk-underline.svg"
+   ],
+   "tile": "l"
+  }
+ },
+ "blobs": {},
+ "createdOnFiles": {
+  "at": "2026-09-26T15:07:19Z",
+  "v": 1
+ },
+ "docs": {
+  "sections": []
+ },
+ "groups": [
+  "Logos",
+  "Textures"
+ ],
+ "lastChange": {
+  "by": "Claude",
+  "at": "2026-10-08T14:08:30Z",
+  "via": "Claude Code",
+  "note": "New logo (φ mark, logo yellow #f8d12f): Logo component, token, guidelines and logo files"
+ },
+ "layout": "files",
+ "libraries": [
+  {
+   "name": "react",
+   "version": "18"
+  },
+  {
+   "name": "react-dom",
+   "version": "18"
+  }
+ ],
+ "namespace": "Kaleem",
+ "sections": {},
+ "title": "Kaleem"
+}

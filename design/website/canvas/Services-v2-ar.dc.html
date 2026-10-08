@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>كليم — خدماتنا (باستيل)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&amp;family=IBM+Plex+Sans+Arabic:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#faf6ee;font-family:"IBM Plex Sans Arabic","IBM Plex Sans",Tahoma,sans-serif;color:#1f1f1f}
+a{color:#1f1f1f}
+a:focus-visible{outline:3px solid #3b6fa0;outline-offset:3px}
+.paper{background-color:#faf6ee;background-image:radial-gradient(circle at 78% 72%, rgba(31,31,31,0.28) 0 0.6px, transparent 1.2px),radial-gradient(circle at 63% 83%, rgba(31,31,31,0.18) 0 1.0px, transparent 2.0px),radial-gradient(circle at 4% 63%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px),radial-gradient(circle at 94% 63%, rgba(31,31,31,0.32) 0 1.0px, transparent 2.0px),radial-gradient(circle at 84% 22%, rgba(31,31,31,0.22) 0 0.6px, transparent 1.2px),radial-gradient(circle at 52% 97%, rgba(31,31,31,0.18) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 8%, rgba(31,31,31,0.18) 0 0.7px, transparent 1.4px),radial-gradient(circle at 63% 79%, rgba(31,31,31,0.32) 0 0.8px, transparent 1.6px),radial-gradient(circle at 96% 76%, rgba(31,31,31,0.22) 0 0.8px, transparent 1.6px),radial-gradient(circle at 15% 7%, rgba(31,31,31,0.32) 0 0.6px, transparent 1.2px),radial-gradient(circle at 36% 89%, rgba(31,31,31,0.28) 0 0.8px, transparent 1.6px),radial-gradient(circle at 67% 52%, rgba(31,31,31,0.28) 0 1.0px, transparent 2.0px),radial-gradient(circle at 77% 55%, rgba(31,31,31,0.22) 0 1.0px, transparent 2.0px),radial-gradient(circle at 90% 6%, rgba(31,31,31,0.22) 0 0.7px, transparent 1.4px);background-size:127px 199px,139px 331px,151px 331px,163px 193px,173px 251px,181px 293px,193px 181px,199px 211px,211px 251px,223px 241px,233px 193px,241px 263px,251px 307px,263px 233px}
+.board{background-color:#1d2320;background-image:radial-gradient(circle at 81% 50%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 89% 3%, rgba(247,227,154,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 80% 13%, rgba(198,221,240,0.55) 0 0.7px, transparent 1.4px),radial-gradient(circle at 92% 8%, rgba(246,193,208,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 60% 95%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 33% 9%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 78% 11%, rgba(198,221,240,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 40% 29%, rgba(246,193,208,0.55) 0 0.6px, transparent 1.2px),radial-gradient(circle at 56% 14%, rgba(236,238,230,0.35) 0 0.7px, transparent 1.4px),radial-gradient(circle at 38% 46%, rgba(247,227,154,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 3% 55%, rgba(198,221,240,0.45) 0 0.5px, transparent 1.0px),radial-gradient(circle at 20% 6%, rgba(246,193,208,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 17% 79%, rgba(236,238,230,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 77% 28%, rgba(247,227,154,0.45) 0 0.6px, transparent 1.2px),radial-gradient(circle at 13% 20%, rgba(198,221,240,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 13% 76%, rgba(246,193,208,0.55) 0 0.8px, transparent 1.6px),radial-gradient(circle at 56% 11%, rgba(236,238,230,0.35) 0 0.8px, transparent 1.6px),radial-gradient(circle at 14% 92%, rgba(247,227,154,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 80% 95%, rgba(198,221,240,0.35) 0 0.5px, transparent 1.0px),radial-gradient(circle at 74% 90%, rgba(246,193,208,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 37% 97%, rgba(236,238,230,0.35) 0 1.0px, transparent 2.0px),radial-gradient(circle at 93% 54%, rgba(247,227,154,0.35) 0 0.6px, transparent 1.2px);background-size:127px 271px,139px 181px,151px 271px,163px 331px,173px 373px,181px 181px,193px 293px,199px 163px,211px 419px,223px 251px,233px 373px,241px 283px,251px 389px,263px 401px,271px 127px,283px 293px,293px 193px,307px 347px,317px 181px,331px 211px,347px 389px,359px 163px}
+.sk{border:2px solid #1f1f1f;border-radius:10px 4px 12px 5px/5px 12px 4px 10px;box-shadow:4px 4px 0 -2px #faf6ee,4px 4px 0 0 #1f1f1f}
+.skb{display:inline-flex;align-items:center;gap:12px;height:52px;padding:0 22px;border:2px solid #1f1f1f;border-radius:8px 3px 9px 4px/4px 9px 3px 8px;box-shadow:3px 3px 0 -1px #faf6ee,3px 3px 0 1px #1f1f1f;color:#1f1f1f;text-decoration:none;font-weight:600;font-size:17px}
+.ico{fill:none;stroke:#1f1f1f;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+a.sk:hover,a.skb:hover{transform:translate(-1px,-1px)}
+
+</style>
+</helmet>
+<div dir="rtl" class="paper" style="width: 1440px; height: 5050px; display: flex; flex-direction: column; color: #1f1f1f; overflow: hidden">
+
+<header class="board" style="height: 88px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 80px">
+<a href="Home-v2-ar.dc.html" aria-label="كليم — الرئيسية" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #c6ddf0">
+<svg width="36" height="36" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"></path><rect x="48" y="6" width="18" height="18" fill="#f7e39a"></rect></svg>
+<span style="font-weight: 700; font-size: 30px">كليم</span>
+<span dir="ltr" style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 18px; color: #a8b4ac">kaleem</span>
+</a>
+<nav style="display: flex; align-items: center; gap: 36px; font-size: 17px">
+<a href="Home-v2-ar.dc.html#method" style="color: #eceee6; text-decoration: none">طريقة عملنا</a>
+<a href="Services-v2-ar.dc.html" aria-current="page" style="color: #f7e39a; text-decoration: underline; text-underline-offset: 8px">خدماتنا</a>
+<a href="Home-v2-ar.dc.html#work" style="color: #eceee6; text-decoration: none">أعمالنا</a>
+<a href="Home-v2-ar.dc.html#about" style="color: #eceee6; text-decoration: none">من نحن</a>
+<a href="Services-v2-en.dc.html" lang="en" style="color: #a8b4ac; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px">English</a>
+<a href="#contact" class="skb" style="background: #d9ccf0; height: 46px">احجز تقييمًا مجانيًا</a>
+</nav>
+</header>
+
+<section style="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 48px; padding: 80px 80px 88px; background: #c6ddf0">
+<div style="display: flex; flex-direction: column; gap: 24px; width: 820px">
+<h1 style="margin: 0; font-size: 64px; line-height: 96px; font-weight: 700">ست خدمات، وطريقة واحدة</h1>
+<p style="margin: 0; font-size: 21px; line-height: 36px; max-width: 720px">كل خدمة تتبع خطواتنا الخمس نفسها، وتنتهي بالتسليم نفسه: بياناتك ونطاقك وحساباتك باسمك، والمفاتيح كلها معك.</p>
+<nav aria-label="الخدمات" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px">
+<a href="#s1" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #f7e7b0; text-decoration: none; font-size: 15px; font-weight: 600">تحرير الأنظمة</a>
+<a href="#s2" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #faf6ee; text-decoration: none; font-size: 15px; font-weight: 600">المواقع</a>
+<a href="#s3" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #f8c9b8; text-decoration: none; font-size: 15px; font-weight: 600">تطبيقات الهاتف</a>
+<a href="#s4" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #bfe6d6; text-decoration: none; font-size: 15px; font-weight: 600">أنظمة الإدارة</a>
+<a href="#s5" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #f9d2ae; text-decoration: none; font-size: 15px; font-weight: 600">الشبكات والأمن</a>
+<a href="#s6" style="height: 36px; padding: 0 16px; display: inline-flex; align-items: center; border: 2px solid #1f1f1f; border-radius: 36px; background: #d9ccf0; text-decoration: none; font-size: 15px; font-weight: 600">الاستشارات</a>
+</nav>
+</div>
+<svg width="340" height="300" viewBox="0 0 340 300" aria-hidden="true">
+<defs><filter id="pen2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="8" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="3.5"></feDisplacementMap></filter></defs>
+<g filter="url(#pen2)" stroke="#1f1f1f" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<rect x="30" y="40" width="120" height="100" fill="#f7e7b0"></rect>
+<rect x="180" y="20" width="120" height="100" fill="#faf6ee"></rect>
+<rect x="60" y="170" width="120" height="100" fill="#bfe6d6"></rect>
+<rect x="210" y="150" width="110" height="100" fill="#f8c9b8"></rect>
+<path d="M60 70h60M60 95h40M210 50h60M210 75h40M90 200h60M90 225h40M240 180h50M240 205h30" fill="none" stroke-width="3"></path>
+<path d="M150 90c20 0 20 -20 30 -20M180 220c15 0 20 -20 30 -20" fill="none" stroke-width="2.5" stroke-dasharray="2 7"></path>
+</g>
+</svg>
+</section>
+
+<section style="flex-shrink: 0; display: flex; flex-direction: column; gap: 48px; padding: 88px 80px">
+
+<article id="s1" class="sk" style="background: #f7e7b0; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 12px"><svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 6H6V26H26V14"></path><rect x="20" y="3" width="9" height="9" fill="#faf6ee"></rect></svg><span style="height: 28px; padding: 0 12px; display: inline-flex; align-items: center; border: 1.5px solid #1f1f1f; border-radius: 28px; background: #faf6ee; font-size: 13px; font-weight: 600">خدمتنا المميّزة</span></div>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">تحرير الأنظمة</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">نُخرج بياناتك من الأنظمة القديمة والمغلقة، ونحوّلها إلى معايير مفتوحة، ونسلّمك المفاتيح.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">لمن</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">لكل من علق بموقع أو تطبيق أو نظام قديم: فقد صلاحية الدخول، أو بيانات موزّعة بينه وبين المزوّد، أو صيغ غير قياسية، أو مزوّد يصعّب المغادرة.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">ما نقدّمه</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— نحدّد أين توجد بياناتك فعلًا</li>
+<li>— نستخرجها: المحتوى والوسائط وسجلات العملاء والمنتجات والإعدادات</li>
+<li>— ننظّفها ونعيد ترتيبها</li>
+<li>— نحوّلها إلى معايير مفتوحة مثل <span dir="ltr" style="font-family: 'IBM Plex Mono', monospace; font-size: 15px">Markdown · CSV · JSON · SQL</span></li>
+<li>— نعيد البناء أو الاستضافة بأدوات مفتوحة المصدر</li>
+<li>— نستعيد ما يخصّك: النطاقات القديمة وملف Google التجاري وصفحات التواصل</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">تستلم</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">بياناتك بصيغ مفتوحة، والنظام الجديد، والتوثيق، وكل الحسابات باسمك.</p>
+</div>
+</div>
+</article>
+
+<article id="s2" class="sk" style="background: #c6ddf0; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M4 11h24"></path><path d="M8 8.5h1M11 8.5h1"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">المواقع وتطبيقات الويب</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">مواقع سريعة ثنائية اللغة، يحرّرها فريقك بنفسه، وبأقل تكلفة استضافة ممكنة.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">لمن</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">الشركات والمتاجر والعيادات والمؤسسات التي تحتاج حضورًا واضحًا على الإنترنت.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">ما نقدّمه</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— العربية والإنجليزية في موقع واحد</li>
+<li>— مواقع ثابتة لا تحتاج خادمًا مستأجرًا متى أمكن، وتطبيقات ويب بخادم عند الحاجة</li>
+<li>— لوحة تحرير مع معاينة مباشرة ليحرّر فريقك المحتوى بنفسه</li>
+<li>— السرعة والتوافق مع الهاتف والتهيئة التقنية لمحركات البحث</li>
+<li>— ميزات عند الطلب: نماذج تواصل، أسئلة شائعة، حجز مواعيد، مساعد محادثة، بريد على نطاقك</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">تستلم</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">الموقع، والنطاق وحساب الاستضافة باسمك، ومستودع الشيفرة في حسابك، وتدريبًا على التحرير.</p>
+</div>
+</div>
+</article>
+
+<article id="s3" class="sk" style="background: #f8c9b8; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="3" width="12" height="26" rx="3"></rect><path d="M14 25h4"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">تطبيقات الهاتف</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">تطبيقات أندرويد و iOS لعملائك أو لفريقك، منشورة باسمك.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">لمن</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">من يحتاج تطبيقًا لعملائه أو لفريقه، أو لديه تطبيق قديم يحتاج إعادة بناء.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">ما نقدّمه</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— تطبيقات للطلبات والحجوزات والكتالوجات وبرامج الولاء والاستخدام الداخلي</li>
+<li>— تحديث التطبيقات القديمة وإعادة بنائها مع نقل بياناتها</li>
+<li>— النشر باسم حسابات المطوّر الخاصة بك</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">تستلم</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">التطبيق منشورًا باسم حساباتك، ومستودع الشيفرة في حسابك.</p>
+</div>
+</div>
+</article>
+
+<article id="s4" class="sk" style="background: #bfe6d6; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v16c0 2.2 4.5 4 10 4s10-1.8 10-4V8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">أنظمة الإدارة والمتاجر</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">أنظمة مخزون ونقاط بيع وإدارة، على السحابة أو داخل مقرّك.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">لمن</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">المتاجر والمكاتب والمؤسسات التي تدير عملها بالورق أو الجداول أو برامج قديمة.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">ما نقدّمه</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— أنظمة المخزون ونقاط البيع والمتاجر</li>
+<li>— أنظمة إدارة المكاتب والعيادات والمؤسسات، وبرامج سطح المكتب</li>
+<li>— سجلات العملاء أو المرضى أو الأعضاء بصلاحيات متّفق عليها كتابيًا</li>
+<li>— خادم سحابي أو محلي حسب اختيارك، مع شرح الفرق في التكلفة ومكان البيانات</li>
+<li>— الانتقال من الجداول أو الورق أو البرامج القديمة</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">تستلم</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">النظام وبياناته، وبيانات الدخول الإدارية، والتوثيق، وتدريب المستخدمين.</p>
+</div>
+</div>
+</article>
+
+<article id="s5" class="sk" style="background: #f9d2ae; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 9l18-4l2 9l-18 4z"></path><path d="M14 16v8H6"></path><circle cx="20" cy="10" r="1.5"></circle></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">الشبكات والأمن</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">كاميرات مراقبة وأنظمة أمن وشبكات منظّمة، مع كل بيانات الدخول بين يديك.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">لمن</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">المكاتب والمتاجر والعيادات والمنشآت التي تحتاج مراقبة أو شبكة منظّمة.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">ما نقدّمه</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— كاميرات المراقبة: التوريد والتركيب والإعداد</li>
+<li>— أنظمة الأمن الأخرى مثل التحكم بالدخول، وربطها معًا</li>
+<li>— شبكات منفصلة للموظفين والزوار، وواي فاي، وأجهزة توجيه ونقاط وصول</li>
+<li>— بوابات واي فاي للزوار تعرض موقعك وتمنحهم وصولًا مجانيًا محدود المدة</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">تستلم</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">بيانات الدخول الإدارية لكل الأجهزة، ومخطط الشبكة، وتوثيق التركيب.</p>
+</div>
+</div>
+</article>
+
+<article id="s6" class="sk" style="background: #d9ccf0; padding: 48px; display: grid; grid-template-columns: 5fr 7fr; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<svg class="ico" width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h22v14H14l-6 5v-5H5z"></path><path d="M10 11h12M10 15h8"></path></svg>
+<h2 style="margin: 0; font-size: 38px; line-height: 56px; font-weight: 700">الاستشارات والتدريب</h2>
+<p style="margin: 0; font-size: 19px; line-height: 32px">نساعدك على تقرير ما تبنيه أو تشتريه أو تبقيه أو تستبدله، وندرّب فريقك.</p>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 700">لمن</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">الإدارات التي تحتاج قرارًا تقنيًا واضحًا، أو فريقًا يدير أنظمته بثقة.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="font-size: 15px; font-weight: 700">ما نقدّمه</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; line-height: 28px">
+<li>— استشارات وتخطيط تقني</li>
+<li>— تحليل البحث والسوق من بيانات Search Console و Analytics</li>
+<li>— تدريب الموظفين: إدارة موقعك، وملف Google التجاري، والتقييمات، ووسائل التواصل</li>
+<li>— عند الطلب، تنسيق فرق الإعلام والعلامة التجارية لحملاتك</li>
+</ul>
+<div style="margin-top: 8px; padding: 20px 24px; background: #faf6ee; border: 2px dashed #1f1f1f; display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 15px; font-weight: 700">تستلم</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px">توصيات مكتوبة وخطة واضحة، وفريقًا يعرف كيف يدير أنظمته.</p>
+</div>
+</div>
+</article>
+
+</section>
+
+<section style="flex-shrink: 0; display: flex; flex-direction: column; gap: 40px; padding: 88px 80px; background: #f3ecdf; border-top: 2px solid #1f1f1f; border-bottom: 2px solid #1f1f1f">
+<h2 style="margin: 0; font-size: 44px; line-height: 64px; font-weight: 700">واضح من البداية</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 30px; line-height: 44px; font-weight: 700">أمر عمل</span><p style="margin: 0; font-size: 16px; line-height: 28px">كل عمل يبدأ بأمر مكتوب: النطاق، والسعر الثابت أو سقف الساعات، والمدة.</p></div>
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span dir="ltr" style="font-family: 'IBM Plex Mono', monospace; font-size: 30px; line-height: 44px; font-weight: 600; text-align: right">30–50%</span><p style="margin: 0; font-size: 16px; line-height: 28px">دفعة مقدّمة قبل البدء، والباقي عند التسليم.</p></div>
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 30px; line-height: 44px; font-weight: 700"><span style="font-family: 'IBM Plex Mono', monospace">14</span> يومًا</span><p style="margin: 0; font-size: 16px; line-height: 28px">تعديلات وإصلاحات مجانية بعد كل تسليم.</p></div>
+<div class="sk" style="background: #faf6ee; padding: 28px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 30px; line-height: 44px; font-weight: 700"><span style="font-family: 'IBM Plex Mono', monospace">60</span> يومًا</span><p style="margin: 0; font-size: 16px; line-height: 28px">استشارات مجانية بعد كل تسليم، تشمل جلسة تدريب.</p></div>
+</div>
+<p style="margin: 0; font-size: 17px; line-height: 30px; max-width: 920px">نعمل بالساعة أو بسعر ثابت لكل أمر عمل، مع اشتراك شهري اختياري. تكاليف الاستضافة والنطاقات والأجهزة والخدمات الخارجية تدفعها للمزوّد مباشرة، دون أي زيادة منّا.</p>
+</section>
+
+<section id="contact" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 96px 80px; background: #bfe6d6">
+<h2 style="margin: 0; font-size: 52px; line-height: 76px; font-weight: 700; max-width: 900px">لست متأكدًا أي خدمة تحتاج؟ ابدأ بتقييم مجاني.</h2>
+<a href="#contact" class="skb" style="background: #f7e7b0; align-self: flex-start">احجز تقييمًا مجانيًا</a>
+</section>
+
+<footer class="board" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 40px; padding: 64px 80px 36px; color: #eceee6">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 10px"><svg width="30" height="30" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"></path><rect x="48" y="6" width="18" height="18" fill="#f7e39a"></rect></svg><span style="font-weight: 700; font-size: 24px; color: #c6ddf0">كليم</span></div>
+<p style="margin: 0; font-size: 15px; line-height: 26px; color: #c9d0cb">نبنيها، نحرّرها، ونسلّمك المفاتيح.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 24px">
+<div style="font-weight: 700; margin-bottom: 4px">الخدمات</div>
+<a href="#s1" style="color: #c9d0cb; text-decoration: none">تحرير الأنظمة</a>
+<a href="#s2" style="color: #c9d0cb; text-decoration: none">المواقع وتطبيقات الويب</a>
+<a href="#s3" style="color: #c9d0cb; text-decoration: none">تطبيقات الهاتف</a>
+<a href="#s4" style="color: #c9d0cb; text-decoration: none">أنظمة الإدارة والمتاجر</a>
+<a href="#s5" style="color: #c9d0cb; text-decoration: none">الشبكات والأمن</a>
+<a href="#s6" style="color: #c9d0cb; text-decoration: none">الاستشارات والتدريب</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 24px">
+<div style="font-weight: 700; margin-bottom: 4px">الشركة</div>
+<a href="Home-v2-ar.dc.html#method" style="color: #c9d0cb; text-decoration: none">طريقة عملنا</a>
+<a href="Home-v2-ar.dc.html#work" style="color: #c9d0cb; text-decoration: none">أعمالنا</a>
+<a href="Home-v2-ar.dc.html#about" style="color: #c9d0cb; text-decoration: none">من نحن</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 24px; color: #c9d0cb">
+<div style="font-weight: 700; margin-bottom: 4px; color: #eceee6">تواصل معنا</div>
+<span>[رقم الهاتف / واتساب]</span>
+<span>[البريد الإلكتروني]</span>
+<span>البصرة، العراق</span>
+<span dir="ltr" style="font-family: 'IBM Plex Mono', monospace; text-align: right">kaleem.dev</span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid #4a5a52; font-size: 13px; color: #a8b4ac">
+<span>© 2026 كليم. جميع الحقوق محفوظة.</span>
+<a href="Services-v2-en.dc.html" lang="en" style="color: #a8b4ac; font-family: 'IBM Plex Sans', sans-serif">English</a>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5050}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

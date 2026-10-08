@@ -23,13 +23,6 @@
       "x": 1520,
       "y": 320
     },
-    "Logo-lockup.dc.html": {
-      "h": 1500,
-      "title": "Logo lockup · A–E (study)",
-      "w": 1440,
-      "x": 2124,
-      "y": 0
-    },
     "Logo-mark.dc.html": {
       "h": 200,
       "title": "Mark (component)",
@@ -78,6 +71,13 @@
       "w": 1440,
       "x": 0,
       "y": 4965
+    },
+    "Options.dc.html": {
+      "h": 2412,
+      "title": "Options · choose one of each",
+      "w": 1440,
+      "x": 5164,
+      "y": 0
     }
   },
   "createdOnFiles": {
@@ -99,7 +99,7 @@
   "notes": {
     "logo": {
       "kind": "title1",
-      "maxW": 5084,
+      "maxW": 6604,
       "text": "Kaleem logo · standard, components and studies",
       "w": 240,
       "x": 0,
@@ -116,8 +116,8 @@
     "Logo-C.dc.html",
     "Logo-E.dc.html",
     "Logo-mark.dc.html",
-    "Logo-lockup.dc.html",
-    "Construction.dc.html"
+    "Construction.dc.html",
+    "Options.dc.html"
   ],
   "pages": [],
   "title": "Kaleem Logo"

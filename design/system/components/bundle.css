@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,700&family=Amiri:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap");
+
+html { background: var(--paper); }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-sans); font-size: 17px; line-height: 1.65; margin: 0; }
+[dir="rtl"], :lang(ar) { font-family: var(--font-arabic); }
+.kl-row { display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: center; padding: var(--space-6); }
+.kl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-7); padding: var(--space-6); }
+.kl-board { background: var(--board); color: var(--chalk); }
+
+/* Pastel fills: one per service */
+.kl-butter { background-color: var(--butter); } .kl-sky { background-color: var(--sky); }
+.kl-peach { background-color: var(--peach); }   .kl-mint { background-color: var(--mint); }
+.kl-apricot { background-color: var(--apricot); } .kl-lilac { background-color: var(--lilac); }
+.kl-paper { background-color: var(--paper); }   .kl-gray { background-color: var(--gray); }
+
+/* Logo: the Open Box */
+.kl-logo { display: inline-flex; align-items: center; gap: 0.4em; color: var(--ink); text-decoration: none; font-size: 24px; line-height: 1; }
+.kl-logo svg { width: 1.4em; height: 1.4em; flex: none; }
+.kl-logo .kl-box { fill: currentColor; }
+.kl-logo .kl-block { fill: var(--logo-block); }
+.kl-board .kl-logo { color: var(--chalk); }
+.kl-logo-word { font-family: var(--font-mono); font-weight: 600; letter-spacing: -0.02em; }
+.kl-logo-ar { font-family: var(--font-arabic); font-weight: 600; font-size: 0.92em; }
+.kl-logo-sep { width: 2px; height: 1em; background: currentColor; opacity: 0.4; }
+
+/* Button: elevated sketch (.skb) and flat (.fbtn) */
+.kl-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3); height: var(--control-height); padding: 0 22px; border: var(--sketch-line, 2px) solid var(--ink); border-radius: var(--sketch-radius-btn, 8px 3px 9px 4px / 4px 9px 3px 8px); background: transparent; color: var(--ink); font: 600 17px/1 var(--font-sans); cursor: pointer; text-decoration: none; box-sizing: border-box; transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 140ms ease, background-color 120ms ease; }
+[dir="rtl"] .kl-btn, .kl-btn:lang(ar) { font-family: var(--font-arabic); }
+.kl-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.kl-btn-elevated { box-shadow: var(--shadow-button); }
+.kl-btn-elevated:hover, .kl-btn-elevated:focus-visible { transform: translate(-4px, -4px); box-shadow: var(--shadow-button-lift); }
+.kl-btn-elevated:active { transform: translate(-1px, -1px); }
+.kl-btn-flat:hover, .kl-btn-flat:focus-visible { transform: translate(-3px, -3px); box-shadow: var(--shadow-flat-lift); }
+.kl-btn-sm { height: 40px; padding: 0 14px; font-size: 14px; gap: var(--space-2); }
+.kl-btn-link { height: auto; padding: 0; border: 0; border-radius: 0; text-decoration: underline; text-underline-offset: 6px; }
+.kl-btn[disabled] { background: var(--gray); color: var(--ink-muted); box-shadow: none; transform: none; cursor: not-allowed; }
+.kl-arrow { display: inline-block; }
+[dir="rtl"] .kl-arrow { transform: scaleX(-1); }
+@media (prefers-reduced-motion: reduce) { .kl-btn, .kl-tile { transition: none; } }
+
+/* Tag */
+.kl-tag { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border: 1.5px solid var(--ink); border-radius: var(--radius-pill); font: 600 13px/1 var(--font-sans); color: var(--ink); background: var(--paper); white-space: nowrap; box-sizing: border-box; }
+.kl-tag:lang(ar), [dir="rtl"] .kl-tag { font-family: var(--font-arabic); }
+
+/* ServiceTile: a pastel sketch card */
+.kl-tile { position: relative; display: flex; flex-direction: column; gap: var(--space-3); padding: 26px; border: var(--sketch-line, 2px) solid var(--ink); border-radius: var(--sketch-radius, 10px 4px 12px 5px / 5px 12px 4px 10px); box-shadow: var(--shadow-sketch); color: var(--ink); text-decoration: none; box-sizing: border-box; transition: transform 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 140ms cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+a.kl-tile:hover, a.kl-tile:focus-visible { transform: translate(-4px, -4px); box-shadow: var(--shadow-sketch-lift); }
+a.kl-tile:active { transform: translate(-1px, -1px); }
+a.kl-tile:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.kl-ico { width: 40px; height: 40px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.kl-tile-title { margin: 0; font-size: 21px; line-height: 1.3; font-weight: 600; }
+.kl-tile-desc { margin: 0; font-size: 16px; line-height: 1.5; }
+.kl-tile-list { margin: var(--space-2) 0 0; padding: var(--space-3) 0 0; list-style: none; border-top: 1.5px dashed var(--ink); display: grid; gap: var(--space-2); font-size: 15px; line-height: 1.4; }
+.kl-tile-list li::before { content: "— "; }
+
+/* Stat */
+.kl-stat { display: flex; flex-direction: column; min-width: 120px; }
+.kl-stat-value { font: 600 30px/1.2 var(--font-mono); color: var(--ink); unicode-bidi: isolate; direction: ltr; }
+[dir="rtl"] .kl-stat-value { text-align: right; }
+.kl-stat-value small { font-size: 18px; color: var(--ink-muted); }
+.kl-stat-label { font-size: 14px; line-height: 20px; color: var(--ink-muted); max-width: 24ch; }

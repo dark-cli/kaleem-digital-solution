@@ -1,0 +1,270 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Artboard-4fey.dc.html": {
+      "h": 600,
+      "title": "Artboard 2",
+      "w": 800,
+      "x": 2421,
+      "y": 16862
+    },
+    "Artboard-qs5z.dc.html": {
+      "h": 600,
+      "title": "Artboard 1",
+      "w": 800,
+      "x": 4752,
+      "y": 5151
+    },
+    "Deptmaster-desktop.dc.html": {
+      "h": 8000,
+      "title": "Deptmaster — desktop redesign",
+      "w": 1440,
+      "x": 0,
+      "y": 21400
+    },
+    "Deptmaster-mobile.dc.html": {
+      "h": 2860,
+      "title": "Deptmaster — mobile (top of page)",
+      "w": 390,
+      "x": 3040,
+      "y": 21400
+    },
+    "Hero-A-case-file.dc.html": {
+      "h": 900,
+      "title": "Hero A · Case file (Al-Imran)",
+      "w": 1440,
+      "x": 0,
+      "y": 17900
+    },
+    "Hero-About.dc.html": {
+      "h": 820,
+      "title": "About page hero",
+      "w": 1440,
+      "x": 1520,
+      "y": 19260
+    },
+    "Hero-B-before-after.dc.html": {
+      "h": 960,
+      "title": "Hero B · Before / after (Al-Imran)",
+      "w": 1440,
+      "x": 1520,
+      "y": 17900
+    },
+    "Hero-C-big-type.dc.html": {
+      "h": 820,
+      "title": "Hero C · Big type, ruled columns (Al-Imran)",
+      "w": 1440,
+      "x": 3040,
+      "y": 17900
+    },
+    "Hero-Work.dc.html": {
+      "h": 820,
+      "title": "Work page hero",
+      "w": 1440,
+      "x": 0,
+      "y": 19260
+    },
+    "Home-en.dc.html": {
+      "h": 5100,
+      "is_interactive": true,
+      "title": "Home — English (desktop)",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Home-mobile-ar.dc.html": {
+      "h": 6400,
+      "title": "Home — Arabic (mobile)",
+      "w": 390,
+      "x": 3040,
+      "y": 0
+    },
+    "Home-v2-ar.dc.html": {
+      "h": 4700,
+      "is_interactive": true,
+      "title": "Home — Arabic (desktop) · pastel",
+      "w": 1440,
+      "x": 3830,
+      "y": 0
+    },
+    "Home-v2-en.dc.html": {
+      "h": 4900,
+      "is_interactive": true,
+      "title": "Home — English (desktop) · pastel",
+      "w": 1440,
+      "x": 5350,
+      "y": 0
+    },
+    "Home-v2-mobile-ar.dc.html": {
+      "h": 6000,
+      "is_interactive": true,
+      "title": "Home — Arabic (mobile) · pastel",
+      "w": 390,
+      "x": 6870,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 5300,
+      "is_interactive": true,
+      "title": "Home — Arabic (desktop)",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Phone-frame.dc.html": {
+      "h": 1560,
+      "title": "Phone frame — the mobile window",
+      "w": 1440,
+      "x": 1520,
+      "y": 21400
+    },
+    "Services-ar.dc.html": {
+      "h": 5300,
+      "is_interactive": true,
+      "title": "Services — Arabic (desktop)",
+      "w": 1440,
+      "x": 0,
+      "y": 6900
+    },
+    "Services-en.dc.html": {
+      "h": 5100,
+      "is_interactive": true,
+      "title": "Services — English (desktop)",
+      "w": 1440,
+      "x": 1520,
+      "y": 6900
+    },
+    "Services-v2-ar.dc.html": {
+      "h": 5050,
+      "is_interactive": true,
+      "title": "Services — Arabic (desktop) · pastel",
+      "w": 1440,
+      "x": 3830,
+      "y": 6900
+    },
+    "Services-v2-en.dc.html": {
+      "h": 5400,
+      "is_interactive": true,
+      "title": "Services — English (desktop) · pastel",
+      "w": 1440,
+      "x": 5350,
+      "y": 6900
+    },
+    "Services-v3-en.dc.html": {
+      "h": 4510,
+      "is_interactive": true,
+      "title": "Services — English (desktop) · visual proposal",
+      "w": 1440,
+      "x": 0,
+      "y": 12800
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-27T06:26:03.809Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/artifact/KnJRGZN1AvynQfLSGhp2gH",
+      "copiedAt": "2026-09-27T06:30:00Z",
+      "namespace": "kaleem",
+      "title": "Kaleem",
+      "version": "1790487059-f991"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "deptmaster": {
+      "kind": "title1",
+      "maxW": 3430,
+      "text": "Deptmaster case study · redesign",
+      "w": 240,
+      "x": 0,
+      "y": 21100
+    },
+    "heroes": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "Page hero · three concepts",
+      "w": 240,
+      "x": 0,
+      "y": 17600
+    },
+    "heroes-applied": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Work & About heroes",
+      "w": 240,
+      "x": 0,
+      "y": 18960
+    },
+    "home": {
+      "kind": "title1",
+      "maxW": 3430,
+      "text": "Home page · dark",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "home-v2": {
+      "kind": "title1",
+      "maxW": 3430,
+      "text": "Home page · pastel",
+      "w": 240,
+      "x": 3830,
+      "y": -300
+    },
+    "services": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Services page · dark",
+      "w": 240,
+      "x": 0,
+      "y": 6600
+    },
+    "services-v2": {
+      "kind": "title1",
+      "maxW": 2960,
+      "text": "Services page · pastel",
+      "w": 240,
+      "x": 3830,
+      "y": 6600
+    },
+    "services-v3": {
+      "kind": "title1",
+      "maxW": 1440,
+      "text": "Services page · visual proposal",
+      "w": 240,
+      "x": 0,
+      "y": 12500
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Home-en.dc.html",
+    "Home-mobile-ar.dc.html",
+    "Services-ar.dc.html",
+    "Services-en.dc.html",
+    "Home-v2-ar.dc.html",
+    "Home-v2-en.dc.html",
+    "Home-v2-mobile-ar.dc.html",
+    "Services-v2-ar.dc.html",
+    "Services-v2-en.dc.html",
+    "Services-v3-en.dc.html",
+    "Artboard-qs5z.dc.html",
+    "Hero-A-case-file.dc.html",
+    "Hero-B-before-after.dc.html",
+    "Hero-C-big-type.dc.html",
+    "Hero-Work.dc.html",
+    "Hero-About.dc.html",
+    "Artboard-4fey.dc.html",
+    "Deptmaster-desktop.dc.html",
+    "Phone-frame.dc.html",
+    "Deptmaster-mobile.dc.html"
+  ],
+  "pages": [],
+  "title": "Kaleem Website"
+}

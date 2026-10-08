@@ -1,0 +1,23 @@
+<!-- @dsCard group="Actions" height=200 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Button — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var K = window.Kaleem, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div', { className: 'kl-row' },
+      h(K.Button, { tone: 'mint' }, 'Book a free audit'),
+      h(K.Button, { tone: 'paper' }, 'See our work'),
+      h(K.Button, { tone: 'lilac', size: 'sm' }, 'Book a free audit'),
+      h(K.Button, { kind: 'flat', tone: 'paper', size: 'sm' }, 'عربي'),
+      h(K.Button, { kind: 'link', arrow: true }, 'All services'),
+      h(K.Button, { disabled: true }, 'Sending…')),
+    h('div', { className: 'kl-row', dir: 'rtl', lang: 'ar' },
+      h(K.Button, { tone: 'mint' }, 'احجز تقييماً مجانياً'),
+      h(K.Button, { tone: 'paper' }, 'شاهد أعمالنا'),
+      h(K.Button, { kind: 'link', arrow: true }, 'جميع الخدمات'))));
+</script>
+</body>
+</html>

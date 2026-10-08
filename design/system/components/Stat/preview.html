@@ -1,0 +1,21 @@
+<!-- @dsCard group="Content" height=180 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Stat — preview</title></head>
+<body>
+<div id="root"></div>
+<script>
+  var K = window.Kaleem, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div', { className: 'kl-row', style: { gap: '16px 36px' } },
+      h(K.Stat, { value: '97/100', label: 'PageSpeed' }),
+      h(K.Stat, { value: '600', label: 'articles moved' }),
+      h(K.Stat, { value: 'AR + EN', label: 'bilingual' }),
+      h(K.Stat, { value: '230', label: 'automated tests' })),
+    h('div', { className: 'kl-row', dir: 'rtl', lang: 'ar', style: { gap: '16px 36px' } },
+      h(K.Stat, { value: '97/100', label: 'في PageSpeed' }),
+      h(K.Stat, { value: '3 أشهر', label: 'حتى التشغيل' }),
+      h(K.Stat, { value: 'بلا إنترنت', label: 'تطبيق ميداني' }))));
+</script>
+</body>
+</html>
