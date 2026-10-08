@@ -15,6 +15,7 @@
  * header, so at the end of any page header + footer meet as one
  * full-screen sky.
  */
+import KaleemLogo from "./KaleemLogo.astro";
 import { currentLocale, localizedHref, alternateHref } from "../lib/i18n";
 import { CONTACT } from "../consts";
 
@@ -93,9 +94,8 @@ const offices = (isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(" · ");
 
     <!-- 2. Brand + page links -->
     <div class="f-row">
-      <a class="f-brand" href={L("/")}>
-        <svg width="28" height="28" viewBox="0 0 72 72" aria-hidden="true"><path d="M42 12H12V60H60V30" fill="none" stroke="#eceee6" stroke-width="7" stroke-linecap="square"/><rect x="48" y="6" width="18" height="18" fill="#f7e39a"/></svg>
-        <span>{isAr ? "كليم" : "kaleem"}</span>
+      <a class="f-brand" href={L("/")} aria-label={isAr ? "كليم" : "Kaleem"}>
+        <KaleemLogo variant="e" tone="chalk" height={40} label="" />
       </a>
       <nav aria-label={T.navLabel}>
         <ul class="f-links">
@@ -230,12 +230,6 @@ const offices = (isAr ? CONTACT.offices.ar : CONTACT.offices.en).join(" · ");
     align-items: center;
     gap: 10px;
     text-decoration: none;
-  }
-  .f-brand span {
-    font-family: var(--k-font-mono);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--k-butter);
   }
   .f-links {
     list-style: none;

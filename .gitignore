@@ -45,3 +45,7 @@ scripts/ar-staging/Neurosurgeon consultant website design.zip
 # Installed Claude Code skills — local tooling, not project source
 .agents/
 
+
+# Fonts the logo tools download (design/logo/tools/masters.py)
+design/logo/tools/fonts/
+design/logo/tools/__pycache__/

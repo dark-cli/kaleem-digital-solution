@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Logo lockup — two versions</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&amp;family=IBM+Plex+Sans+Arabic:wght@600&amp;display=swap">
+<style>
+body{margin:0;background:#faf6ee;font-family:"IBM Plex Mono",ui-monospace,monospace;color:#2f3e4c}
+</style>
+</helmet>
+<!-- Both lockups sit on the same golden-ratio grid: a 200×200 square for the mark, then a
+     200 × 323.6 (φ) area split into two rows. Only the mark's scale differs:
+     A — the whole mark, yellow square included, fits the square.
+     B — the open frame is the square; the yellow square reaches past it.
+     C / D — the first boxed layout: the mark sits inside the square with room around it,
+     drawn with the grid lines (C) and without them (D).
+     E — A with a 9px line between mark and name (the stem weight of "kaleem" and of the mark's frame); the name is 71.1px / 63.0px
+     (still the same width) to leave room for the line.
+     "kaleem" 76.6px mono and the Arabic (22 × ـ after the ي, 67.9px) are the same width. -->
+<div style="width: 1440px; height: 1500px; box-sizing: border-box; padding: 96px 120px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 120px; background: #faf6ee">
+
+<div style="display: flex; flex-direction: column; gap: 56px">
+<span style="font-size: 14px; letter-spacing: 0.12em; color: #5b6770">A · THE WHOLE MARK FITS THE SQUARE</span>
+<div style="display: flex; width: 524px; height: 200px; margin-top: 30px">
+<div style="width: 200px; height: 200px; flex-shrink: 0">
+<svg width="200" height="200" viewBox="3.5 3 65 65" aria-hidden="true" style="display: block; overflow: visible"><path d="M40 16H6V66H56V38" fill="none" stroke="#2f3e4c" stroke-width="3" stroke-linecap="square"></path><rect x="44" y="3" width="23" height="23" fill="#f8d12f"></rect></svg>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column">
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center; font-size: 76.6px; line-height: 1; font-weight: 600">kaleem</div>
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center">
+<span lang="ar" dir="rtl" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 67.9px; line-height: 1; font-weight: 600; transform: translateY(-7.5px)">كليــــــــــــــــــــــم</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 56px">
+<span style="font-size: 14px; letter-spacing: 0.12em; color: #5b6770">B · THE FRAME IS THE SQUARE</span>
+<div style="display: flex; width: 524px; height: 200px; margin-top: 30px">
+<div style="width: 200px; height: 200px; flex-shrink: 0">
+<svg width="200" height="200" viewBox="4 14 54 54" aria-hidden="true" style="display: block; overflow: visible"><path d="M40 16H6V66H56V38" fill="none" stroke="#2f3e4c" stroke-width="2.6" stroke-linecap="square"></path><rect x="44" y="3" width="23" height="23" fill="#f8d12f"></rect></svg>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column">
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center; font-size: 76.6px; line-height: 1; font-weight: 600">kaleem</div>
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center">
+<span lang="ar" dir="rtl" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 67.9px; line-height: 1; font-weight: 600; transform: translateY(-7.5px)">كليــــــــــــــــــــــم</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 56px">
+<span style="font-size: 14px; letter-spacing: 0.12em; color: #5b6770">C · ORIGINAL BOX, WITH LINES</span>
+<div style="display: flex; width: 524px; height: 200px; margin-top: 30px; border: 2px solid #2f3e4c">
+<div style="width: 200px; height: 196px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-right: 2px solid #2f3e4c">
+<svg width="124" height="124" viewBox="0 0 72 72" aria-hidden="true" style="display: block"><path d="M40 16H6V66H56V38" fill="none" stroke="#2f3e4c" stroke-width="4" stroke-linecap="square"></path><rect x="44" y="3" width="23" height="23" fill="#f8d12f"></rect></svg>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column">
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #2f3e4c; font-size: 76.6px; line-height: 1; font-weight: 600">kaleem</div>
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center">
+<span lang="ar" dir="rtl" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 67.9px; line-height: 1; font-weight: 600; transform: translateY(-7.5px)">كليــــــــــــــــــــــم</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 56px">
+<span style="font-size: 14px; letter-spacing: 0.12em; color: #5b6770">D · ORIGINAL BOX, NO LINES</span>
+<div style="display: flex; width: 524px; height: 200px; margin-top: 30px; border: 2px solid transparent">
+<div style="width: 200px; height: 196px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-right: 2px solid transparent">
+<svg width="124" height="124" viewBox="0 0 72 72" aria-hidden="true" style="display: block"><path d="M40 16H6V66H56V38" fill="none" stroke="#2f3e4c" stroke-width="4" stroke-linecap="square"></path><rect x="44" y="3" width="23" height="23" fill="#f8d12f"></rect></svg>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column">
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid transparent; font-size: 76.6px; line-height: 1; font-weight: 600">kaleem</div>
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center">
+<span lang="ar" dir="rtl" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 67.9px; line-height: 1; font-weight: 600; transform: translateY(-7.5px)">كليــــــــــــــــــــــم</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 56px">
+<span style="font-size: 14px; letter-spacing: 0.12em; color: #5b6770">E · A WITH A LINE BETWEEN MARK AND NAME</span>
+<div style="display: flex; align-items: center; width: 524px; height: 200px; margin-top: 30px">
+<div style="width: 200px; height: 200px; flex-shrink: 0">
+<svg width="200" height="200" viewBox="3.5 3 65 65" aria-hidden="true" style="display: block; overflow: visible"><path d="M40 16H6V66H56V38" fill="none" stroke="#2f3e4c" stroke-width="3" stroke-linecap="square"></path><rect x="44" y="3" width="23" height="23" fill="#f8d12f"></rect></svg>
+</div>
+<div style="width: 9px; height: 184px; flex-shrink: 0; margin: 0 14px 0 17px; background: #2f3e4c"></div>
+<div style="flex-grow: 1; height: 200px; display: flex; flex-direction: column">
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center; font-size: 71.1px; line-height: 1; font-weight: 600">kaleem</div>
+<div style="flex-grow: 1; flex-basis: 0; display: flex; align-items: center; justify-content: center">
+<span lang="ar" dir="rtl" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 63.0px; line-height: 1; font-weight: 600; transform: translateY(-6.9px)">كليــــــــــــــــــــــم</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

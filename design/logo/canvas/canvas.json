@@ -1,0 +1,124 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Construction.dc.html": {
+      "h": 1825,
+      "title": "Mark construction · φ",
+      "w": 1440,
+      "x": 3644,
+      "y": 0
+    },
+    "Logo-C.dc.html": {
+      "h": 200,
+      "title": "C · signature lockup (component)",
+      "w": 524,
+      "x": 1520,
+      "y": 0
+    },
+    "Logo-E.dc.html": {
+      "h": 200,
+      "title": "E · everyday lockup (component)",
+      "w": 524,
+      "x": 1520,
+      "y": 320
+    },
+    "Logo-lockup.dc.html": {
+      "h": 1500,
+      "title": "Logo lockup · A–E (study)",
+      "w": 1440,
+      "x": 2124,
+      "y": 0
+    },
+    "Logo-mark.dc.html": {
+      "h": 200,
+      "title": "Mark (component)",
+      "w": 200,
+      "x": 1520,
+      "y": 640
+    },
+    "Main.dc.html": {
+      "h": 1135,
+      "title": "Logo standard v2 · 1 · the mark",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Std-02-lockups.dc.html": {
+      "h": 869,
+      "title": "Logo standard v2 · 2 · lockups",
+      "w": 1440,
+      "x": 0,
+      "y": 1255
+    },
+    "Std-03-colour.dc.html": {
+      "h": 866,
+      "title": "Logo standard v2 · 3 · colour",
+      "w": 1440,
+      "x": 0,
+      "y": 2244
+    },
+    "Std-04-space.dc.html": {
+      "h": 784,
+      "title": "Logo standard v2 · 4 · space and size",
+      "w": 1440,
+      "x": 0,
+      "y": 3230
+    },
+    "Std-05-never.dc.html": {
+      "h": 711,
+      "title": "Logo standard v2 · 5 · never",
+      "w": 1440,
+      "x": 0,
+      "y": 4134
+    },
+    "Std-06-in-use.dc.html": {
+      "h": 1408,
+      "title": "Logo standard v2 · 6 · in use",
+      "w": 1440,
+      "x": 0,
+      "y": 4965
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-08T01:40:00Z",
+    "v": 1
+  },
+  "designSystems": [
+    {
+      "artifact": "https://claude.ai/artifact/KnJRGZN1AvynQfLSGhp2gH",
+      "copiedAt": "2026-10-08T01:40:00Z",
+      "namespace": "kaleem",
+      "title": "Kaleem",
+      "version": "1791421663-a41d"
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "logo": {
+      "kind": "title1",
+      "maxW": 5084,
+      "text": "Kaleem logo · standard, components and studies",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Std-02-lockups.dc.html",
+    "Std-03-colour.dc.html",
+    "Std-04-space.dc.html",
+    "Std-05-never.dc.html",
+    "Std-06-in-use.dc.html",
+    "Logo-C.dc.html",
+    "Logo-E.dc.html",
+    "Logo-mark.dc.html",
+    "Logo-lockup.dc.html",
+    "Construction.dc.html"
+  ],
+  "pages": [],
+  "title": "Kaleem Logo"
+}

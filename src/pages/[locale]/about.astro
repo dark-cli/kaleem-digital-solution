@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import LogoLockup from "../../components/LogoLockup.astro";
+import KaleemLogo from "../../components/KaleemLogo.astro";
 import { currentLocale } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -93,7 +93,7 @@ const values = [
         <p>{T.lede}</p>
       </div>
       <div class="ab-card sk">
-        <LogoLockup class="ab-lockup" />
+        <KaleemLogo variant="c" class="ab-lockup" />
         <p class="ab-meaning">{T.meaning}</p>
         <dl class="ab-facts">
           <div><dt>{T.officesLabel}</dt><dd>{T.offices}</dd></div>
@@ -173,7 +173,7 @@ const values = [
     min-width: 0;
   }
   /* The lockup scales as one piece: fill the card, up to its full size. */
-  .ab-card :global(.ab-lockup) { width: 100%; max-width: 396px; }
+  .ab-card :global(.ab-lockup) { width: 100%; max-width: 396px; height: auto; }
   .ab-meaning { margin: 0; font-size: 17px; line-height: 1.6; }
   .ab-facts {
     margin: 0;

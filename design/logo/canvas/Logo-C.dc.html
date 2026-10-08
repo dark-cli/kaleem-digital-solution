@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kaleem logo · signature lockup (C)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&amp;family=IBM+Plex+Sans+Arabic:wght@600&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<svg width="{{w}}" height="{{h}}" viewBox="0 0 524 200" role="img" aria-label="Kaleem — كليم" style="display: block; color: {{ink}}">
+<rect x="1" y="1" width="522" height="198" fill="none" stroke="{{ink}}" stroke-width="2"></rect>
+<rect x="202" y="2" width="2" height="196" fill="{{ink}}"></rect>
+<rect x="204" y="99" width="318" height="2" fill="{{ink}}"></rect>
+<svg x="40" y="38" width="124" height="124" viewBox="0 0 110 110"><path d="M0 21H55V34H13V97H76V55H89V110H0Z" fill="{{ink}}"></path><rect x="76" y="0" width="34" height="34" fill="{{block}}"></rect></svg>
+<text x="363" y="79.2" text-anchor="middle" textLength="275.75" lengthAdjust="spacingAndGlyphs" font-family="IBM Plex Mono, ui-monospace, monospace" font-weight="600" font-size="76.6" fill="{{ink}}">kaleem</text>
+<text x="363" y="164.05" text-anchor="middle" textLength="275.78" lengthAdjust="spacingAndGlyphs" font-family="IBM Plex Sans Arabic, sans-serif" font-weight="600" font-size="67.9" fill="{{ink}}" lang="ar" direction="rtl">كليــــــــــــــــــــــم</text>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scale":{"editor":"float","default":1,"min":0.1,"max":2,"step":0.01},"ink":{"editor":"color","default":"#1f1f1f","options":["#1f1f1f","#eceee6"]},"block":{"editor":"color","default":"#f8d12f","options":["#f8d12f","#1f1f1f","#eceee6"]},"$preview":{"width":524,"height":200}}'>
+class Component extends DCLogic {
+renderVals() {
+const s = parseFloat(this.props.scale ?? 1) || 1;
+return { w: 524 * s, h: 200 * s, ink: this.props.ink ?? '#1f1f1f', block: this.props.block ?? '#f8d12f' };
+}
+}
+</script>
+</body>
+</html>
