@@ -76,13 +76,13 @@
      "type": "image/svg+xml"
     },
     "kaleem-lockup-e-ar.svg": {
-     "blob": "ad780c094f67d6f498c5c03338de84ba",
+     "blob": "60332ac583630d93b7f8fc3e24a0a01e",
      "name": "kaleem-lockup-e-ar.svg",
      "size": 5830,
      "type": "image/svg+xml"
     },
     "kaleem-lockup-e-ar-chalk.svg": {
-     "blob": "4af5ea514daf226fc1c33ffe6ea97f19",
+     "blob": "19af33657c8e1244a5d69097cef75883",
      "name": "kaleem-lockup-e-ar-chalk.svg",
      "size": 5830,
      "type": "image/svg+xml"
@@ -165,9 +165,9 @@
  ],
  "lastChange": {
   "by": "Claude",
-  "at": "2026-10-08T16:40:00Z",
+  "at": "2026-10-08T17:10:00Z",
   "via": "Claude Code",
-  "note": "Logo: Arabic versions of lockups E and C (mark on the right, «كليم» on top); names fitted by ink"
+  "note": "Logo: Arabic lockup E is 309 x 110 so the box stays one door (34) from the rule, as in English"
  },
  "layout": "files",
  "libraries": [
