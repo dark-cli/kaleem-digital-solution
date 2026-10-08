@@ -5,8 +5,8 @@
  * The Kaleem logo, drawn from the logo standard (design/logo/).
  *
  *   variant="mark"  the Open Box alone (square, 110 x 110 grid)
- *   variant="e"     everyday lockup: mark | kaleem / كليم  (2.62 : 1)
- *   variant="c"     signature lockup with guide lines      (2.62 : 1)
+ *   variant="e"     everyday lockup: mark | kaleem / كليم  (288 x 110, φ² : 1)
+ *   variant="c"     signature lockup with guide lines      (523.6 x 200, φ² : 1)
  *
  * The names are outlined, so the logo never depends on a font loading.
  * Set its size with `height` (px) or with CSS on the class you pass;
@@ -14,7 +14,7 @@
  */
 import {
   LOGO_INK, LOGO_CHALK, LOGO_YELLOW, MARK_BOX, MARK_BLOCK,
-  E_EN, E_AR, C_EN, C_AR,
+  E_LOCKUP, C_LOCKUP, E_EN, E_AR, C_EN, C_AR,
 } from "../data/logo";
 
 interface Props {
@@ -32,9 +32,11 @@ interface Props {
 const { variant = "e", tone = "ink", mono = false, height, class: className, label = "Kaleem — كليم" } = Astro.props;
 const ink = tone === "chalk" ? LOGO_CHALK : LOGO_INK;
 const block = mono ? ink : LOGO_YELLOW;
-const isMark = variant === "mark";
-const viewBox = isMark ? "0 0 110 110" : "0 0 524 200";
-const width = height ? Math.round(height * (isMark ? 1 : 524 / 200) * 10) / 10 : undefined;
+const box = variant === "e" ? E_LOCKUP : variant === "c" ? C_LOCKUP : { width: 110, height: 110 };
+const viewBox = `0 0 ${box.width} ${box.height}`;
+const width = height ? Math.round((height * box.width) / box.height * 10) / 10 : undefined;
+const { rule } = E_LOCKUP;
+const { frame, divider, row, mark } = C_LOCKUP;
 const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": "true" };
 ---
 
@@ -46,7 +48,7 @@ const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": "tr
   direction="ltr"
   {...a11y}
 >
-  {isMark && (
+  {variant === "mark" && (
     <>
       <path d={MARK_BOX} fill={ink} />
       <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
@@ -54,21 +56,19 @@ const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": "tr
   )}
   {variant === "e" && (
     <>
-      <g transform="scale(1.81818)">
-        <path d={MARK_BOX} fill={ink} />
-        <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
-      </g>
-      <rect x="217" y="8" width="9" height="184" fill={ink} />
+      <path d={MARK_BOX} fill={ink} />
+      <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
+      <rect x={rule.x} y={rule.y} width={rule.width} height={rule.height} fill={ink} />
       <path d={E_EN} fill={ink} />
       <path d={E_AR} fill={ink} />
     </>
   )}
   {variant === "c" && (
     <>
-      <rect x="1" y="1" width="522" height="198" fill="none" stroke={ink} stroke-width="2" />
-      <rect x="202" y="2" width="2" height="196" fill={ink} />
-      <rect x="204" y="99" width="318" height="2" fill={ink} />
-      <g transform="translate(40 38) scale(1.12727)">
+      <rect x={frame.x} y={frame.y} width={frame.width} height={frame.height} fill="none" stroke={ink} stroke-width={C_LOCKUP.line} />
+      <rect x={divider.x} y={divider.y} width={divider.width} height={divider.height} fill={ink} />
+      <rect x={row.x} y={row.y} width={row.width} height={row.height} fill={ink} />
+      <g transform={`translate(${mark.x} ${mark.y}) scale(${mark.scale})`}>
         <path d={MARK_BOX} fill={ink} />
         <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
       </g>
