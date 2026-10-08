@@ -44,6 +44,36 @@
      "name": "kaleem-avatar.svg",
      "size": 309,
      "type": "image/svg+xml"
+    },
+    "kaleem-lockup-e.svg": {
+     "blob": "1230a3cd60731a88f33abae852b81001",
+     "name": "kaleem-lockup-e.svg",
+     "size": 6147,
+     "type": "image/svg+xml"
+    },
+    "kaleem-lockup-e-chalk.svg": {
+     "blob": "2db3bbdd2570b9ad9c8e076b86224cfd",
+     "name": "kaleem-lockup-e-chalk.svg",
+     "size": 6147,
+     "type": "image/svg+xml"
+    },
+    "kaleem-lockup-c.svg": {
+     "blob": "c674930b09587bca861d01c40ea97cb6",
+     "name": "kaleem-lockup-c.svg",
+     "size": 6669,
+     "type": "image/svg+xml"
+    },
+    "kaleem-lockup-c-chalk.svg": {
+     "blob": "dcf13a95a295fc4abe6ff9a7d8246aac",
+     "name": "kaleem-lockup-c-chalk.svg",
+     "size": 6669,
+     "type": "image/svg+xml"
+    },
+    "favicon.svg": {
+     "blob": "768fb642e7bdb19e3a485b118276e1eb",
+     "name": "favicon.svg",
+     "size": 317,
+     "type": "image/svg+xml"
     }
    },
    "name": "Logos",
@@ -52,6 +82,11 @@
     "kaleem-mark-chalk.svg",
     "kaleem-mark-one-colour-ink.svg",
     "kaleem-mark-one-colour-chalk.svg",
+    "kaleem-lockup-e.svg",
+    "kaleem-lockup-e-chalk.svg",
+    "kaleem-lockup-c.svg",
+    "kaleem-lockup-c-chalk.svg",
+    "favicon.svg",
     "kaleem-app-icon.svg",
     "kaleem-app-icon-white.svg",
     "kaleem-avatar.svg"
@@ -102,9 +137,9 @@
  ],
  "lastChange": {
   "by": "Claude",
-  "at": "2026-10-08T14:08:30Z",
+  "at": "2026-10-08T16:00:00Z",
   "via": "Claude Code",
-  "note": "New logo (φ mark, logo yellow #f8d12f): Logo component, token, guidelines and logo files"
+  "note": "Logo: lockups E (288 x 110) and C (golden grid) and the sky favicon added; Logo guidelines updated"
  },
  "layout": "files",
  "libraries": [
