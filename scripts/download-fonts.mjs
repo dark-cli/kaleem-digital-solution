@@ -19,13 +19,14 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT_DIR   = path.resolve(__dirname, "../public/fonts");
 
-// One Google Fonts family2 request per family. Weight lists must match what
-// src/styles/global.css actually declares — extras just bloat the payload.
+// One Google Fonts family2 request per family: every weight the site's CSS
+// uses (400–700). A browser only downloads a file when a page uses it, so an
+// unused weight costs nothing but repo space.
 const FAMILIES = [
-  { name: "Newsreader",           spec: "Newsreader:opsz,wght@6..72,400;6..72,500",  subsets: ["latin", "latin-ext"] },
-  { name: "IBM Plex Sans",        spec: "IBM+Plex+Sans:wght@400;500;600",             subsets: ["latin", "latin-ext"] },
-  { name: "IBM Plex Mono",        spec: "IBM+Plex+Mono:wght@400;500",                 subsets: ["latin", "latin-ext"] },
-  { name: "IBM Plex Sans Arabic", spec: "IBM+Plex+Sans+Arabic:wght@400;500;600",      subsets: ["arabic"] },
+  { name: "Newsreader",           spec: "Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700", subsets: ["latin", "latin-ext"] },
+  { name: "IBM Plex Sans",        spec: "IBM+Plex+Sans:wght@400;500;600;700",         subsets: ["latin", "latin-ext"] },
+  { name: "IBM Plex Mono",        spec: "IBM+Plex+Mono:wght@400;500;600;700",         subsets: ["latin", "latin-ext"] },
+  { name: "IBM Plex Sans Arabic", spec: "IBM+Plex+Sans+Arabic:wght@400;500;600;700",  subsets: ["arabic"] },
   { name: "Amiri",                spec: "Amiri:wght@400;700",                          subsets: ["arabic"] },
 ];
 
