@@ -43,6 +43,15 @@ weighed; E2, C2 and the sky favicon were chosen in October 2026.
 | Spacing | 13 either side of the rule (the wall) | one padding, 38.2, around mark and names |
 | Names | fill the 147 left; "kaleem" on line 55, «كليم» on line 97 | 247.2 wide, each centred in its row |
 
+Both names are fitted by their ink (the visible letters), so they fill the
+name area exactly.
+
+**Arabic versions.** Each lockup has an Arabic version for Arabic pages and
+Arabic documents: the mirror layout, with the mark on the right and «كليم» on
+top. In E the two names swap rows inside the same text block; in C the square
+moves to the right. The mark itself is never mirrored. On the site,
+`KaleemLogo` picks the version from the page's language.
+
 ## Favicon
 
 The app-icon tile in **sky** `#c6ddf0`, the website's pastel, with the ink mark:
@@ -62,12 +71,13 @@ the platform rounds or crops the corners itself (`favicon-192.png`,
 | `kaleem-lockup-e.svg`, `kaleem-lockup-e-chalk.svg` | Everyday lockup: site header and footer, cards, social, invoices. Min. 40px / 11 mm tall |
 | `kaleem-lockup-e-one-colour-ink.svg` | Everyday lockup in one ink |
 | `kaleem-lockup-c.svg`, `-chalk.svg`, `-one-colour-ink.svg` | Signature lockup with guide lines: About page, proposals, signage, stickers. Min. 96px / 25 mm tall |
+| `kaleem-lockup-e-ar*.svg`, `kaleem-lockup-c-ar*.svg` | The Arabic versions of both lockups (same three colourings): mark on the right, «كليم» on top |
 | `kaleem-app-icon-sky.svg` (+ `-512.png`, `-192.png`) | App icon in sky, the favicon's tile: mark at 65%, centred on grid point (50, 60) |
 | `kaleem-app-icon.svg` (+ `-512.png`, `-192.png`), `kaleem-app-icon-white.svg` | App icon on the night sky, or on white |
 | `kaleem-icon-square-sky.svg`, `kaleem-icon-square.svg` | Unrounded tiles, for platforms that round corners themselves |
 | `kaleem-avatar.svg`, `kaleem-avatar-sky.svg` (+ `-400.png`) | Social avatar, for round crops |
 | `favicon.svg` | Browser favicon: the sky tile |
-| `kaleem-lockup-e-1048.png`, `kaleem-lockup-c-1048.png` (+ `-chalk-`) | 1048 × 400 PNGs of the lockups for documents and slides |
+| `kaleem-lockup-{e,c}[-ar]-1048.png` (+ `-chalk-`) | 1048 × 400 PNGs of the lockups, English and Arabic, for documents and slides |
 
 Colours: logo yellow `#f8d12f` (the block only), ink `#1f1f1f` (on light),
 chalk `#eceee6` (on the night sky `#1d2320`). Clear space on every side: the
@@ -77,11 +87,12 @@ side of the yellow block.
 
 - `src/components/KaleemLogo.astro` draws the mark and both lockups from
   `src/data/logo.ts`, which `tools/masters.py` generates. Header and footer use
-  lockup E in chalk; the About page uses lockup C.
+  lockup E in chalk; the About page uses lockup C. English pages get the
+  English version, Arabic pages the Arabic one (or pass `lang`).
 - `public/favicon.svg`, `favicon.ico` (16, 32, 48), `favicon-32.png`,
   `favicon-192.png` and `apple-touch-icon.png` (180): the sky tile, from the masters.
 - `public/assets/logo/` holds copies of the SVG masters for linking.
-- `public/assets/og-default.png` is the social share image (1200 × 630).
+- `public/assets/og-default.png` and `og-default-ar.png` are the social share images (1200 × 630), English and Arabic.
 
 ## Changing the logo
 
@@ -90,12 +101,12 @@ side of the yellow block.
    (`pip install fonttools uharfbuzz brotli`, then `python3 design/logo/tools/masters.py`).
    It downloads the two fonts into `tools/fonts/` (ignored by git), outlines the
    names, and rewrites `masters/*.svg`, `src/data/logo.ts` and the canvas
-   components `canvas/Logo-E.dc.html` and `canvas/Logo-C.dc.html`.
+   components `canvas/Logo-E`, `Logo-C`, `Logo-E-ar` and `Logo-C-ar`.
 3. Run `node design/logo/tools/exports.mjs` (needs Playwright with Chromium). It
    renders the PNGs and `favicon.ico`, and copies the favicon set,
-   `public/assets/logo/` and `og-default.png` into `public/`.
+   `public/assets/logo/` and the share images into `public/`.
 4. Rebuild the static page: `python3 design/logo/tools/build_static.py design/logo/canvas design/logo/standard.html`
 5. Copy the changed canvas components back to the Kaleem Logo canvas.
 
 The names are IBM Plex Mono 600 and IBM Plex Sans Arabic 600, outlined, with
-«كليم» stretched with 22 kashidas to the width of "kaleem".
+«كليم» stretched with 21 kashidas to the width of "kaleem", both fitted by ink.

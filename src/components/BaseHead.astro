@@ -19,7 +19,7 @@ interface Props {
 const locale = currentLocale(Astro);
 const {
   title = SITE_TITLE,
-  image = "/assets/og-default.png",
+  image = locale === "ar" ? "/assets/og-default-ar.png" : "/assets/og-default.png",
   noindex = false,
   fontAwesome = false,
   heroPreload,

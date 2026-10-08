@@ -9,7 +9,7 @@
 //   public/favicon.svg, favicon.ico (16, 32, 48), favicon-32.png,
 //   favicon-192.png, apple-touch-icon.png (180)   the sky tile
 //   public/assets/logo/*.svg             copies of the SVG masters, for linking
-//   public/assets/og-default.png         the social share image (1200 x 630)
+//   public/assets/og-default(-ar).png    the social share images (1200 x 630)
 import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -53,6 +53,10 @@ for (const [svg, out, w, h] of [
   ['kaleem-lockup-e-chalk.svg', 'kaleem-lockup-e-chalk-1048.png', 1048, 400],
   ['kaleem-lockup-c.svg', 'kaleem-lockup-c-1048.png', 1048, 400],
   ['kaleem-lockup-c-chalk.svg', 'kaleem-lockup-c-chalk-1048.png', 1048, 400],
+  ['kaleem-lockup-e-ar.svg', 'kaleem-lockup-e-ar-1048.png', 1048, 400],
+  ['kaleem-lockup-e-ar-chalk.svg', 'kaleem-lockup-e-ar-chalk-1048.png', 1048, 400],
+  ['kaleem-lockup-c-ar.svg', 'kaleem-lockup-c-ar-1048.png', 1048, 400],
+  ['kaleem-lockup-c-ar-chalk.svg', 'kaleem-lockup-c-ar-chalk-1048.png', 1048, 400],
 ]) await png(svg, join(MASTERS, out), w, h ?? w);
 
 // Favicon set: the rounded sky tile for tabs, the square one where the
@@ -73,19 +77,28 @@ for (const f of readdirSync(MASTERS)) {
   if (f.endsWith('.svg') && f !== 'favicon.svg') copyFileSync(join(MASTERS, f), join(logoDir, f));
 }
 
-// Social share image: lockup E in chalk on the night sky.
-const lockup = pathToFileURL(join(MASTERS, 'kaleem-lockup-e-chalk.svg')).href;
-await shot(`<!doctype html><html><head><meta charset="utf-8">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,700&family=IBM+Plex+Mono:wght@500&display=swap">
-<style>body{margin:0}.og{width:1200px;height:630px;box-sizing:border-box;padding:96px 96px 0;background:#1d2320;color:#eceee6;display:flex;flex-direction:column;gap:44px}
-h1{margin:0;font-family:Newsreader,Georgia,serif;font-weight:700;font-size:62px;line-height:1.12;letter-spacing:-0.5px;max-width:980px}
-.url{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:28px;color:#c6ddf0}</style></head><body>
-<div class="og"><img src="${lockup}" width="314" height="120" alt="">
-<h1>We free your data, modernize your systems, and hand you the keys.</h1><div class="url">kaleem.dev</div></div></body></html>`,
-  join(PUBLIC, 'assets/og-default.png'), 1200, 630, false);
+// Social share images: lockup E in chalk on the night sky, one per language,
+// set in the site's own font files.
+const font = (f) => pathToFileURL(join(PUBLIC, 'fonts', f)).href;
+const ogFonts = `@font-face{font-family:Newsreader;font-weight:100 900;src:url(${font('newsreader-latin-400.woff2')})}
+@font-face{font-family:Amiri;font-weight:700;src:url(${font('amiri-arabic-700.woff2')})}
+@font-face{font-family:'IBM Plex Mono';font-weight:500;src:url(${font('ibm-plex-mono-latin-500.woff2')})}`;
+for (const [lang, lockupFile, headline, out] of [
+  ['en', 'kaleem-lockup-e-chalk.svg', 'We free your data, modernize your systems, and hand you the keys.', 'og-default.png'],
+  ['ar', 'kaleem-lockup-e-ar-chalk.svg', 'نحرّر بياناتك، ونحدّث أنظمتك، ونسلّمك المفاتيح.', 'og-default-ar.png'],
+]) {
+  const ar = lang === 'ar';
+  await shot(`<!doctype html><html lang="${lang}" dir="${ar ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><style>${ogFonts}
+body{margin:0}.og{width:1200px;height:630px;box-sizing:border-box;padding:96px 96px 0;background:#1d2320;color:#eceee6;display:flex;flex-direction:column;align-items:flex-start;gap:44px}
+h1{margin:0;font-family:${ar ? 'Amiri,serif' : 'Newsreader,Georgia,serif'};font-weight:700;font-size:${ar ? 66 : 62}px;line-height:${ar ? 1.5 : 1.12};letter-spacing:${ar ? 0 : '-0.5px'};max-width:980px}
+.url{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:28px;color:#c6ddf0;direction:ltr}</style></head><body>
+<div class="og"><img src="${pathToFileURL(join(MASTERS, lockupFile)).href}" width="314" height="120" alt="">
+<h1>${headline}</h1><div class="url">kaleem.dev</div></div></body></html>`,
+    join(PUBLIC, 'assets', out), 1200, 630, false);
+}
 
 await browser.close();
-console.log('masters/*.png, public favicon set, public/assets/logo, og-default.png');
+console.log('masters/*.png, public favicon set, public/assets/logo, og-default.png, og-default-ar.png');
 
 // An ICO file whose images are PNGs (supported by every current browser).
 function ico(sizes, images) {

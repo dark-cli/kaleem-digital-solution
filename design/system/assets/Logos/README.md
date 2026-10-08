@@ -7,6 +7,7 @@ The mark from the logo standard (repo: `design/logo/`): a box open at its top-ri
 - `kaleem-mark-one-colour-ink.svg` / `-chalk.svg` — single-ink print: stamps, engraving.
 - `kaleem-lockup-e.svg` / `-chalk.svg` — lockup E, everyday: 288 × 110, mark | rule | kaleem / كليم.
 - `kaleem-lockup-c.svg` / `-chalk.svg` — lockup C, signature: 523.6 × 200 golden grid with guide lines.
+- `kaleem-lockup-e-ar.svg` / `kaleem-lockup-c-ar.svg` (+ `-chalk`) — the Arabic versions, for Arabic pages: mark on the right, «كليم» on top.
 - `favicon.svg` — the favicon: the app-icon tile in `sky` (#c6ddf0), ink mark.
 - `kaleem-app-icon.svg` — app icon: night-sky tile, mark at 65%, centred on the grid point (50, 60).
 - `kaleem-app-icon-white.svg` — the app icon on white.

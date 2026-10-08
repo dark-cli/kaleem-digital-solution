@@ -8,14 +8,20 @@
  *   variant="e"     everyday lockup: mark | kaleem / كليم  (288 x 110, φ² : 1)
  *   variant="c"     signature lockup with guide lines      (523.6 x 200, φ² : 1)
  *
+ * Each lockup has an English and an Arabic version, picked by `lang` (the
+ * page's language by default): English has the mark on the left and
+ * "kaleem" on top; Arabic is the mirror layout, mark on the right and «كليم»
+ * on top. The mark itself is never mirrored.
+ *
  * The names are outlined, so the logo never depends on a font loading.
  * Set its size with `height` (px) or with CSS on the class you pass;
- * width follows the ratio. Always left-to-right, on Arabic pages too.
+ * width follows the ratio.
  */
 import {
   LOGO_INK, LOGO_CHALK, LOGO_YELLOW, MARK_BOX, MARK_BLOCK,
   E_LOCKUP, C_LOCKUP, E_EN, E_AR, C_EN, C_AR,
 } from "../data/logo";
+import { currentLocale } from "../lib/i18n";
 
 interface Props {
   variant?: "mark" | "e" | "c";
@@ -23,20 +29,25 @@ interface Props {
   tone?: "ink" | "chalk";
   /** One-colour version: the block takes the ink colour too. */
   mono?: boolean;
+  /** Which version: "en" or "ar". Defaults to the page's language. */
+  lang?: "en" | "ar";
   height?: number;
   class?: string;
   /** Accessible name; pass "" when a parent link already names it. */
   label?: string;
 }
 
-const { variant = "e", tone = "ink", mono = false, height, class: className, label = "Kaleem — كليم" } = Astro.props;
+const { variant = "e", tone = "ink", mono = false, lang = currentLocale(Astro), height, class: className, label = "Kaleem — كليم" } = Astro.props;
 const ink = tone === "chalk" ? LOGO_CHALK : LOGO_INK;
 const block = mono ? ink : LOGO_YELLOW;
 const box = variant === "e" ? E_LOCKUP : variant === "c" ? C_LOCKUP : { width: 110, height: 110 };
 const viewBox = `0 0 ${box.width} ${box.height}`;
 const width = height ? Math.round((height * box.width) / box.height * 10) / 10 : undefined;
-const { rule } = E_LOCKUP;
-const { frame, divider, row, mark } = C_LOCKUP;
+const dir = lang === "ar" ? "rtl" : "ltr";
+const e = E_LOCKUP[dir];
+const c = C_LOCKUP[dir];
+const { frame } = C_LOCKUP;
+const at = (p: { x: number; y: number }) => `translate(${p.x} ${p.y})`;
 const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": "true" };
 ---
 
@@ -56,24 +67,26 @@ const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": "tr
   )}
   {variant === "e" && (
     <>
-      <path d={MARK_BOX} fill={ink} />
-      <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
-      <rect x={rule.x} y={rule.y} width={rule.width} height={rule.height} fill={ink} />
-      <path d={E_EN} fill={ink} />
-      <path d={E_AR} fill={ink} />
+      <g transform={at(e.mark)}>
+        <path d={MARK_BOX} fill={ink} />
+        <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
+      </g>
+      <rect x={e.rule.x} y={e.rule.y} width={e.rule.width} height={e.rule.height} fill={ink} />
+      <path transform={at(e.en)} d={E_EN} fill={ink} />
+      <path transform={at(e.ar)} d={E_AR} fill={ink} />
     </>
   )}
   {variant === "c" && (
     <>
       <rect x={frame.x} y={frame.y} width={frame.width} height={frame.height} fill="none" stroke={ink} stroke-width={C_LOCKUP.line} />
-      <rect x={divider.x} y={divider.y} width={divider.width} height={divider.height} fill={ink} />
-      <rect x={row.x} y={row.y} width={row.width} height={row.height} fill={ink} />
-      <g transform={`translate(${mark.x} ${mark.y}) scale(${mark.scale})`}>
+      <rect x={c.divider.x} y={c.divider.y} width={c.divider.width} height={c.divider.height} fill={ink} />
+      <rect x={c.row.x} y={c.row.y} width={c.row.width} height={c.row.height} fill={ink} />
+      <g transform={`${at(c.mark)} scale(${C_LOCKUP.mark_scale})`}>
         <path d={MARK_BOX} fill={ink} />
         <rect x={MARK_BLOCK.x} y={MARK_BLOCK.y} width={MARK_BLOCK.size} height={MARK_BLOCK.size} fill={block} />
       </g>
-      <path d={C_EN} fill={ink} />
-      <path d={C_AR} fill={ink} />
+      <path transform={at(c.en)} d={C_EN} fill={ink} />
+      <path transform={at(c.ar)} d={C_AR} fill={ink} />
     </>
   )}
 </svg>
