@@ -4,8 +4,9 @@
  * (design/logo/). Do not edit by hand; change the standard and regenerate.
  *
  * The mark sits on a 110-unit grid (frame 89, door and block 34, step 21,
- * wall 13). Lockup E is 288 x 110 on that same grid; lockup C is
- * 523.6 x 200 on a golden grid. Both are 2.618 : 1. The names are outlined
+ * wall 13). Lockup E is 288 x 110 on that same grid (309 x 110 in Arabic,
+ * so the box stays one door, 34, from the rule); lockup C is
+ * 523.6 x 200 on a golden grid. The names are outlined
  * IBM Plex Mono 600 and IBM Plex Sans Arabic 600, fitted to equal ink
  * widths and drawn at the origin (ink left edge x 0, baseline y 0); each
  * layout places them with `en` and `ar`.
@@ -24,7 +25,7 @@ export const MARK_BOX = "M0 21H55V34H13V97H76V55H89V110H0Z";
 export const MARK_BLOCK = { x: 76, y: 0, size: 34 } as const;
 
 /** Lockup E: the mark at 1:1, the rule, the names. */
-export const E_LOCKUP = { width: 288, height: 110, ltr: { mark: { x: 0, y: 0 }, rule: { x: 123, y: 21, width: 5, height: 89 }, en: { x: 141, y: 55 }, ar: { x: 141, y: 97 } }, rtl: { mark: { x: 178, y: 0 }, rule: { x: 160, y: 21, width: 5, height: 89 }, ar: { x: 0, y: 51.89 }, en: { x: 0, y: 107.892 } } } as const;
+export const E_LOCKUP = { height: 110, ltr: { width: 288, mark: { x: 0, y: 0 }, rule: { x: 123, y: 21, width: 5, height: 89 }, en: { x: 141, y: 55 }, ar: { x: 141, y: 97 } }, rtl: { width: 309, mark: { x: 199, y: 0 }, rule: { x: 160, y: 21, width: 5, height: 89 }, ar: { x: 0, y: 51.89 }, en: { x: 0, y: 107.892 } } } as const;
 /** Lockup C: frame, divider and row line (all one weight); the mark at `mark`, scaled by `mark_scale`. */
 export const C_LOCKUP = { width: 523.607, height: 200, line: 2.131, mark_scale: 1.1237, frame: { x: 1.066, y: 1.066, width: 521.476, height: 197.869 }, ltr: { mark: { x: 38.197, y: 38.197 }, divider: { x: 198.934, y: 0, width: 2.131, height: 200 }, row: { x: 200, y: 98.934, width: 323.607, height: 2.131 }, en: { x: 238.197, y: 75.821 }, ar: { x: 238.197, y: 164.047 } }, rtl: { mark: { x: 361.803, y: 38.197 }, divider: { x: 322.541, y: 0, width: 2.131, height: 200 }, row: { x: 0, y: 98.934, width: 323.607, height: 2.131 }, ar: { x: 38.197, y: 64.047 }, en: { x: 38.197, y: 175.821 } } } as const;
 

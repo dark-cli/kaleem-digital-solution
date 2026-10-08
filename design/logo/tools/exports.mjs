@@ -41,7 +41,7 @@ const png = (svg, out, w, h = w) => shot(
   `<html><body style="margin:0;background:transparent"><img src="${pathToFileURL(join(MASTERS, svg)).href}" style="display:block;width:${w}px;height:${h}px"></body></html>`,
   out, w, h);
 
-// Master PNGs. The lockups are 2.618 : 1, so 1048 x 400.
+// Master PNGs, 400 tall: the lockups are 1048 wide (the Arabic E, 309 x 110, 1124).
 for (const [svg, out, w, h] of [
   ['kaleem-app-icon-sky.svg', 'kaleem-app-icon-sky-512.png', 512],
   ['kaleem-app-icon-sky.svg', 'kaleem-app-icon-sky-192.png', 192],
@@ -53,8 +53,8 @@ for (const [svg, out, w, h] of [
   ['kaleem-lockup-e-chalk.svg', 'kaleem-lockup-e-chalk-1048.png', 1048, 400],
   ['kaleem-lockup-c.svg', 'kaleem-lockup-c-1048.png', 1048, 400],
   ['kaleem-lockup-c-chalk.svg', 'kaleem-lockup-c-chalk-1048.png', 1048, 400],
-  ['kaleem-lockup-e-ar.svg', 'kaleem-lockup-e-ar-1048.png', 1048, 400],
-  ['kaleem-lockup-e-ar-chalk.svg', 'kaleem-lockup-e-ar-chalk-1048.png', 1048, 400],
+  ['kaleem-lockup-e-ar.svg', 'kaleem-lockup-e-ar-1124.png', 1124, 400],
+  ['kaleem-lockup-e-ar-chalk.svg', 'kaleem-lockup-e-ar-chalk-1124.png', 1124, 400],
   ['kaleem-lockup-c-ar.svg', 'kaleem-lockup-c-ar-1048.png', 1048, 400],
   ['kaleem-lockup-c-ar-chalk.svg', 'kaleem-lockup-c-ar-chalk-1048.png', 1048, 400],
 ]) await png(svg, join(MASTERS, out), w, h ?? w);
@@ -92,7 +92,7 @@ for (const [lang, lockupFile, headline, out] of [
 body{margin:0}.og{width:1200px;height:630px;box-sizing:border-box;padding:96px 96px 0;background:#1d2320;color:#eceee6;display:flex;flex-direction:column;align-items:flex-start;gap:44px}
 h1{margin:0;font-family:${ar ? 'Amiri,serif' : 'Newsreader,Georgia,serif'};font-weight:700;font-size:${ar ? 66 : 62}px;line-height:${ar ? 1.5 : 1.12};letter-spacing:${ar ? 0 : '-0.5px'};max-width:980px}
 .url{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:28px;color:#c6ddf0;direction:ltr}</style></head><body>
-<div class="og"><img src="${pathToFileURL(join(MASTERS, lockupFile)).href}" width="314" height="120" alt="">
+<div class="og"><img src="${pathToFileURL(join(MASTERS, lockupFile)).href}" height="120" alt="">
 <h1>${headline}</h1><div class="url">kaleem.dev</div></div></body></html>`,
     join(PUBLIC, 'assets', out), 1200, 630, false);
 }

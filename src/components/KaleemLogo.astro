@@ -5,7 +5,7 @@
  * The Kaleem logo, drawn from the logo standard (design/logo/).
  *
  *   variant="mark"  the Open Box alone (square, 110 x 110 grid)
- *   variant="e"     everyday lockup: mark | kaleem / كليم  (288 x 110, φ² : 1)
+ *   variant="e"     everyday lockup: mark | kaleem / كليم  (288 x 110; Arabic 309 x 110)
  *   variant="c"     signature lockup with guide lines      (523.6 x 200, φ² : 1)
  *
  * Each lockup has an English and an Arabic version, picked by `lang` (the
@@ -40,12 +40,15 @@ interface Props {
 const { variant = "e", tone = "ink", mono = false, lang = currentLocale(Astro), height, class: className, label = "Kaleem — كليم" } = Astro.props;
 const ink = tone === "chalk" ? LOGO_CHALK : LOGO_INK;
 const block = mono ? ink : LOGO_YELLOW;
-const box = variant === "e" ? E_LOCKUP : variant === "c" ? C_LOCKUP : { width: 110, height: 110 };
-const viewBox = `0 0 ${box.width} ${box.height}`;
-const width = height ? Math.round((height * box.width) / box.height * 10) / 10 : undefined;
 const dir = lang === "ar" ? "rtl" : "ltr";
 const e = E_LOCKUP[dir];
 const c = C_LOCKUP[dir];
+const box =
+  variant === "e" ? { width: e.width, height: E_LOCKUP.height }
+  : variant === "c" ? C_LOCKUP
+  : { width: 110, height: 110 };
+const viewBox = `0 0 ${box.width} ${box.height}`;
+const width = height ? Math.round((height * box.width) / box.height * 10) / 10 : undefined;
 const { frame } = C_LOCKUP;
 const at = (p: { x: number; y: number }) => `translate(${p.x} ${p.y})`;
 const a11y = label ? { role: "img", "aria-label": label } : { "aria-hidden": "true" };

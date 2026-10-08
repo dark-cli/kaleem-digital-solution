@@ -76,20 +76,27 @@ def at(x, y):
 # layout, mark on the right, «كليم» above "kaleem"). The mark itself is never
 # mirrored.
 
-# Lockup E (everyday): on the mark's own grid. The whole lockup is 110 x phi^2
-# (288 x 110); a gap of 13 (the wall), a rule 5 wide (the letter stroke) from 21
-# to 110 (the box's height), another 13, then the names fill the 147 left.
-# Left-to-right: "kaleem" on line 55, «كليم» on line 97 (the box's inner floor).
-# Right-to-left: the rows swap inside the same text block (same top, same bottom).
-E_W, E_H, GAP, RULE = 288, 110, 13, 5
-E_NAME_W = E_W - 110 - 2 * GAP - RULE
+# Lockup E (everyday): on the mark's own grid. The English lockup is 110 x phi^2
+# (288 x 110): the mark, a gap of 13 (the wall), a rule 5 wide (the letter
+# stroke) from 21 to 110 (the box's height), another 13, then the names fill the
+# 147 left. "kaleem" sits on line 55, «كليم» on line 97 (the box's inner floor).
+# The mark's two sides differ: its open side (the block, and the box's wall 34
+# back) faces the rule in English; its solid wall faces it in Arabic. So the
+# spacing is measured from the box: the box is one door (34) from the rule in
+# both versions, the block 13 in English. The Arabic lockup is therefore wider,
+# 309 x 110, with the same names and rule. Its rows swap inside the same text
+# block (same top, same bottom).
+E_H, GAP, RULE, DOOR = 110, 13, 5, 34
+E_NAME_W = 288 - 110 - 2 * GAP - RULE
 EN = names(E_NAME_W)
 (_, en_t, en_b), (_, ar_t, ar_b) = EN['en'], EN['ar']
 e_top, e_bottom = 55 + en_t, 97 + ar_b
-E = dict(width=E_W, height=E_H,
-         ltr=dict(mark=at(0, 0), rule=dict(x=110 + GAP, y=21, width=RULE, height=89),
-                  en=at(E_W - E_NAME_W, 55), ar=at(E_W - E_NAME_W, 97)),
-         rtl=dict(mark=at(E_W - 110, 0), rule=dict(x=E_NAME_W + GAP, y=21, width=RULE, height=89),
+E_RTL_RULE = E_NAME_W + GAP
+E = dict(height=E_H,
+         ltr=dict(width=288, mark=at(0, 0), rule=dict(x=110 + GAP, y=21, width=RULE, height=89),
+                  en=at(288 - E_NAME_W, 55), ar=at(288 - E_NAME_W, 97)),
+         rtl=dict(width=E_RTL_RULE + RULE + DOOR + 110, mark=at(E_RTL_RULE + RULE + DOOR, 0),
+                  rule=dict(x=E_RTL_RULE, y=21, width=RULE, height=89),
                   ar=at(0, e_top - ar_t), en=at(0, e_bottom - en_b)))
 
 # Lockup C (signature): height 200; square 200 : name area 200 x phi; the mark
@@ -153,7 +160,7 @@ def lockup_c_body(ink, block, dir='ltr'):
 
 
 def lockup_e(ink, block, dir='ltr'):
-    return svg(f'0 0 {E_W} {E_H}', lockup_e_body(ink, block, dir))
+    return svg(f'0 0 {E[dir]["width"]} {E_H}', lockup_e_body(ink, block, dir))
 
 
 def lockup_c(ink, block, dir='ltr'):
@@ -217,8 +224,9 @@ ts = ['/**',
       ' * (design/logo/). Do not edit by hand; change the standard and regenerate.',
       ' *',
       ' * The mark sits on a 110-unit grid (frame 89, door and block 34, step 21,',
-      ' * wall 13). Lockup E is 288 x 110 on that same grid; lockup C is',
-      ' * 523.6 x 200 on a golden grid. Both are 2.618 : 1. The names are outlined',
+      ' * wall 13). Lockup E is 288 x 110 on that same grid (309 x 110 in Arabic,',
+      ' * so the box stays one door, 34, from the rule); lockup C is',
+      ' * 523.6 x 200 on a golden grid. The names are outlined',
       ' * IBM Plex Mono 600 and IBM Plex Sans Arabic 600, fitted to equal ink',
       ' * widths and drawn at the origin (ink left edge x 0, baseline y 0); each',
       ' * layout places them with `en` and `ar`.',
@@ -257,9 +265,9 @@ import re  # noqa: E402
 import shutil  # noqa: E402
 canvas = os.path.join(REPO, 'design', 'logo', 'canvas')
 for name, src, title, vb, w, body in (
-        ('Logo-E.dc.html', None, None, f'0 0 {E_W} {E_H}', 200 * E_W / E_H, lockup_e_body('{{ink}}', '{{block}}')),
+        ('Logo-E.dc.html', None, None, f'0 0 {E["ltr"]["width"]} {E_H}', 200 * E['ltr']['width'] / E_H, lockup_e_body('{{ink}}', '{{block}}')),
         ('Logo-C.dc.html', None, None, f'0 0 {C["width"]} {C_H}', C['width'], lockup_c_body('{{ink}}', '{{block}}')),
-        ('Logo-E-ar.dc.html', 'Logo-E.dc.html', 'Kaleem logo · everyday lockup (E), Arabic', f'0 0 {E_W} {E_H}', 200 * E_W / E_H, lockup_e_body('{{ink}}', '{{block}}', 'rtl')),
+        ('Logo-E-ar.dc.html', 'Logo-E.dc.html', 'Kaleem logo · everyday lockup (E), Arabic', f'0 0 {E["rtl"]["width"]} {E_H}', 200 * E['rtl']['width'] / E_H, lockup_e_body('{{ink}}', '{{block}}', 'rtl')),
         ('Logo-C-ar.dc.html', 'Logo-C.dc.html', 'Kaleem logo · signature lockup (C), Arabic', f'0 0 {C["width"]} {C_H}', C['width'], lockup_c_body('{{ink}}', '{{block}}', 'rtl'))):
     p = os.path.join(canvas, name)
     if src and not os.path.exists(p):

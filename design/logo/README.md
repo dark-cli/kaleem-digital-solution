@@ -48,8 +48,11 @@ name area exactly.
 
 **Arabic versions.** Each lockup has an Arabic version for Arabic pages and
 Arabic documents: the mirror layout, with the mark on the right and «كليم» on
-top. In E the two names swap rows inside the same text block; in C the square
-moves to the right. The mark itself is never mirrored. On the site,
+top. In E the two names swap rows inside the same text block, and the box
+stays one door (34) from the rule: in English the open side faces the rule
+(block 13 away, wall 34), in Arabic the solid wall does, so the Arabic E is
+309 × 110. In C the square moves to the right; the mark sits the same way in
+its cell and the names keep the 38.2 padding. The mark itself is never mirrored. On the site,
 `KaleemLogo` picks the version from the page's language.
 
 ## Favicon
@@ -77,7 +80,7 @@ the platform rounds or crops the corners itself (`favicon-192.png`,
 | `kaleem-icon-square-sky.svg`, `kaleem-icon-square.svg` | Unrounded tiles, for platforms that round corners themselves |
 | `kaleem-avatar.svg`, `kaleem-avatar-sky.svg` (+ `-400.png`) | Social avatar, for round crops |
 | `favicon.svg` | Browser favicon: the sky tile |
-| `kaleem-lockup-{e,c}[-ar]-1048.png` (+ `-chalk-`) | 1048 × 400 PNGs of the lockups, English and Arabic, for documents and slides |
+| `kaleem-lockup-*-1048.png`, `kaleem-lockup-e-ar*-1124.png` | 400px-tall PNGs of the lockups, English and Arabic, for documents and slides |
 
 Colours: logo yellow `#f8d12f` (the block only), ink `#1f1f1f` (on light),
 chalk `#eceee6` (on the night sky `#1d2320`). Clear space on every side: the
