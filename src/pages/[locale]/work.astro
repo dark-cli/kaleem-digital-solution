@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Image from "../../components/Image.astro";
 import PageHero from "../../components/PageHero.astro";
 import PhoneFrame from "../../components/PhoneFrame.astro";
+import Slides from "../../components/Slides.astro";
 import { currentLocale, localizedHref } from "../../lib/i18n";
 
 export async function getStaticPaths() {
@@ -14,21 +15,21 @@ const isAr = locale === "ar";
 const L = (href: string) => localizedHref(href, locale);
 
 const T = isAr ? {
-  title:       "أعمالنا — كليم",
+  title:       "الحلول — كليم",
   description: "مشاريع كليم في تحرير البيانات والتحديث الرقمي: استخراج البيانات وإعادة بناء المنصات.",
-  eyebrow:     "الأعمال",
-  h1:          "من مواقع قديمة إلى منصات حديثة ومتحرّرة.",
-  lede:        "كل مشروع ننجزه يثبت أن الانتقال من نظام قديم إلى نظام حديث ممكن دون فقدان البيانات أو توقّف العمل. إليك قصة مركز العمران الطبي.",
+  eyebrow:     "",
+  h1:          "من مواقع قديمة إلى منصات حديثة ومتحررة.",
+  lede:        "كل مشروع ننجزه يثبت أن الانتقال من نظام قديم إلى نظام حديث ممكن دون فقدان البيانات أو توقّف العمل.",
   moreSoon:    "المزيد من دراسات الحالة قريباً — حين يوافق عملاؤنا على مشاركة قصصهم.",
   readCase:    "اقرأ القصة كاملة ←",
   nextTitle:   "مشروعك التالي",
   nextCta:     "احجز تقييماً مجانياً",
 } : {
-  title:       "Work — Kaleem",
+  title:       "Solutions — Kaleem",
   description: "Digital liberation and modernization projects from Kaleem — data extraction and platform rebuilds.",
-  eyebrow:     "Work",
+  eyebrow:     "Solutions",
   h1:          "From legacy websites to liberated, modern platforms.",
-  lede:        "Every project we complete proves that migration from old systems to modern ones is possible without data loss or downtime. Here's the story of Alimran Medical Center.",
+  lede:        "Every project we complete proves that migration from old systems to modern ones is possible without data loss or downtime.",
   moreSoon:    "More case studies coming — as clients approve sharing their stories.",
   readCase:    "Read the full story →",
   nextTitle:   "Your project next",
@@ -36,6 +37,20 @@ const T = isAr ? {
 };
 
 const cases = isAr ? [
+  {
+    title: "الدب الطبي — نظام إدارة العيادات",
+    summary: "نظام متكامل يدير العيادة من الاستقبال والمرضى حتى الحسابات: قائمة الانتظار والمواعيد، وطلبات الطبيب والمختبر، والصيدلية والمخزون، والحسابات. كل دينار يُتتبَّع من صندوق الاستقبال إلى حساب المالك. يعمل باللغة العربية والانجليزية، ويتيح لك إمكانية التعديل عليه بما يناسبك، من القوالب والقوائم والخيارات الغير محدودة.",
+    tags: ["إدارة العيادات", "لوحة الطبيب", "الصيدلية والمخزون", "المختبر", "الحسابات"],
+    tagBg: ["tag-butter", "tag-sky", "tag-mint", "tag-lilac", "tag-peach"],
+    href: "/ar/medical-bear/",
+    image: "",
+    imageAlt: "",
+    slides: [
+      { src: "/assets/bear/dashboard-bear-dark.png",  alt: "لوحة العيادة في الوضع الداكن: صافي اليوم والموافقات المعلّقة" },
+      { src: "/assets/bear/dashboard-bear-light.png", alt: "لوحة العيادة في الوضع الفاتح: صافي اليوم والموافقات المعلّقة" },
+    ],
+    accent: "bg-sky",
+  },
   {
     title: "مركز العمران الطبي، البصرة",
     summary: "استخرجنا 600 مقالة من موقع WordPress قديم، ونظّفناها وأعدنا تنسيقها، ثم أعدنا بناء الموقع على Astro وCloudflare Workers. النتيجة: موقع يحصل على 97/100 في PageSpeed، وبيانات بيد المركز بالكامل، وحرية حقيقية في التطوير والصيانة.",
@@ -63,6 +78,20 @@ const cases = isAr ? [
     accent: "bg-apricot",
   },
 ] : [
+  {
+    title: "The Medical Bear — Clinic Management System",
+    summary: "A comprehensive system for managing your clinic—from reception and patient care to financial accounting. It covers everything: waiting lists and appointments, physician and laboratory orders, pharmacy and inventory management, and accounting. Every single unit of currency is tracked, from the reception cash desk all the way to the owner’s accounts. The system supports both Arabic and English and offers extensive customization options, allowing you to tailor templates, menus, and settings to your specific needs.",
+    tags: ["Clinic management", "Doctor's panel", "Pharmacy & stock", "Laboratory", "Accounting"],
+    tagBg: ["tag-butter", "tag-sky", "tag-mint", "tag-lilac", "tag-peach"],
+    href: "/en/medical-bear/",
+    image: "",
+    imageAlt: "",
+    slides: [
+      { src: "/assets/bear/dashboard-bear-dark.png",  alt: "Clinic dashboard in dark mode: today's net and pending approvals" },
+      { src: "/assets/bear/dashboard-bear-light.png", alt: "Clinic dashboard in light mode: today's net and pending approvals" },
+    ],
+    accent: "bg-sky",
+  },
   {
     title: "Alimran Medical Center, Basra",
     summary: "We extracted 600 articles from a legacy WordPress site, cleaned and reformatted them, then rebuilt the site on Astro and Cloudflare Workers. The result: a site that scores 97/100 on PageSpeed, full Arabic and English support, data in the center's own hands, and real freedom to develop and maintain it.",
@@ -104,8 +133,11 @@ const cases = isAr ? [
   <section class="work-list">
     <div class="container">
       <div class="cases-grid">
-        {cases.map((c) => (
-          <a class="sk case-card window-link" href={c.href}>
+        {cases.map((c) => {
+          // A project without its own page yet is a plain tile, not a link.
+          const Tile = c.href ? "a" : "div";
+          return (
+          <Tile class:list={["sk case-card", c.href && "window-link"]} href={c.href || undefined}>
             <span class="case-chrome" data-sky aria-hidden="true"><i></i><i></i><i></i></span>
             {c.image && <Image src={c.image} alt={c.imageAlt} class="case-shot" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" fetchpriority="high" />}
             {c.stage && (
@@ -114,7 +146,8 @@ const cases = isAr ? [
                 <PhoneFrame src={c.stage.phone} alt={c.stage.phoneAlt} class="case-stage-phone" finish="paper" sizes="140px" loading="eager" />
               </span>
             )}
-            {!c.image && !c.stage && <span class={`case-shot-placeholder ${c.accent}`} aria-hidden="true"></span>}
+            {c.slides && <Slides images={c.slides} class="case-slides" imgClass="case-slide-img" sizes="(min-width: 900px) 50vw, 100vw" loading="eager" />}
+            {!c.image && !c.stage && !c.slides && <span class={`case-shot-placeholder ${c.accent}`} aria-hidden="true"></span>}
             <span class="case-body">
               <h2>{c.title}</h2>
               <p>{c.summary}</p>
@@ -123,10 +156,11 @@ const cases = isAr ? [
                   <span class={`k-tag ${c.tagBg[i]}`}>{t}</span>
                 ))}
               </span>
-              <span class="case-more">{T.readCase}</span>
+              {c.href && <span class="case-more">{T.readCase}</span>}
             </span>
-          </a>
-        ))}
+          </Tile>
+          );
+        })}
         <a class="sk case-next" href={L("/audit/")}>
           <svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 7v18M7 16h18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
           <span class="next-title">{T.nextTitle}</span>
@@ -182,6 +216,16 @@ const cases = isAr ? [
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 1200 / 1252;
+    object-fit: cover;
+    object-position: top right;
+    border-bottom: 2px solid var(--k-ink);
+  }
+  /* Slides tile: the same shape as the screenshot tiles. The dots are only an
+     indicator here (the whole tile is a link). */
+  .case-card :global(.case-slides) {
+    display: block;
+    aspect-ratio: 1200 / 1252;
     border-bottom: 2px solid var(--k-ink);
   }
   .case-body { display: flex; flex-direction: column; gap: 14px; padding: 26px 28px 28px; }
@@ -189,10 +233,12 @@ const cases = isAr ? [
   .case-body p { margin: 0; font-size: 16px; line-height: 1.6; }
   .case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
   .k-tag { background: var(--k-paper); }
-  .tag-butter  { background: var(--k-butter); }
-  .tag-sky     { background: var(--k-sky); }
-  .tag-mint    { background: var(--k-mint); }
-  .tag-apricot { background: var(--k-apricot); }
+  .k-tag.tag-butter  { background: var(--k-butter); }
+  .k-tag.tag-sky     { background: var(--k-sky); }
+  .k-tag.tag-mint    { background: var(--k-mint); }
+  .k-tag.tag-apricot { background: var(--k-apricot); }
+  .k-tag.tag-lilac   { background: var(--k-lilac); }
+  .k-tag.tag-peach   { background: var(--k-peach); }
 
   /* The dashboard fills the tile like the other tiles' screenshot (same
      1200×1252 shape), with the phone over its lower corner. */

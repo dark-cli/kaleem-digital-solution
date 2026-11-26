@@ -5,10 +5,15 @@
  * only for a window visible on first paint).
  */
 import Image from './Image.astro';
+import Slides from './Slides.astro';
 
 interface Props {
-  src: string;
-  alt: string;
+  src?: string;
+  /** Two or more screenshots that crossfade in the window (instead of src). */
+  images?: { src: string; alt: string }[];
+  /** Accessible name for the slides group. */
+  slidesLabel?: string;
+  alt?: string;
   chromeColor?: 'sky-shader';
   /** Layout hint for srcset; the default fits a window in a two-column row. */
   sizes?: string;
@@ -17,7 +22,9 @@ interface Props {
 
 const {
   src,
-  alt,
+  images,
+  slidesLabel,
+  alt = '',
   chromeColor,
   sizes = '(min-width: 1024px) 50vw, 100vw',
   loading = 'lazy',
@@ -28,7 +35,9 @@ const hasShader = chromeColor === 'sky-shader';
 <div class="sk window widget">
   <div class="window-chrome" {...(hasShader ? { 'data-sky': true } : {})}></div>
   <div class="window-body widget-content">
-    <Image {src} {alt} {sizes} {loading} class="widget-image" />
+    {images && images.length > 1
+      ? <Slides {images} {sizes} {loading} class="widget-slides" imgClass="widget-image" controls label={slidesLabel} />
+      : <Image src={src ?? images?.[0]?.src ?? ''} alt={alt || images?.[0]?.alt || ''} {sizes} {loading} class="widget-image" />}
   </div>
 </div>
 
@@ -47,6 +56,8 @@ const hasShader = chromeColor === 'sky-shader';
     display: flex;
     align-items: stretch;
   }
+
+  .widget-content :global(.widget-slides) { width: 100%; }
 
   .widget-content :global(.widget-image) {
     width: 100%;

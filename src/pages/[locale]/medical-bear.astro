@@ -1,0 +1,976 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import WindowWidget from "../../components/WindowWidget.astro";
+import Image from "../../components/Image.astro";
+import { currentLocale, localizedHref } from "../../lib/i18n";
+
+export async function getStaticPaths() {
+  return [{ params: { locale: "en" } }, { params: { locale: "ar" } }];
+}
+
+const locale = currentLocale(Astro);
+const isAr = locale === "ar";
+const L = (href: string) => localizedHref(href, locale);
+
+type Text = { en: string; ar: string };
+const tx = (v: Text) => (isAr ? v.ar : v.en);
+
+/* ─── The system, module by module ─────────────────────────────────────
+   Every feature listed here is visible in the screenshots in
+   public/assets/bear/screens/ (demo data). Modules are grouped into
+   chapters; each module is one row: text and feature list beside its
+   screenshot, alternating sides. */
+type Module = { id: string; /** Left out until a screenshot exists: the picture then fills the screenshot's place. */ shot?: string; alt: Text; name: Text; lead: Text; points: Text[]; /** Decorative picture under the points; its base lines up with the screenshot's bottom. */ art?: string };
+type Chapter = { name: Text; intro: Text; bg: string; modules: Module[] };
+
+const CHAPTERS: Chapter[] = [
+  {
+    name:  { en: "The front desk", ar: "الاستقبال" },
+    intro: { en: "Where the patient's day starts: arriving, waiting, being called back.", ar: "حيث يبدأ يوم المريض: الوصول والانتظار والمتابعة بعد الزيارة." },
+    bg: "bg-paper-2",
+    modules: [
+      {
+        id: "reception",
+        shot: "/assets/bear/screens/reception-queue.png",
+        art: "/assets/bear/doctor-bear-patients.png",
+        alt:  { en: "Reception queue: today's patients with their doctor, status and time waiting", ar: "قائمة الاستقبال: مرضى اليوم مع الطبيب والحالة ووقت الانتظار" },
+        name: { en: "Reception queue", ar: "قائمة الاستقبال" },
+        lead: { en: "The whole day's patients on one list, numbered in the order they arrived.", ar: "كل مرضى اليوم في قائمة واحدة، مرقّمين حسب ترتيب وصولهم." },
+        points: [
+          { en: "Register a walk-in or book an appointment from the same screen.", ar: "سجّل حضوراً جديداً أو احجز موعداً من الشاشة نفسها." },
+          { en: "Tabs follow the patient: expected today, waiting, in the visit, at payment, in departments, done.", ar: "تبويبات تتبع المريض: متوقع اليوم، ينتظر، في الزيارة، للدفع، في الأقسام، انتهى." },
+          { en: "Filter by doctor, search by name, and see how long each patient has waited.", ar: "صفِّ حسب الطبيب، وابحث بالاسم، واعرف كم انتظر كل مريض." },
+          { en: "End the visit with one button; the patient moves on to payment.", ar: "أنهِ الزيارة بزر واحد، فينتقل المريض إلى الدفع." },
+        ],
+      },
+      {
+        id: "appointments",
+        shot: "/assets/bear/screens/appointments.png",
+        art: "/assets/bear/doctor-bear-calendar.png",
+        alt:  { en: "Appointments list with no-shows marked for rebooking", ar: "قائمة المواعيد مع من لم يحضروا معلَّمين لإعادة الحجز" },
+        name: { en: "Appointments", ar: "المواعيد" },
+        lead: { en: "Every booking with its doctor and type, and nobody lost when they miss one.", ar: "كل حجز مع طبيبه ونوعه، ولا يضيع أحد إن فاته موعده." },
+        points: [
+          { en: "Statuses for every booking: unconfirmed, confirmed, checked in, no-show, done.", ar: "حالة لكل حجز: غير مؤكَّد، مؤكَّد، سُجِّل الحضور، لم يحضر، انتهى." },
+          { en: "Booking types: consultation, procedure, follow-up.", ar: "أنواع الحجز: كشف، إجراء، متابعة." },
+          { en: "No-shows are counted at the top and rebooked with one button.", ar: "من لم يحضروا يظهر عددهم في الأعلى، ويُعاد حجزهم بزر واحد." },
+          { en: "Filter by doctor and by date range.", ar: "صفِّ حسب الطبيب وحسب الفترة." },
+        ],
+      },
+      {
+        id: "calls",
+        shot: "/assets/bear/screens/call-list.png",
+        art: "/assets/bear/doctor-bear-headset.png",
+        alt:  { en: "Call list: patients to call today, urgent first, with the reason for each call", ar: "قائمة الاتصال: مرضى للاتصال بهم اليوم، العاجل أولاً، مع سبب كل اتصال" },
+        name: { en: "Call list", ar: "قائمة الاتصال" },
+        lead: { en: "The clinic calls the patient back, not the other way round.", ar: "العيادة هي من تتصل بالمريض، لا العكس." },
+        points: [
+          { en: "Calls arrive on their own: a result is ready, a follow-up is due, the doctor or lab flagged something.", ar: "الاتصالات تصل تلقائياً: نتيجة جاهزة، متابعة مستحقة، تنبيه من الطبيب أو المختبر." },
+          { en: "Urgent calls come first, with the doctor's note beside them.", ar: "الاتصالات العاجلة أولاً، وبجانبها ملاحظة الطبيب." },
+          { en: "No answer? It returns to the list to call again; or mark it for later.", ar: "لا رد؟ يعود إلى القائمة لمعاودة الاتصال، أو أجّله لوقت لاحق." },
+          { en: "Reception can add a patient to the list by hand.", ar: "يستطيع الاستقبال إضافة مريض إلى القائمة يدوياً." },
+        ],
+      },
+      {
+        id: "patients",
+        shot: "/assets/bear/screens/patients.png",
+        art: "/assets/bear/doctor-bear-clipboard.png",
+        alt:  { en: "Patients table with file number, phone, age, last visit, next booking and debts", ar: "جدول المرضى برقم الملف والهاتف والعمر وآخر زيارة والحجز القادم والديون" },
+        name: { en: "Patients", ar: "المرضى" },
+        lead: { en: "Every patient's file, searchable in a second.", ar: "ملف كل مريض، والبحث فيه بلحظة." },
+        points: [
+          { en: "File number, phone, age, last visit, next booking and what they owe, in one table.", ar: "رقم الملف والهاتف والعمر وآخر زيارة والحجز القادم وما عليه، في جدول واحد." },
+          { en: "Ready-made views: all patients, patients with a balance, new this month.", ar: "عروض جاهزة: كل المرضى، من عليهم مبالغ، الجدد هذا الشهر." },
+          { en: "Add filters, choose the columns, and export the list.", ar: "أضف تصفية، واختر الأعمدة، وصدّر القائمة." },
+        ],
+      },
+    ],
+  },
+  {
+    name:  { en: "Orders and approvals", ar: "الطلبات والموافقات" },
+    intro: { en: "What the doctor asks for, and the decisions that need a second pair of eyes.", ar: "ما يطلبه الطبيب، والقرارات التي تحتاج إلى عين ثانية." },
+    bg: "",
+    modules: [
+      {
+        id: "orders",
+        shot: "/assets/bear/screens/orders.png",
+        alt:  { en: "Order status: each patient's lab tests, procedures and services, and what is left to pay", ar: "حالة الطلبات: تحاليل كل مريض وإجراءاته وخدماته، وما بقي للدفع" },
+        name: { en: "Order status", ar: "حالة الطلبات" },
+        lead: { en: "Every lab test, procedure and service the doctor ordered, from request to done.", ar: "كل تحليل وإجراء وخدمة طلبها الطبيب، من الطلب حتى التنفيذ." },
+        points: [
+          { en: "Filter by lab, procedures or services.", ar: "صفِّ حسب المختبر أو الإجراءات أو الخدمات." },
+          { en: "See what is waiting for payment and what is already in the departments.", ar: "اعرف ما ينتظر الدفع وما وصل إلى الأقسام." },
+          { en: "Take payment for a patient's open orders in one step.", ar: "استلم دفع الطلبات المفتوحة للمريض بخطوة واحدة." },
+          { en: "An order keeps the price it was requested at, even if prices change later.", ar: "يحتفظ الطلب بالسعر الذي طُلب به، حتى لو تغيّرت الأسعار لاحقاً." },
+        ],
+      },
+      {
+        id: "approvals",
+        shot: "/assets/bear/screens/approvals.png",
+        alt:  { en: "Approvals: a debt and a refund waiting for approval, each with its reason", ar: "الموافقات: دين واسترداد بانتظار الموافقة، لكل منهما سببه" },
+        name: { en: "Approvals", ar: "الموافقات" },
+        lead: { en: "Debts and refunds wait for an approval before any money moves.", ar: "الديون والاستردادات تنتظر الموافقة قبل أن يتحرك أي مبلغ." },
+        points: [
+          { en: "Each request shows the patient, the amount, the reason and who asked.", ar: "كل طلب يُظهر المريض والمبلغ والسبب ومن طلبه." },
+          { en: "Approve or reject in one click; the waiting count shows in the side menu.", ar: "وافق أو ارفض بنقرة، وعدد الطلبات المعلّقة يظهر في القائمة الجانبية." },
+          { en: "Every past decision stays in the history.", ar: "كل قرار سابق يبقى في السجل." },
+        ],
+      },
+    ],
+  },
+  {
+    name:  { en: "Pharmacy and lab", ar: "الصيدلية والمختبر" },
+    intro: { en: "A full pharmacy with its own cash box, and a lab that follows every sample to its result.", ar: "صيدلية كاملة بصندوقها الخاص، ومختبر يتابع كل عينة حتى نتيجتها." },
+    bg: "bg-paper-2",
+    modules: [
+      {
+        id: "pharmacy",
+        shot: "/assets/bear/screens/pharmacy.png",
+        alt:  { en: "Pharmacy: sales list with stock alerts at the top", ar: "الصيدلية: قائمة المبيعات مع تنبيهات المخزون في الأعلى" },
+        name: { en: "Pharmacy and stock", ar: "الصيدلية والمخزون" },
+        lead: { en: "Sales, prescriptions, stock and suppliers in one place.", ar: "المبيعات والوصفات والمخزون والموردون في مكان واحد." },
+        points: [
+          { en: "Sales, prescriptions, stock, invoices, suppliers and a full stock log.", ar: "المبيعات، والوصفات، والمخزون، والفواتير، والموردون، وسجل كامل للمخزون." },
+          { en: "Alerts for products that ran out, stock running low, expired stock, and batches expiring within 60 days.", ar: "تنبيهات للمنتجات التي نفدت، والمخزون المنخفض، والمخزون المنتهي، والدفعات التي تنتهي خلال 60 يوماً." },
+          { en: "Each sale records the patient, the items and the payment method (cash or card).", ar: "كل عملية بيع تسجّل المريض والمواد وطريقة الدفع (نقداً أو بطاقة)." },
+          { en: "Drafts, refunds and deletions are kept, never lost.", ar: "المسودات والمرتجعات والمحذوفات محفوظة، لا تضيع." },
+        ],
+      },
+      {
+        id: "lab",
+        art: "/assets/bear/doctor-bear-lab.png",
+        alt:  { en: "", ar: "" },
+        name: { en: "Laboratory", ar: "المختبر" },
+        lead: { en: "Every test from the sample to the result, and the doctor is told.", ar: "كل تحليل من أخذ العينة حتى النتيجة، ويُبلَّغ الطبيب." },
+        points: [
+          { en: "Tabs follow the work: needs a sample, in the lab queue, processing, and results ready.", ar: "تبويبات تتبع العمل: يحتاج عينة، في طابور المختبر، قيد التحليل، والنتائج الجاهزة." },
+          { en: "Urgent tests come first, and the top of the page shows only what needs you now.", ar: "التحاليل العاجلة أولاً، وأعلى الصفحة يُظهر فقط ما يحتاجك الآن." },
+          { en: "Each test has its own form with the patient's normal range; a high or low value is flagged as you type.", ar: "لكل تحليل نموذجه مع المدى الطبيعي للمريض، والقيمة المرتفعة أو المنخفضة تُنبَّه أثناء الكتابة." },
+          { en: "Send the result to the doctor, the patient and reception with the lab's report attached, or flag it for a follow-up call.", ar: "أرسل النتيجة إلى الطبيب والمريض والاستقبال مع ورقة التقرير، أو أشِر إليها لمكالمة متابعة." },
+        ],
+      },
+    ],
+  },
+  {
+    name:  { en: "Money", ar: "المال" },
+    intro: { en: "From the patient's payment to the owner's account, every dinar is accounted for.", ar: "من دفعة المريض إلى حساب المالك، كل دينار محسوب." },
+    bg: "",
+    modules: [
+      {
+        id: "payments",
+        shot: "/assets/bear/screens/payments.png",
+        art: "/assets/bear/doctor-bear-cash.png",
+        alt:  { en: "Payments: what each patient has left to pay", ar: "المدفوعات: ما بقي على كل مريض" },
+        name: { en: "Payments", ar: "المدفوعات" },
+        lead: { en: "What is due, what is owed, and everything already paid.", ar: "ما هو مطلوب، وما هو دين، وكل ما دُفع." },
+        points: [
+          { en: "Three views: due now, debts, and the full log.", ar: "ثلاثة عروض: المطلوب الآن، والديون، والسجل الكامل." },
+          { en: "Each bill lists its services and total; take the payment with one button.", ar: "كل فاتورة تعرض خدماتها ومجموعها، واستلم الدفع بزر واحد." },
+          { en: "Bills waiting for a debt approval or a refund are kept apart.", ar: "الفواتير التي تنتظر موافقة على دين أو استرداداً معزولة على حدة." },
+        ],
+      },
+      {
+        id: "shift",
+        shot: "/assets/bear/screens/shift-closing.png",
+        alt:  { en: "Shift closing: counting the cash box against the expected amount", ar: "إغلاق الوردية: عدّ الصندوق مقابل المبلغ المتوقع" },
+        name: { en: "Shift closing", ar: "إغلاق الوردية" },
+        lead: { en: "At the end of a shift the cashier counts the box, and the system checks the count.", ar: "في نهاية الوردية يعدّ الموظف الصندوق، والنظام يتحقق من العدّ." },
+        points: [
+          { en: "The expected amount is worked out for you: opening balance, plus cash received, minus petty cash and refunds.", ar: "المبلغ المتوقع يُحسب تلقائياً: رصيد البداية، زائد المقبوض نقداً، ناقص النثرية والمبالغ المعادة." },
+          { en: "Enter what is actually in the box and what stays as change for the next shift.", ar: "أدخل الموجود فعلاً في الصندوق، وما يبقى فكّةً للوردية التالية." },
+          { en: "Choose who receives the rest, such as the owner.", ar: "اختر من يستلم الباقي، مثل المالك." },
+          { en: "Card payments are counted separately, since they never enter the box. The pharmacy closes its own box.", ar: "مدفوعات البطاقة تُحسب منفصلة لأنها لا تدخل الصندوق. والصيدلية تغلق صندوقها بنفسها." },
+        ],
+      },
+      {
+        id: "accounts",
+        shot: "/assets/bear/screens/accounts.png",
+        alt:  { en: "Accounts: every cash account's balance, received and paid today", ar: "الحسابات: رصيد كل حساب نقدي، وما قُبض وما صُرف اليوم" },
+        name: { en: "Accounts", ar: "الحسابات" },
+        lead: { en: "Where the clinic's money is right now, and every movement on it.", ar: "أين مال العيادة الآن، وكل حركة عليه." },
+        points: [
+          { en: "Cash accounts for each place money sits: the reception box, the pharmacy box, the bank, with the owner, and a dollar box.", ar: "حساب نقدي لكل مكان فيه مال: صندوق الاستقبال، وصندوق الصيدلية، والمصرف، وعند المالك، وصندوق الدولار." },
+          { en: "Received and paid today on every account.", ar: "قبض اليوم وصرف اليوم لكل حساب." },
+          { en: "Transfers between accounts, journal entries, expenses and monthly recurring expenses.", ar: "التحويل بين الحسابات، والقيود، والمصاريف، والمصاريف الشهرية المتكررة." },
+          { en: "Parties and a chart of items, so every amount lands in the right place in the reports.", ar: "الجهات وشجرة البنود، حتى يقع كل مبلغ في مكانه الصحيح في التقارير." },
+        ],
+      },
+    ],
+  },
+  {
+    name:  { en: "Setup and reports", ar: "الإعداد والتقارير" },
+    intro: { en: "Set the clinic up your way, then see how it is doing.", ar: "جهّز العيادة على طريقتك، ثم تابع كيف تسير." },
+    bg: "bg-paper-2",
+    modules: [
+      {
+        id: "prices",
+        shot: "/assets/bear/screens/prices.png",
+        alt:  { en: "Services and prices list with each service's group", ar: "قائمة الخدمات والأسعار مع مجموعة كل خدمة" },
+        name: { en: "Services and prices", ar: "الخدمات والأسعار" },
+        lead: { en: "Everything the clinic charges for, with its price and its group.", ar: "كل ما تتقاضاه العيادة، بسعره ومجموعته." },
+        points: [
+          { en: "Services, lab tests, procedures and doctors' fees, each on its own list.", ar: "الخدمات، والتحاليل، والإجراءات، وأجور الأطباء، لكلٍّ قائمته." },
+          { en: "Groups decide how each item adds up in the reports.", ar: "المجموعات تحدد كيف يُجمع كل عنصر في التقارير." },
+          { en: "Most clinics need one price list; add more for another department.", ar: "تكفي معظم العيادات قائمة أسعار واحدة، وأضف قوائم أخرى لقسم ثانٍ." },
+          { en: "A service without a price can be priced at payment time. Export any list.", ar: "الخدمة التي لا سعر لها تُسعَّر عند الدفع. وصدّر أي قائمة." },
+        ],
+      },
+      {
+        id: "reports",
+        shot: "/assets/bear/screens/reports.png",
+        alt:  { en: "Today's summary report: net, received, cash, card, debts and a revenue chart", ar: "تقرير ملخص اليوم: الصافي والمستلم والنقد والبطاقة والديون ورسم الإيرادات" },
+        name: { en: "Reports", ar: "التقارير" },
+        lead: { en: "The day, the month or any period, on one page.", ar: "اليوم أو الشهر أو أي فترة، في صفحة واحدة." },
+        points: [
+          { en: "Net, revenue and expenses; received in cash and by card; open debts.", ar: "الصافي والإيرادات والمصاريف، والمستلم نقداً وبالبطاقة، والديون المفتوحة." },
+          { en: "Compare with the previous period with one switch.", ar: "قارن مع الفترة السابقة بمفتاح واحد." },
+          { en: "Revenue broken down by group, with a cash summary.", ar: "الإيرادات مقسّمة حسب المجموعة، مع ملخص للنقد." },
+          { en: "Print, save as PDF, export to CSV, or save a report you use often.", ar: "اطبع، أو احفظ PDF، أو صدّر CSV، أو احفظ تقريراً تستخدمه كثيراً." },
+        ],
+      },
+    ],
+  },
+];
+
+const T = isAr ? {
+  title:       "الدب الطبي — نظام إدارة العيادات · كليم",
+  description: "الدب الطبي: نظام متكامل لإدارة العيادة من الاستقبال حتى الحسابات — المواعيد، والطلبات، والصيدلية، والمدفوعات، وإغلاق الوردية، والتقارير.",
+  eyebrow:     "دراسة حالة · نظام إدارة عيادات",
+  h1:          "الدب الطبـي",
+  lead:        "نظام واحد يدير العيادة كلها: من لحظة وصول المريض حتى إدارة الحسابات.",
+  sub:         "الاستقبال والمواعيد، وطلبات الطبيب والمختبر، والصيدلية والمخزون، والمدفوعات والحسابات والتقارير. بالعربية والإنجليزية، ويمكن تعديله بما يناسب عيادتك.",
+  chips:       ["إدارة العيادات", "لوحة الطبيب", "الصيدلية والمخزون", "المختبر", "الحسابات"],
+  heroAlt:     "لوحة العيادة في الدب الطبي: صافي اليوم والموافقات المعلّقة ومرضى اليوم",
+  heroSlidesLabel: "لوحة العيادة بالوضعين الداكن والفاتح",
+  heroSlides: [
+    { src: "/assets/bear/dashboard-bear-dark.png",  alt: "لوحة العيادة في الوضع الداكن: صافي اليوم والموافقات المعلّقة ومرضى اليوم" },
+    { src: "/assets/bear/dashboard-bear-light.png", alt: "لوحة العيادة في الوضع الفاتح: صافي اليوم والموافقات المعلّقة ومرضى اليوم" },
+  ],
+
+  facts: [
+    { label: "الأقسام",     value: "13 لوحة تحكم",     note: "من الاستقبال والمواعيد إلى الصيدلية والحسابات والتقارير." },
+    { label: "المال",       value: "كل دينار محسوب",   note: "من صندوق الاستقبال إلى حساب المالك، مع موافقة على كل دين واسترداد." },
+    { label: "اللغة",       value: "عربي وإنجليزي",   note: "الواجهة كاملة باللغتين، بالدينار العراقي والدولار." },
+    { label: "التخصيص",     value: "على مقاس عيادتك",  note: "القوالب والقوائم والخيارات تُعدَّل بما يناسبك." },
+  ],
+
+  dashEyebrow: "لوحة العيادة",
+  dashHead:    "اليوم كله بنظرة واحدة.",
+  dashText:    "أول ما يراه المالك أو المدير: صافي اليوم، والإيرادات والمصاريف، وما ينتظر قراره.",
+  dashPoints: [
+    "صافي اليوم مع الإيرادات والمصاريف.",
+    "ما ينتظر الموافقة، وإغلاقات الورديات التي تنتظر التدقيق، مع زر للانتقال إليها.",
+    "مرضى اليوم، ومن ينتظر الآن، ومن يجب الاتصال بهم، والنتائج التي لم تُراجَع.",
+    "جدول لكل طبيب: مرضاه، ومن ينتظر، وأجوره، ونتائجه غير المراجعة.",
+    "تنبيه فوري إن لم يتطابق أي صندوق مع عدّه.",
+  ],
+
+  flowEyebrow: "يوم في العيادة",
+  flowHead:    "المريض يمرّ، والنظام يتابع.",
+  flow: [
+    { t: "الاستقبال",  d: "يُسجَّل حضوره أو يصل إلى موعده، ويأخذ رقمه في قائمة اليوم." },
+    { t: "الزيارة",    d: "يدخل إلى طبيبه، ويطلب الطبيب التحاليل والإجراءات والخدمات." },
+    { t: "الدفع",      d: "يدفع ما عليه، أو يُطلب له دين ينتظر الموافقة." },
+    { t: "الأقسام",    d: "تُنفَّذ طلباته في المختبر والأقسام، وتظهر النتيجة حين تجهز." },
+    { t: "المتابعة",   d: "حين تجهز النتيجة أو تحين المتابعة، يظهر في قائمة الاتصال." },
+    { t: "إغلاق الوردية", d: "يُعدّ الصندوق، ويُسلَّم المال، ويُدقَّق الإغلاق." },
+  ],
+
+  moneyEyebrow: "التحكم بالمال",
+  moneyHead:    "لا يخرج مبلغ دون أن يُرى.",
+  moneyItems: [
+    { t: "موافقة على كل دين واسترداد", d: "لا يُسجَّل دين ولا يُعاد مبلغ قبل أن يوافق عليه صاحب الصلاحية." },
+    { t: "عدّ الصندوق في كل وردية",     d: "النظام يعرف كم يجب أن يكون في الصندوق، والموظف يعدّ ما فيه فعلاً." },
+    { t: "تدقيق الإغلاقات",              d: "كل إغلاق وردية ينتظر التدقيق، وأي صندوق لا يتطابق يظهر تنبيهه في لوحة العيادة." },
+    { t: "حساب لكل مكان فيه مال",       d: "صناديق الاستقبال والصيدلية والدولار، والمصرف، وما عند المالك، مع كل حركة عليها." },
+  ],
+
+  customEyebrow: "التخصيص",
+  customHead:    "عيادتك ليست كغيرها.",
+  customText:    "الدب الطبي يتكيّف مع طريقة عملك، لا العكس.",
+  customItems: [
+    { t: "القوالب",  d: "عدّل القوالب لتناسب أوراق عيادتك وطريقة عملها." },
+    { t: "القوائم",  d: "قوائم الخدمات والأسعار والتحاليل والإجراءات، بقدر ما تحتاج." },
+    { t: "الخيارات", d: "خيارات غير محدودة لتضبط النظام على مقاس عيادتك." },
+    { t: "اللغة",    d: "النظام كاملاً بالعربية والإنجليزية." },
+  ],
+
+  ctaHead:   "تريد الدب الطبي في عيادتك؟",
+  ctaText:   "أخبرنا عن عيادتك، ونريك كيف يعمل النظام.",
+  ctaButton: "تواصل معنا",
+} : {
+  title:       "The Medical Bear — Clinic Management System · Kaleem",
+  description: "The Medical Bear: a complete clinic management system from reception to the books — appointments, orders, pharmacy, payments, shift closing and reports.",
+  eyebrow:     "Case study · Clinic management system",
+  h1:          "The Medical Bear",
+  lead:        "One system that runs the whole clinic, from the moment a patient walks in to managing the accounts.",
+  sub:         "Reception and appointments, doctor and lab orders, pharmacy and stock, payments, accounts and reports. In Arabic and English, and shaped to fit your clinic.",
+  chips:       ["Clinic management", "Doctor's panel", "Pharmacy & stock", "Laboratory", "Accounting"],
+  heroAlt:     "The Medical Bear clinic dashboard: today's net, pending approvals and today's patients",
+  heroSlidesLabel: "The clinic dashboard in dark and light mode",
+  heroSlides: [
+    { src: "/assets/bear/dashboard-bear-dark.png",  alt: "The clinic dashboard in dark mode: today's net, pending approvals and today's patients" },
+    { src: "/assets/bear/dashboard-bear-light.png", alt: "The clinic dashboard in light mode: today's net, pending approvals and today's patients" },
+  ],
+
+  facts: [
+    { label: "Modules",       value: "13 dashboards",        note: "From reception and appointments to the pharmacy, accounts and reports." },
+    { label: "Money",         value: "Every dinar traced",   note: "From the reception till to the owner's account, with an approval on every debt and refund." },
+    { label: "Language",      value: "Arabic & English",     note: "The whole interface in both languages, in Iraqi dinars and dollars." },
+    { label: "Customization", value: "Fitted to your clinic", note: "Templates, lists and options, adjusted to the way you work." },
+  ],
+
+  dashEyebrow: "The clinic dashboard",
+  dashHead:    "The whole day at a glance.",
+  dashText:    "The first thing the owner or manager sees: today's net, revenue and expenses, and what is waiting on their decision.",
+  dashPoints: [
+    "Today's net, with revenue and expenses.",
+    "Requests waiting for approval and shift closings waiting for an audit, with a button to each.",
+    "Patients today, who is waiting now, who needs a call and which results are unreviewed.",
+    "A table per doctor: their patients, who is waiting, their fees and unreviewed results.",
+    "An instant warning when any cash box does not match its count.",
+  ],
+
+  flowEyebrow: "A day in the clinic",
+  flowHead:    "The patient moves; the system keeps up.",
+  flow: [
+    { t: "Reception",     d: "They walk in or arrive for a booking, and take a number in today's queue." },
+    { t: "The visit",     d: "They see their doctor, who orders lab tests, procedures and services." },
+    { t: "Payment",       d: "They pay what is due, or a debt is requested and waits for approval." },
+    { t: "Departments",   d: "The lab and departments carry out the orders; results appear when ready." },
+    { t: "Follow-up",     d: "When a result is ready or a follow-up is due, they land on the call list." },
+    { t: "Shift closing", d: "The cash box is counted, the money handed over, and the closing audited." },
+  ],
+
+  moneyEyebrow: "Money control",
+  moneyHead:    "No money leaves unseen.",
+  moneyItems: [
+    { t: "An approval on every debt and refund", d: "No debt is recorded and no money returned until someone with the authority approves it." },
+    { t: "A count every shift",                  d: "The system knows what should be in the box; the cashier counts what is actually there." },
+    { t: "Audited closings",                     d: "Every shift closing waits for an audit, and a box that doesn't match shows up on the dashboard." },
+    { t: "An account for every place money sits", d: "The reception, pharmacy and dollar boxes, the bank and the owner, with every movement on each." },
+  ],
+
+  customEyebrow: "Customization",
+  customHead:    "Your clinic isn't like any other.",
+  customText:    "The Medical Bear adapts to the way you work, not the other way round.",
+  customItems: [
+    { t: "Templates", d: "Adjust templates to match your clinic's paperwork and way of working." },
+    { t: "Lists",     d: "Services, prices, lab tests and procedures: as many lists as you need." },
+    { t: "Options",   d: "Unlimited options to fit the system to your clinic." },
+    { t: "Language",  d: "The whole system in Arabic and English." },
+  ],
+
+  ctaHead:   "Want The Medical Bear in your clinic?",
+  ctaText:   "Tell us about your clinic, and we'll show you how the system works.",
+  ctaButton: "Contact us",
+};
+
+const allModules = CHAPTERS.flatMap((c) => c.modules);
+
+/* Section menu: the dashboard, then every module. Line icons, 24×24,
+   stroked with currentColor by the .ni svg rule. */
+const NAV_ICONS: Record<string, string> = {
+  dashboard:    '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  reception:    '<path d="M3 18h18"/><path d="M5 18a7 7 0 0 1 14 0"/><path d="M12 11V8"/><path d="M10 8h4"/>',
+  appointments: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  calls:        '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+  patients:     '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6 6 0 0 1 3.5 5.5"/>',
+  orders:       '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6v3H9z"/><path d="M9 10h6M9 14h6M9 18h4"/>',
+  approvals:    '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+  pharmacy:     '<path d="M10.5 20.5a5 5 0 0 1-7-7l6-6a5 5 0 0 1 7 7z"/><path d="M8.5 8.5l7 7"/>',
+  lab:          '<path d="M9 3h6"/><path d="M10 3v6.5L4.6 18.4A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.4-2.6L14 9.5V3"/><path d="M7.5 15h9"/>',
+  payments:     '<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/><path d="M6 6l10-3 1 3"/>',
+  shift:        '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/>',
+  accounts:     '<path d="M3 21h18"/><path d="M5 21V11M9 21V11M15 21V11M19 21V11"/><path d="M2 9l10-6 10 6z"/>',
+  prices:       '<path d="M12.6 2.6a2 2 0 0 0-1.4-.6H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+  reports:      '<path d="M3 21h18"/><path d="M7 17v-5M12 17V7M17 17v-8"/>',
+};
+const navItems = [
+  { id: "dashboard", label: T.dashEyebrow },
+  ...allModules.map((m) => ({ id: m.id, label: tx(m.name) })),
+];
+---
+
+<BaseLayout title={T.title} description={T.description}>
+
+  <!-- ─── HERO ─── -->
+  <section class="mb-hero bg-sky dust">
+    <div class="container mb-hero-grid">
+      <div class="mb-hero-text">
+        <span class="eyebrow">{T.eyebrow}</span>
+        <h1>{T.h1}</h1>
+        <p class="mb-lead">{T.lead}</p>
+        <p class="mb-sub">{T.sub}</p>
+        <div class="chips">{T.chips.map((c) => <span class="chip">{c}</span>)}</div>
+      </div>
+      <div class="mb-hero-shot">
+        <WindowWidget images={T.heroSlides} slidesLabel={T.heroSlidesLabel} chromeColor="sky-shader" loading="eager" sizes="(min-width: 900px) 55vw, 100vw" />
+      </div>
+    </div>
+  </section>
+  <dl class="mb-facts bg-sky dust">
+    {T.facts.map((f) => (
+      <div>
+        <dt>{f.label}</dt>
+        <dd><span class="fact-value">{f.value}</span><span class="fact-note">{f.note}</span></dd>
+      </div>
+    ))}
+  </dl>
+
+  <!-- ─── MODULE INDEX: jump to any part of the system ─── -->
+  <nav class="mb-index" aria-label={isAr ? "أقسام النظام" : "System modules"} data-mb-nav>
+    <div class="container">
+      <ul data-mb-index>
+        {navItems.map((n) => (
+          <li>
+            <a href={`#${n.id}`} data-target={n.id}>
+              <span class="ni"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" set:html={NAV_ICONS[n.id]}></svg></span>
+              <span class="nl">{n.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── THE DASHBOARD ─── -->
+  <section class="mb-sec" id="dashboard">
+    <div class="container mb-dash">
+      <div class="mb-dash-text">
+        <span class="eyebrow">{T.dashEyebrow}</span>
+        <h2 class="sec-h2">{T.dashHead}</h2>
+        <p>{T.dashText}</p>
+        <ul class="points">{T.dashPoints.map((p) => <li>{p}</li>)}</ul>
+        <Image src="/assets/bear/doctor-bear-tablet.png" alt="" class="mb-dash-bear" sizes="(min-width: 900px) 330px, 240px" />
+      </div>
+      <div class="mb-dash-shot">
+        <WindowWidget src="/assets/bear/screens/dashboard-busy.png" alt={T.heroAlt} sizes="(min-width: 900px) 55vw, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── A DAY IN THE CLINIC ─── -->
+  <section class="mb-sec board mb-dark" data-sky>
+    <div class="container">
+      <span class="eyebrow">{T.flowEyebrow}</span>
+      <h2 class="sec-h2">{T.flowHead}</h2>
+      <ol class="flow">
+        {T.flow.map((s, i) => (
+          <li><span class="flow-n">{i + 1}</span><b>{s.t}</b><span>{s.d}</span></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ─── EVERY MODULE, chapter by chapter ───
+       These windows use the plain chrome, not "sky-shader": each starry
+       element is its own WebGL context, and past the browser's limit (~16)
+       the oldest ones (the header, the hero) go blank. -->
+  {CHAPTERS.map((ch, ci) => (
+    <section class:list={["mb-sec", ch.bg, ch.bg && "dust"]}>
+      <div class="container">
+        {ch.modules.map((m, mi) => (
+          <article class:list={["module", { flip: mi % 2 === 1, first: mi === 0, "has-art": !!m.art }]} id={m.id}>
+            <div class="module-text">
+              {/* The chapter heading sits in the first module's text column,
+                  so that module's screenshot rises level with it. */}
+              {mi === 0 && (
+                <header class="chapter-head">
+                  <span class="chapter-n">{String(ci + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h2 class="sec-h2">{tx(ch.name)}</h2>
+                    <p>{tx(ch.intro)}</p>
+                  </div>
+                </header>
+              )}
+              <h3>{tx(m.name)}</h3>
+              <p class="module-lead">{tx(m.lead)}</p>
+              <ul class="points">{m.points.map((p) => <li>{tx(p)}</li>)}</ul>
+              {m.art && m.shot && <Image src={m.art} alt="" class="module-art" sizes="(min-width: 900px) 420px, 300px" />}
+            </div>
+            <div class:list={["module-shot", { "art-only": !m.shot }]}>
+              {m.shot
+                ? <WindowWidget src={m.shot} alt={tx(m.alt)} sizes="(min-width: 900px) 55vw, 100vw" />
+                : m.art && <Image src={m.art} alt="" class="module-art-big" sizes="(min-width: 900px) 55vw, 100vw" />}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <!-- ─── MONEY CONTROL ─── -->
+  <section class="mb-sec board mb-dark" data-sky>
+    <div class="container">
+      <span class="eyebrow">{T.moneyEyebrow}</span>
+      <h2 class="sec-h2">{T.moneyHead}</h2>
+      <div class="money-grid">
+        {T.moneyItems.map((m) => (
+          <div class="money-item"><b>{m.t}</b><span>{m.d}</span></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CUSTOMIZATION ─── -->
+  <section class="mb-sec">
+    <div class="container">
+      <span class="eyebrow">{T.customEyebrow}</span>
+      <h2 class="sec-h2">{T.customHead}</h2>
+      <p class="sec-text">{T.customText}</p>
+      <div class="custom-grid">
+        {T.customItems.map((c, i) => (
+          <div class={`sk custom ${["bg-butter", "bg-mint", "bg-lilac", "bg-apricot"][i]}`}><b>{c.t}</b><span>{c.d}</span></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CALL TO ACTION ─── -->
+  <section class="mb-sec bg-paper-2 dust">
+    <div class="container mb-cta">
+      <h2 class="sec-h2">{T.ctaHead}</h2>
+      <p>{T.ctaText}</p>
+      <a class="skb skb-lilac" href={L("/contact/")}>{T.ctaButton}</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script is:inline>
+  // Section menu.
+  // 1. Rail (wide screens): shown from the dashboard section to the end
+  //    of the last module, hidden over the hero and the closing sections.
+  // 2. The current section's item is marked .active (both layouts); in
+  //    the narrow row it is also scrolled into view.
+  // 3. Narrow row: a vertical mouse wheel scrolls it sideways (toward the
+  //    row's end, leftward in Arabic) until it reaches an end.
+  (function () {
+    var off = function () {};
+    function init() {
+      off();
+      var nav = document.querySelector("[data-mb-nav]");
+      var row = document.querySelector("[data-mb-index]");
+      if (!nav || !row) return;
+      var links = Array.prototype.slice.call(row.querySelectorAll("a[data-target]"));
+      var targets = links.map(function (a) { return document.getElementById(a.dataset.target); });
+      var first = targets[0], last = targets[targets.length - 1];
+      var current = -1, ticking = false;
+
+      function update() {
+        ticking = false;
+        var vh = window.innerHeight;
+        // The rail is visible between the first and last section.
+        var on = first.getBoundingClientRect().top < vh * 0.6 && last.getBoundingClientRect().bottom > vh * 0.35;
+        nav.classList.toggle("is-on", on);
+        // Current = the last section whose top has passed 40% of the screen.
+        var idx = 0;
+        for (var i = 0; i < targets.length; i++) {
+          if (targets[i].getBoundingClientRect().top <= vh * 0.4) idx = i;
+        }
+        if (idx !== current) {
+          current = idx;
+          links.forEach(function (a, k) {
+            a.classList.toggle("active", k === idx);
+            if (k === idx) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+          });
+          // Narrow row only: bring the current pill into view.
+          if (getComputedStyle(nav).position !== "fixed") {
+            var r = links[idx].getBoundingClientRect(), rr = row.getBoundingClientRect();
+            row.scrollBy({ left: (r.left + r.width / 2) - (rr.left + rr.width / 2), behavior: "smooth" });
+          }
+        }
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+
+      function onWheel(e) {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+        var max = row.scrollWidth - row.clientWidth;
+        if (max <= 0) return;
+        var rtl = getComputedStyle(row).direction === "rtl";
+        var pos = Math.abs(row.scrollLeft);
+        var forward = e.deltaY > 0;
+        if ((forward && pos >= max - 1) || (!forward && pos <= 0)) return;
+        e.preventDefault();
+        row.scrollBy({ left: (rtl ? -1 : 1) * e.deltaY, behavior: "smooth" });
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      row.addEventListener("wheel", onWheel, { passive: false });
+      off = function () {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+        row.removeEventListener("wheel", onWheel);
+      };
+      update();
+    }
+    document.addEventListener("astro:page-load", init);
+    document.addEventListener("astro:before-swap", function () { off(); off = function () {}; });
+    init();
+  })();
+</script>
+
+<style>
+  .container {
+    max-width: var(--k-max);
+    margin: 0 auto;
+    padding: 0 var(--k-gutter-desktop);
+  }
+
+  /* ─── Shared pieces ─── */
+  .eyebrow {
+    display: block;
+    font-family: var(--k-font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4a4a4a;
+  }
+  :global(html[dir="rtl"]) .eyebrow { font-family: var(--k-font-sans); font-size: 16px; font-weight: 600; letter-spacing: 0; }
+  .sec-h2 { margin: 14px 0 0; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.15; }
+  .sec-text { margin: 16px 0 0; max-width: 620px; font-size: 17px; line-height: 1.65; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    border: 2px solid var(--k-ink);
+    border-radius: 999px;
+    background: var(--k-paper);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .mb-sec { padding: 96px 0; border-top: 2px solid var(--k-ink); scroll-margin-top: 80px; }
+  /* The side menu's first button: offset past the section's 96px top padding so the
+     heading lands where the module headings do (140px below the top). */
+  #dashboard { scroll-margin-top: 44px; }
+  .mb-dark { color: var(--k-chalk); }
+  .mb-dark .eyebrow { color: #a8b4ac; }
+  .mb-dark .sec-h2 { color: var(--k-chalk); }
+
+  /* Feature lists: a small sky tick before each line. */
+  .points { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .points li { position: relative; padding-inline-start: 30px; font-size: 16px; line-height: 1.6; }
+  .points li::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.3em;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--k-ink);
+    border-radius: 50%;
+    background: var(--k-sky) url("/assets/icons/check.svg") center / 12px no-repeat;
+  }
+
+  /* ─── Hero + facts ─── */
+  .mb-hero { padding: 56px 0 72px; }
+  .mb-hero-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; }
+  .mb-hero-text { display: flex; flex-direction: column; gap: 20px; }
+  /* The screenshot is exactly as tall as the text beside it (top with the
+     eyebrow, bottom with the tags): it is taken out of the row's height
+     and fills it, cropped from the bottom. */
+  .mb-hero-grid { align-items: stretch; }
+  .mb-hero-shot { position: relative; min-height: 360px; }
+  .mb-hero-shot :global(.widget) { position: absolute; inset: 0; }
+  .mb-hero-shot :global(.widget-image) { object-fit: cover; object-position: top center; }
+  .mb-hero h1 { margin: 0; font-size: clamp(48px, 6vw, 80px); line-height: 1.05; letter-spacing: -0.03em; }
+  :global(html[dir="rtl"]) .mb-hero h1 { letter-spacing: 0; line-height: 1.2; font-feature-settings: "rlig" 0; }
+  .mb-lead { margin: 0; font-size: clamp(19px, 1.8vw, 24px); line-height: 1.4; font-weight: 600; }
+  .mb-sub { margin: 0; font-size: 17px; line-height: 1.65; color: #2b3238; }
+
+  .mb-facts {
+    margin: 0;
+    padding-inline: calc(max(0px, (100vw - var(--k-max)) / 2) + var(--k-gutter-desktop));
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 2px solid var(--k-ink);
+  }
+  .mb-facts > div { padding: 28px 28px 32px; display: flex; flex-direction: column; gap: 8px; }
+  .mb-facts > div:first-child { padding-inline-start: 0; }
+  .mb-facts > div:last-child { padding-inline-end: 0; }
+  .mb-facts > div + div { border-inline-start: 2px solid var(--k-ink); }
+  .mb-facts dt { font-family: var(--k-font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #33404a; }
+  :global(html[dir="rtl"]) .mb-facts dt { font-family: var(--k-font-sans); font-size: 15px; font-weight: 600; letter-spacing: 0; }
+  .mb-facts dd { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .fact-value { font-family: var(--k-font-serif); font-size: clamp(26px, 2.4vw, 34px); line-height: 1.15; font-weight: 700; }
+  .fact-note { font-size: 15px; line-height: 1.5; color: #2b3238; }
+
+  /* ─── Module index ─── */
+  /* Section menu. Narrow screens: one row of pills under the facts that
+     scrolls sideways (thin scrollbar, faded ends, wheel scrolls it).
+     From 1100px: a fixed rail on the page's start side (right in Arabic, left in English), icons joined by a
+     dotted line, the current section highlighted; labels show from
+     1600px, or when the rail is hovered or focused. */
+  :global(html:has(.mb-index)) { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { :global(html:has(.mb-index)) { scroll-behavior: auto; } }
+  .mb-index { padding: 18px 0 12px; border-top: 2px solid var(--k-ink); background: var(--k-paper); }
+  .mb-index ul {
+    margin: 0;
+    padding: 4px 24px 14px;
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--k-ink) 35%, transparent) transparent;
+    mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+  .mb-index ul::-webkit-scrollbar { height: 6px; }
+  .mb-index ul::-webkit-scrollbar-track { background: transparent; }
+  .mb-index ul::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--k-ink) 30%, transparent); border-radius: 999px; }
+  .mb-index li { flex-shrink: 0; scroll-snap-align: start; }
+  .mb-index a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 14px 0 6px;
+    border: 2px solid var(--k-ink);
+    border-radius: 999px;
+    color: var(--k-ink);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+  :global(html[dir="rtl"]) .mb-index a { padding: 0 6px 0 14px; }
+  .mb-index a:hover, .mb-index a:focus-visible { background: var(--k-sky); }
+  .ni {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  }
+  .ni svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  @media (min-width: 1100px) {
+    .mb-index {
+      position: fixed;
+      z-index: 40;
+      top: 50%;
+      inset-inline-start: 18px;
+      padding: 0;
+      border: 0;
+      background: none;
+      transform: translateY(-50%);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .mb-index.is-on { opacity: 1; visibility: visible; }
+    .mb-index .container { max-width: none; padding: 0; }
+    .mb-index ul {
+      flex-direction: column;
+      gap: 0;
+      padding: 8px;
+      overflow: visible;
+      mask-image: none;
+      background: var(--k-paper);
+      border: 2px solid var(--k-ink);
+      border-radius: 28px;
+      box-shadow: 0 10px 28px rgb(29 35 32 / 0.14);
+    }
+    /* The dotted line between two icons. */
+    .mb-index li + li::before {
+      content: "";
+      display: block;
+      height: 8px;
+      margin-inline-start: 18px;
+      border-inline-start: 2px dotted color-mix(in srgb, var(--k-ink) 40%, transparent);
+    }
+    .mb-index a,
+    :global(html[dir="rtl"]) .mb-index a {
+      height: auto;
+      padding: 2px;
+      gap: 0;
+      border: 0;
+      background: none;
+      color: color-mix(in srgb, var(--k-ink) 72%, transparent);
+    }
+    .mb-index a:hover, .mb-index a:focus-visible { background: none; color: var(--k-ink); }
+    .ni { width: 34px; height: 34px; }
+    .mb-index a:hover .ni { background: var(--k-paper-2); }
+    .mb-index a.active { color: var(--k-ink); }
+    .mb-index a.active .ni { background: var(--k-sky); color: var(--k-focus); box-shadow: 0 0 0 2px var(--k-focus); }
+    /* Labels: folded away, unfolded on hover/focus. */
+    .nl {
+      max-width: 0;
+      overflow: hidden;
+      opacity: 0;
+      font-size: 13.5px;
+      transition: max-width 0.25s ease, opacity 0.2s ease, margin 0.25s ease;
+    }
+    .mb-index ul:hover .nl, .mb-index ul:focus-within .nl { max-width: 180px; opacity: 1; margin-inline: 10px 12px; }
+  }
+  @media (min-width: 1600px) {
+    .nl { max-width: 180px; opacity: 1; margin-inline: 10px 12px; }
+  }
+  /* Short laptop screens: a tighter rail so all 13 items fit. */
+  @media (min-width: 1100px) and (max-height: 760px) {
+    .ni { width: 28px; height: 28px; }
+    .ni svg { width: 16px; height: 16px; }
+    .mb-index li + li::before { height: 4px; margin-inline-start: 15px; }
+    .mb-index ul { padding: 6px; }
+  }
+
+  /* ─── Dashboard ─── */
+  /* The text starts level with the window's top; the bear fills the space
+     under it and its base lines up with the window's bottom. */
+  .mb-dash { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: stretch; }
+  .mb-dash :global(.mb-dash-bear) {
+    margin-top: auto;
+    align-self: center;
+    width: 330px;
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.15));
+    pointer-events: none;
+  }
+  .mb-dash-text { display: flex; flex-direction: column; gap: 18px; }
+  .mb-dash-text > p { margin: 0; font-size: 17px; line-height: 1.65; }
+  .mb-dash-text .sec-h2 { margin: 0; }
+
+  /* ─── A day in the clinic ─── */
+  .flow { margin: 44px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .flow li { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; border-inline-start: 2px dashed #6b776f; }
+  .flow li:first-child { padding-inline-start: 0; border-inline-start: 0; }
+  .flow-n {
+    width: 40px; height: 40px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 2px solid var(--k-chalk);
+    border-radius: 50%;
+    font-family: var(--k-font-serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--k-butter);
+  }
+  .flow b { font-size: 18px; color: var(--k-chalk); }
+  .flow span:last-child { font-size: 15px; line-height: 1.55; color: #c9d2cc; }
+
+  /* ─── Chapters and modules ─── */
+  .chapter-head { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; padding-bottom: 24px; border-bottom: 2px dashed color-mix(in srgb, var(--k-ink) 30%, transparent); }
+  .chapter-head .sec-h2 { margin: 0; }
+  .chapter-head p { margin: 10px 0 0; max-width: 620px; font-size: 17px; line-height: 1.6; }
+  .chapter-n {
+    flex-shrink: 0;
+    font-family: var(--k-font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border: 2px solid var(--k-ink);
+    border-radius: 6px;
+    background: var(--k-butter);
+    margin-top: 8px;
+  }
+  .module {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "text shot";
+    gap: 56px;
+    align-items: start;
+    scroll-margin-top: 140px;
+  }
+  .module + .module { margin-top: 64px; }
+  .module.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: "shot text"; }
+  .module-text { grid-area: text; display: flex; flex-direction: column; gap: 16px; padding-top: 44px; }
+  .module.first .module-text { padding-top: 0; }
+  .module-shot { grid-area: shot; min-width: 0; }
+  /* A module with a picture: the text column runs the screenshot's full
+     height and the picture sits at its bottom (same idea as the dashboard bear). */
+  .module.has-art { align-items: stretch; }
+  .module.has-art .module-shot { align-self: start; }
+  .module :global(.module-art) {
+    margin-top: auto;
+    align-self: center;
+    width: auto;
+    max-width: min(420px, 100%);
+    height: auto;
+    max-height: 340px;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.15));
+    pointer-events: none;
+  }
+  /* No screenshot yet: the picture stands in its place, centred. */
+  .module-shot.art-only { align-self: center; display: flex; justify-content: center; }
+  .module-shot :global(.module-art-big) {
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.15));
+    pointer-events: none;
+  }
+  .module h3 { margin: 0; font-size: clamp(24px, 2.4vw, 32px); }
+  .module-lead { margin: 0; font-size: 18px; line-height: 1.5; font-weight: 600; }
+
+  /* ─── Money control ─── */
+  .money-grid { margin-top: 44px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+  .money-item { padding: 0 24px; display: flex; flex-direction: column; gap: 10px; border-inline-start: 2px solid #46524c; }
+  .money-item:first-child { padding-inline-start: 0; border-inline-start: 0; }
+  .money-item b { font-size: 19px; color: var(--k-butter); line-height: 1.35; }
+  .money-item span { font-size: 15px; line-height: 1.6; color: #c9d2cc; }
+
+  /* ─── Customization ─── */
+  .custom-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .custom { padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .custom b { font-size: 20px; }
+  .custom span { font-size: 15px; line-height: 1.55; }
+
+  /* ─── Call to action ─── */
+  .mb-cta { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+  .mb-cta .sec-h2 { margin: 0; }
+  .mb-cta p { margin: 0; max-width: 560px; font-size: 17px; line-height: 1.6; }
+
+  /* ─── Tablet ─── */
+  @media (max-width: 1100px) {
+    .mb-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-inline: 0; }
+    .mb-facts > div, .mb-facts > div:first-child, .mb-facts > div:last-child { padding: 24px var(--k-gutter-desktop) 28px; }
+    .mb-facts > div:nth-child(odd) { border-inline-start: 0; }
+    .mb-facts > div:nth-child(n + 3) { border-top: 2px solid var(--k-ink); }
+    .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 36px; }
+    .flow li:nth-child(4) { padding-inline-start: 0; border-inline-start: 0; }
+    .money-grid, .custom-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+    .money-item:nth-child(3) { padding-inline-start: 0; border-inline-start: 0; }
+  }
+  @media (max-width: 900px) {
+    .mb-hero-shot { min-height: 0; }
+    .mb-hero-shot :global(.widget) { position: static; }
+    .mb-hero-grid, .mb-dash, .module, .module.flip {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "text" "shot";
+      gap: 32px;
+    }
+    .module + .module { margin-top: 56px; }
+    .module-text { padding-top: 0; }
+    .mb-dash :global(.mb-dash-bear) { width: 240px; margin-top: 8px; }
+    .module :global(.module-art) { max-width: min(300px, 100%); max-height: 260px; margin-top: 8px; }
+  }
+
+  /* ─── Phones ─── */
+  @media (max-width: 672px) {
+    .container { padding: 0 var(--k-gutter-mobile); }
+    .mb-sec { padding: 56px 0; }
+    .mb-hero { padding: 36px 0 44px; }
+    .mb-facts { grid-template-columns: minmax(0, 1fr); }
+    .mb-facts > div, .mb-facts > div:first-child, .mb-facts > div:last-child { padding: 20px var(--k-gutter-mobile); border-inline-start: 0; }
+    .mb-facts > div + div { border-top: 2px solid var(--k-ink); }
+    .flow { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+    .flow li, .flow li:first-child, .flow li:nth-child(4) { padding: 0; padding-inline-start: 20px; border-inline-start: 2px dashed #6b776f; }
+    .money-grid, .custom-grid { grid-template-columns: minmax(0, 1fr); }
+    .money-item, .money-item:first-child, .money-item:nth-child(3) { padding: 0; padding-inline-start: 18px; border-inline-start: 2px solid #46524c; }
+    .chapter-head { flex-direction: column; gap: 12px; margin-bottom: 12px; }
+    .custom { padding: 18px; }
+  }
+</style>

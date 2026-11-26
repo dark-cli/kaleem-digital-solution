@@ -9,7 +9,7 @@
  * (class="lead") plus a paragraph, plus an optional button.
  */
 interface Props {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   /** Background utility class from global.css, e.g. "bg-sky". */
   bg?: string;
@@ -21,7 +21,7 @@ const { eyebrow, title, bg = "bg-sky" } = Astro.props;
 <section class:list={["page-hero", bg]}>
   <div class="ph-grid">
     <div class="ph-title">
-      <span class="ph-eyebrow">{eyebrow}</span>
+      {eyebrow && <span class="ph-eyebrow">{eyebrow}</span>}
       <h1>{title}</h1>
     </div>
     <div class="ph-desc">
@@ -61,6 +61,22 @@ const { eyebrow, title, bg = "bg-sky" } = Astro.props;
     line-height: 1.07;
     letter-spacing: -0.02em;
     color: var(--k-ink);
+  }
+  /* Arabic: the Latin eyebrow style (13px mono caps, wide tracking) reads as
+     a speck in Arabic, so the label gets the Arabic sans at a readable size
+     with no tracking. */
+  :global(html[dir="rtl"]) .ph-eyebrow {
+    font-family: var(--k-font-sans);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin-bottom: 10px;
+  }
+  /* Amiri's "rlig" stacks يم at display sizes (the ي of قديمة drops its
+     dots under the م, reading as a stray mark). Turning off only rlig keeps
+     every other join intact; turning off liga/calt as well breaks joins. */
+  :global(html[dir="rtl"]) h1 {
+    font-feature-settings: "rlig" 0;
   }
   .ph-desc :global(p) { margin: 0; font-size: 17px; line-height: 1.65; color: var(--k-ink); }
   .ph-desc :global(p + p) { margin-top: 12px; }
