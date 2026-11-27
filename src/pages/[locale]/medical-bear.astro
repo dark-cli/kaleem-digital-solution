@@ -20,7 +20,7 @@ const tx = (v: Text) => (isAr ? v.ar : v.en);
    public/assets/bear/screens/ (demo data). Modules are grouped into
    chapters; each module is one row: text and feature list beside its
    screenshot, alternating sides. */
-type Module = { id: string; /** Left out until a screenshot exists: the picture then fills the screenshot's place. */ shot?: string; alt: Text; name: Text; lead: Text; points: Text[]; /** Decorative picture under the points; its base lines up with the screenshot's bottom. */ art?: string };
+type Module = { id: string; /** Left out until a screenshot exists: the picture then fills the screenshot's place. */ shot?: string; /** The same screen in the English interface, for the English page; falls back to `shot`. */ shotEn?: string; alt: Text; name: Text; lead: Text; points: Text[]; /** Decorative picture under the points; its base lines up with the screenshot's bottom. */ art?: string };
 type Chapter = { name: Text; intro: Text; bg: string; modules: Module[] };
 
 const CHAPTERS: Chapter[] = [
@@ -32,6 +32,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "reception",
         shot: "/assets/bear/screens/reception-queue.png",
+        shotEn: "/assets/bear/screens/reception-queue-en.png",
         art: "/assets/bear/doctor-bear-patients.png",
         alt:  { en: "Reception queue: today's patients with their doctor, status and time waiting", ar: "قائمة الاستقبال: مرضى اليوم مع الطبيب والحالة ووقت الانتظار" },
         name: { en: "Reception queue", ar: "قائمة الاستقبال" },
@@ -46,6 +47,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "appointments",
         shot: "/assets/bear/screens/appointments.png",
+        shotEn: "/assets/bear/screens/appointments-en.png",
         art: "/assets/bear/doctor-bear-calendar.png",
         alt:  { en: "Appointments list with no-shows marked for rebooking", ar: "قائمة المواعيد مع من لم يحضروا معلَّمين لإعادة الحجز" },
         name: { en: "Appointments", ar: "المواعيد" },
@@ -60,6 +62,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "calls",
         shot: "/assets/bear/screens/call-list.png",
+        shotEn: "/assets/bear/screens/call-list-en.png",
         art: "/assets/bear/doctor-bear-headset.png",
         alt:  { en: "Call list: patients to call today, urgent first, with the reason for each call", ar: "قائمة الاتصال: مرضى للاتصال بهم اليوم، العاجل أولاً، مع سبب كل اتصال" },
         name: { en: "Call list", ar: "قائمة الاتصال" },
@@ -74,6 +77,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "patients",
         shot: "/assets/bear/screens/patients.png",
+        shotEn: "/assets/bear/screens/patients-en.png",
         art: "/assets/bear/doctor-bear-clipboard.png",
         alt:  { en: "Patients table with file number, phone, age, last visit, next booking and debts", ar: "جدول المرضى برقم الملف والهاتف والعمر وآخر زيارة والحجز القادم والديون" },
         name: { en: "Patients", ar: "المرضى" },
@@ -94,6 +98,8 @@ const CHAPTERS: Chapter[] = [
       {
         id: "orders",
         shot: "/assets/bear/screens/orders.png",
+        shotEn: "/assets/bear/screens/orders-en.png",
+        art: "/assets/bear/doctor-bear-heart.png",
         alt:  { en: "Order status: each patient's lab tests, procedures and services, and what is left to pay", ar: "حالة الطلبات: تحاليل كل مريض وإجراءاته وخدماته، وما بقي للدفع" },
         name: { en: "Order status", ar: "حالة الطلبات" },
         lead: { en: "Every lab test, procedure and service the doctor ordered, from request to done.", ar: "كل تحليل وإجراء وخدمة طلبها الطبيب، من الطلب حتى التنفيذ." },
@@ -107,6 +113,8 @@ const CHAPTERS: Chapter[] = [
       {
         id: "approvals",
         shot: "/assets/bear/screens/approvals.png",
+        shotEn: "/assets/bear/screens/approvals-en.png",
+        art: "/assets/bear/doctor-bear-approved.png",
         alt:  { en: "Approvals: a debt and a refund waiting for approval, each with its reason", ar: "الموافقات: دين واسترداد بانتظار الموافقة، لكل منهما سببه" },
         name: { en: "Approvals", ar: "الموافقات" },
         lead: { en: "Debts and refunds wait for an approval before any money moves.", ar: "الديون والاستردادات تنتظر الموافقة قبل أن يتحرك أي مبلغ." },
@@ -126,6 +134,8 @@ const CHAPTERS: Chapter[] = [
       {
         id: "pharmacy",
         shot: "/assets/bear/screens/pharmacy.png",
+        shotEn: "/assets/bear/screens/pharmacy-en.png",
+        art: "/assets/bear/doctor-bear-pharmacy.png",
         alt:  { en: "Pharmacy: sales list with stock alerts at the top", ar: "الصيدلية: قائمة المبيعات مع تنبيهات المخزون في الأعلى" },
         name: { en: "Pharmacy and stock", ar: "الصيدلية والمخزون" },
         lead: { en: "Sales, prescriptions, stock and suppliers in one place.", ar: "المبيعات والوصفات والمخزون والموردون في مكان واحد." },
@@ -138,8 +148,10 @@ const CHAPTERS: Chapter[] = [
       },
       {
         id: "lab",
+        shot: "/assets/bear/screens/lab.png",
+        shotEn: "/assets/bear/screens/lab-en.png",
         art: "/assets/bear/doctor-bear-lab.png",
-        alt:  { en: "", ar: "" },
+        alt:  { en: "Lab: each patient's test with its state, from needs a sample to results ready", ar: "المختبر: تحليل كل مريض وحالته، من يحتاج عينة حتى النتائج الجاهزة" },
         name: { en: "Laboratory", ar: "المختبر" },
         lead: { en: "Every test from the sample to the result, and the doctor is told.", ar: "كل تحليل من أخذ العينة حتى النتيجة، ويُبلَّغ الطبيب." },
         points: [
@@ -159,6 +171,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "payments",
         shot: "/assets/bear/screens/payments.png",
+        shotEn: "/assets/bear/screens/payments-en.png",
         art: "/assets/bear/doctor-bear-cash.png",
         alt:  { en: "Payments: what each patient has left to pay", ar: "المدفوعات: ما بقي على كل مريض" },
         name: { en: "Payments", ar: "المدفوعات" },
@@ -172,6 +185,8 @@ const CHAPTERS: Chapter[] = [
       {
         id: "shift",
         shot: "/assets/bear/screens/shift-closing.png",
+        shotEn: "/assets/bear/screens/shift-closing-en.png",
+        art: "/assets/bear/doctor-bear-shift.png",
         alt:  { en: "Shift closing: counting the cash box against the expected amount", ar: "إغلاق الوردية: عدّ الصندوق مقابل المبلغ المتوقع" },
         name: { en: "Shift closing", ar: "إغلاق الوردية" },
         lead: { en: "At the end of a shift the cashier counts the box, and the system checks the count.", ar: "في نهاية الوردية يعدّ الموظف الصندوق، والنظام يتحقق من العدّ." },
@@ -185,6 +200,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "accounts",
         shot: "/assets/bear/screens/accounts.png",
+        shotEn: "/assets/bear/screens/accounts-en.png",
         alt:  { en: "Accounts: every cash account's balance, received and paid today", ar: "الحسابات: رصيد كل حساب نقدي، وما قُبض وما صُرف اليوم" },
         name: { en: "Accounts", ar: "الحسابات" },
         lead: { en: "Where the clinic's money is right now, and every movement on it.", ar: "أين مال العيادة الآن، وكل حركة عليه." },
@@ -205,6 +221,8 @@ const CHAPTERS: Chapter[] = [
       {
         id: "prices",
         shot: "/assets/bear/screens/prices.png",
+        shotEn: "/assets/bear/screens/prices-en.png",
+        art: "/assets/bear/doctor-bear-reports.png",
         alt:  { en: "Services and prices list with each service's group", ar: "قائمة الخدمات والأسعار مع مجموعة كل خدمة" },
         name: { en: "Services and prices", ar: "الخدمات والأسعار" },
         lead: { en: "Everything the clinic charges for, with its price and its group.", ar: "كل ما تتقاضاه العيادة، بسعره ومجموعته." },
@@ -218,6 +236,7 @@ const CHAPTERS: Chapter[] = [
       {
         id: "reports",
         shot: "/assets/bear/screens/reports.png",
+        shotEn: "/assets/bear/screens/reports-en.png",
         alt:  { en: "Today's summary report: net, received, cash, card, debts and a revenue chart", ar: "تقرير ملخص اليوم: الصافي والمستلم والنقد والبطاقة والديون ورسم الإيرادات" },
         name: { en: "Reports", ar: "التقارير" },
         lead: { en: "The day, the month or any period, on one page.", ar: "اليوم أو الشهر أو أي فترة، في صفحة واحدة." },
@@ -243,8 +262,8 @@ const T = isAr ? {
   heroAlt:     "لوحة العيادة في الدب الطبي: صافي اليوم والموافقات المعلّقة ومرضى اليوم",
   heroSlidesLabel: "لوحة العيادة بالوضعين الداكن والفاتح",
   heroSlides: [
-    { src: "/assets/bear/dashboard-bear-dark.png",  alt: "لوحة العيادة في الوضع الداكن: صافي اليوم والموافقات المعلّقة ومرضى اليوم" },
-    { src: "/assets/bear/dashboard-bear-light.png", alt: "لوحة العيادة في الوضع الفاتح: صافي اليوم والموافقات المعلّقة ومرضى اليوم" },
+    { src: "/assets/bear/dashboard-bear-dark.png",  alt: "لوحة العيادة في الوضع الداكن: ربح اليوم والموافقات المعلّقة ومرضى اليوم وحصيلة كل طبيب" },
+    { src: "/assets/bear/dashboard-bear-light.png", alt: "لوحة العيادة في الوضع الفاتح: ربح اليوم والموافقات المعلّقة ومرضى اليوم وحصيلة كل طبيب" },
   ],
 
   facts: [
@@ -309,8 +328,8 @@ const T = isAr ? {
   heroAlt:     "The Medical Bear clinic dashboard: today's net, pending approvals and today's patients",
   heroSlidesLabel: "The clinic dashboard in dark and light mode",
   heroSlides: [
-    { src: "/assets/bear/dashboard-bear-dark.png",  alt: "The clinic dashboard in dark mode: today's net, pending approvals and today's patients" },
-    { src: "/assets/bear/dashboard-bear-light.png", alt: "The clinic dashboard in light mode: today's net, pending approvals and today's patients" },
+    { src: "/assets/bear/dashboard-bear-en-dark.png",   alt: "The clinic dashboard in dark mode: today's profit, approvals waiting, today's patients and each doctor's day" },
+    { src: "/assets/bear/dashboard-bear-en-light.png", alt: "The clinic dashboard in light mode: today's profit, approvals waiting, today's patients and each doctor's day" },
   ],
 
   facts: [
@@ -445,7 +464,7 @@ const navItems = [
         <Image src="/assets/bear/doctor-bear-tablet.png" alt="" class="mb-dash-bear" sizes="(min-width: 900px) 330px, 240px" />
       </div>
       <div class="mb-dash-shot">
-        <WindowWidget src="/assets/bear/screens/dashboard-busy.png" alt={T.heroAlt} sizes="(min-width: 900px) 55vw, 100vw" />
+        <WindowWidget src={isAr ? "/assets/bear/screens/dashboard-busy.png" : "/assets/bear/screens/dashboard-en-section.png"} alt={T.heroAlt} sizes="(min-width: 900px) 55vw, 100vw" />
       </div>
     </div>
   </section>
@@ -491,7 +510,7 @@ const navItems = [
             </div>
             <div class:list={["module-shot", { "art-only": !m.shot }]}>
               {m.shot
-                ? <WindowWidget src={m.shot} alt={tx(m.alt)} sizes="(min-width: 900px) 55vw, 100vw" />
+                ? <WindowWidget src={(!isAr && m.shotEn) || m.shot} alt={tx(m.alt)} sizes="(min-width: 900px) 55vw, 100vw" />
                 : m.art && <Image src={m.art} alt="" class="module-art-big" sizes="(min-width: 900px) 55vw, 100vw" />}
             </div>
           </article>
@@ -674,7 +693,9 @@ const navItems = [
      eyebrow, bottom with the tags): it is taken out of the row's height
      and fills it, cropped from the bottom. */
   .mb-hero-grid { align-items: stretch; }
-  .mb-hero-shot { position: relative; min-height: 360px; }
+  /* The window takes the text column's height, but never less than this, so the
+     one-line Arabic title gets the same window as the two-line English one. */
+  .mb-hero-shot { position: relative; min-height: 512px; }
   .mb-hero-shot :global(.widget) { position: absolute; inset: 0; }
   .mb-hero-shot :global(.widget-image) { object-fit: cover; object-position: top center; }
   .mb-hero h1 { margin: 0; font-size: clamp(48px, 6vw, 80px); line-height: 1.05; letter-spacing: -0.03em; }
@@ -911,6 +932,20 @@ const navItems = [
     height: auto;
     filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.15));
     pointer-events: none;
+  }
+  /* Side by side: the picture fills what the points leave beside the
+     screenshot, ending level with its bottom. When the text alone is taller
+     than the screenshot (narrow windows), the row grows instead and the
+     picture keeps its smallest size under the points, never overlapping. */
+  @media (min-width: 901px) {
+    .module.has-art .module-text :global(.module-art) {
+      flex: 1 1 0;
+      min-height: 150px;
+      width: 100%;
+      max-width: 420px;
+      object-fit: contain;
+      object-position: center bottom;
+    }
   }
   .module h3 { margin: 0; font-size: clamp(24px, 2.4vw, 32px); }
   .module-lead { margin: 0; font-size: 18px; line-height: 1.5; font-weight: 600; }
